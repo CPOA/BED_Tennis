@@ -1,2 +1,15 @@
 09/11:  introduction au différent modules à réaliser, choix du groupe : DAVID VIVIER, BRYAN BONI, EMILE BEX.
         choix du sujet: gestion des hébérgements & création d'un agenda.
+
+avant 01/12/2015 : Création des diagrammes de packages et pour la gestion réservation de cas d'utilisation,
+                   de classe et début des diagrammes d'activités.
+
+01/12/2015 : séparation du travail, david s'occupe des diagrammes du planing,
+             pendant que Emile et Bryan continuent sur le package gestion hébergement.
+
+Note: 
+
+base de données : ORACLE
+
+Site de génération de structure de données : http://generatedata.com/
+
