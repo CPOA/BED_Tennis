@@ -7,9 +7,17 @@ avant 01/12/2015 : Création des diagrammes de packages et pour la gestion rése
 01/12/2015 : séparation du travail, david s'occupe des diagrammes du planing,
              pendant que Emile et Bryan continuent sur le package gestion hébergement.
 
+03/12/2015 : fin du package "gestion hebergement" de Emile et Bryan, Bryan a débuté le maquettage de ce package, 
+             Emile a commencé la création de la  BDD et David a fait les diagrammes de classe, de cas d'utilisation, 
+             d'activité (général) et 3 diagrammes de séquences sur le package "Planning".
+             Création des projets sur netBeans
+  
 Note: 
 
 base de données : ORACLE
+
+choix lanqage: Gestion Hebergement : PHP/HTML/CSS
+               Planning : JAVA
 
 Site de génération de structure de données : http://generatedata.com/
 
