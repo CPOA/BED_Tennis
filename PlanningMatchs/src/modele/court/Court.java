@@ -1,3 +1,5 @@
+package modele.court;
+
 public abstract class Court {
 
 	private int id;

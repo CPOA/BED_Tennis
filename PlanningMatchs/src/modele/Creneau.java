@@ -1,9 +1,17 @@
 
+package modele;
+
+import java.util.Date;
 
 public class Creneau {
 
-	private int date;
-	private TrancheHoraire heure;
+	private Date m_date;
+	private TrancheHoraire m_heure;
+        
+        public Creneau(Date date, TrancheHoraire heure) {
+            m_date = date;
+            m_heure = heure;
+        }
 
 	public void getDate() {
 		

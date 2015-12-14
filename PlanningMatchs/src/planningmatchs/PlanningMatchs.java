@@ -5,6 +5,9 @@
  */
 package planningmatchs;
 
+import java.util.List;
+import modele.Joueur;
+
 /**
  *
  * @author dave
@@ -19,5 +22,18 @@ public class PlanningMatchs {
         System.out.println("Hello, Miserable World.");
         
     }
+    
+    
+    public static void planifierTournoi(String typeTournoi) {
+        
+        List<Joueur> joueurs;
+        
+        
+        
+        
+        
+    }
+    
+    
     
 }

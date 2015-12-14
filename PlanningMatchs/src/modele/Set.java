@@ -1,10 +1,12 @@
+package modele;
+
 public class Set {
 
-	private int pointsJoueur1;
-	private int pointsJoueur2;
+	private int m_pointsJoueur1;
+	private int m_pointsJoueur2;
 
 	public void getPointsJoueur1() {
-		
+            
 	}
 
 	public void getPointsJoueur2() {
@@ -18,5 +20,14 @@ public class Set {
 	public void setPointsJoueur2() {
 		
 	}
-
+        
+        // renvoie lequel des joueurs a gagné le set
+        int gagnant() {
+            if (m_pointsJoueur1 > m_pointsJoueur2) {
+                return 1;
+            }
+            else {
+                return 2;
+            }
+        }
 }

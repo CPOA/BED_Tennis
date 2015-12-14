@@ -1,3 +1,5 @@
+package modele.arbitre;
+
 public class ArbitrageLigne {
 
 	private int ligneArbitree;
