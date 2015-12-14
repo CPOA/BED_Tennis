@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
+
+
 <html>
     <head>
         <meta charset="UTF-8">
-        <title></title>
+        <title>  BED_TENNIS </title>
     </head>
+   
     <body>
-        <?php
-        // put your code here
-        ?>
+        <center>
+            <h1> Bienvenu sur le Site de BED Tennis </h1>
+            <h2> veuillez vous identifier en cliquant ici :</h2>
+            <a href=""> Me Connecter </a>
+        </center>
     </body>
 </html>
