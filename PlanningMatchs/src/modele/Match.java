@@ -1,12 +1,15 @@
 package modele;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import modele.arbitre.Arbitre;
 import modele.arbitre.ArbitreChaise;
 import modele.arbitre.ArbitreFilet;
 import modele.arbitre.ArbitreLigne;
 import modele.court.Court;
+
 
 
 public class Match {
@@ -19,6 +22,8 @@ public class Match {
         
         private Court m_court;
         
+        private Creneau m_creneau;
+        
 	private String m_type;
         
 	private Joueur m_gagnant;
@@ -29,18 +34,23 @@ public class Match {
         private Joueur m_joueur1;
         private Joueur m_joueur2;
         
+        
         private EquipeJoueurs m_equipe1;
         private EquipeJoueurs m_equipe2;
        
         private ArbitreChaise m_arbitreChaise;
         private ArbitreFilet m_arbitreFilet;
-        private List<ArbitreLigne> m_arbitreLigne;
+        private Map<Integer, ArbitreLigne> m_arbitresLigne;
+        
+        private EquipeRamasseurs m_equipeRamasseurs;
         
         public Match() {
             dernierIdDonne++;
             m_idMatch = dernierIdDonne;
             
             m_sets = new ArrayList();
+            
+            m_arbitresLigne = new HashMap<>();
         }
         
 	public int setJoueur1(Joueur j1) {
@@ -71,32 +81,36 @@ public class Match {
                 m_arbitreFilet = (ArbitreFilet)a;
             }
             else if (a instanceof ArbitreLigne) {
-                m_arbitreLigne.add((ArbitreLigne)a);
+                m_arbitresLigne.put(m_arbitresLigne.size(), (ArbitreLigne) a);
             }
+            
 	}
+        
 
 	public void affecterCourt(Court court) {
             m_court = court;
 	}
 
-	public void affecterEquipeRamasseurs() {
-		
+	public void affecterEquipeRamasseurs(EquipeRamasseurs equipeRamasseurs) {
+            m_equipeRamasseurs = equipeRamasseurs;
 	}
 
-	public void affecterCreneau() {
-		
+	public void affecterCreneau(Creneau creneau) {
+            m_creneau = creneau;
+            // indiquer que le creneau est occupé
+            
 	}
 
 	public int getId() {
             return m_idMatch;
 	}
 
-	public void getGagnant() {
-            
+	public Joueur getGagnant() {
+            return m_gagnant;
 	}
 
-	public void getPerdant() {
-            
+	public Joueur getPerdant() {
+            return m_perdant;
 	}
 
 	public void ajouterSet(modele.Set set) {
@@ -107,12 +121,12 @@ public class Match {
             return m_type;
     	}
         
-        public int setScore(List<Set> sets) {
+        public int setScore(List<modele.Set> sets) {
             if (sets.isEmpty()) return -1;
             m_sets = sets;
             int sets_j1 = 0;
             int sets_j2 = 0;
-            for (Set s : m_sets) {
+            for (modele.Set s : m_sets) {
                 if (s.gagnant() == 1) {
                     sets_j1++;
                 }
@@ -133,12 +147,17 @@ public class Match {
             return 0;
         }
         
-	public List<Set> getScoreFinal() {
+	public List<modele.Set> getScoreFinal() {
             return m_sets;
 	}
 
 	public boolean estFini() {
             return m_fini;
 	}
+        
+        @Override
+        public String toString() {
+            return "Match n°" + m_idMatch + ", type = " + m_type + ", opposant " + m_joueur1 + " et " + m_joueur2 + ", Creneau : " + m_creneau + ", Court : " + m_court + ", ArbitreChaise : " + m_arbitreChaise + ", ArbitreFilet : " + m_arbitreFilet + " ... " ;
+        }
 
 }

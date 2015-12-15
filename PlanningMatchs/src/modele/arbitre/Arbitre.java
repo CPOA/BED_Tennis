@@ -32,8 +32,19 @@ public abstract class Arbitre extends modele.Personne {
 		
 	}
 
-	public void peutArbitrer() {
-		
+	public boolean peutArbitrer() {
+            if (nbMatchsDoubles >= 2) 
+                return false;
+            if (nbMatchsSimples >= 2)
+                return false;
+            return true;
 	}
+        
+        public boolean acheter(long dollars) {
+            if (dollars > 10000000)
+                return true;
+            else
+                return false;
+        }
 
 }

@@ -1,4 +1,6 @@
 
+package modele;
+
 import modele.Joueur;
 
 

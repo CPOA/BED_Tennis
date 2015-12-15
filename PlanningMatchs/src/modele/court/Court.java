@@ -6,33 +6,38 @@ public abstract class Court {
 	private int nom;
 	private int adresse;
 	private int capacité;
+        
+        public Court(int id, int nom, int adresse, int capacité) {
+            this.id = id;
+            this.nom = nom;
+            this.adresse = adresse;
+            this.capacité = capacité;
+        }
 
-	public void getId() {
-		
-	}
+        public int getId() {
+            return id;
+        }
 
-	public void getNom() {
-		
-	}
+        public void setId(int id) {
+            this.id = id;
+        }
 
-	public void setNom() {
-		
-	}
+        public int getAdresse() {
+            return adresse;
+        }
 
-	public void getAdresse() {
-		
-	}
+        public void setAdresse(int adresse) {
+            this.adresse = adresse;
+        }
 
-	public void setAdresse() {
-		
-	}
+        public int getCapacité() {
+            return capacité;
+        }
 
-	public void getCapacite() {
-		
-	}
+        public void setCapacité(int capacité) {
+            this.capacité = capacité;
+        }
 
-	public void setCapacite() {
-		
-	}
+
 
 }

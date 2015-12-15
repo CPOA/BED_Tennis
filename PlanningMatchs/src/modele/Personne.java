@@ -34,8 +34,8 @@ public abstract class Personne {
             return m_prenom;
 	}
 
-	public void setPrenom() {
-		
+	public void setPrenom(String prenom) {
+            this.m_prenom = prenom;
 	}
 
 	public String getAdresseMail() {
@@ -57,5 +57,10 @@ public abstract class Personne {
         public boolean aMemeNationalite(Personne p) {
             return this.m_nationalite.equals(p.getNationalite());
         }
-
+        
+        @Override
+        public String toString() {
+            return m_prenom + " " + m_prenom;
+        }
+        
 }
