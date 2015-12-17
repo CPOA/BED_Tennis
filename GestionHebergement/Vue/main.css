@@ -1,8 +1,7 @@
 body{
    background-color: #424242; 
-   border: 2px solid white;
-   margin:10%;
-   padding:10%; 
+   margin:5%;
+   padding:5%; 
 }
 
 #corps{
@@ -23,7 +22,11 @@ body{
 #bouton:active{
     border-style: inset;
 }
-
+#cadre{
+   border: 2px solid white;
+   padding-top: 3%;
+   padding-bottom: 3%;
+}
 #header{
     
 }
