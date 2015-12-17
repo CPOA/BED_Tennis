@@ -14,9 +14,11 @@ body{
 }
 
 #bouton{
-    border:5px outset white;
+    background-color:  #e8e8e8;
+    border:5px outset #e8e8e8;
     width: 25%;
-    padding: 5px;   
+    margin: 10px;  
+    color: #424242;
 }
 
 #bouton:active{

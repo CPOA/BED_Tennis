@@ -2,17 +2,17 @@
     $title = "Menu";
     $content =  "<div id = \"cadre\">"
             
-                    . "<div id = \"bouton\">"
-                        . "Mettre à jour informations"
-                    . "</div>"
+                    . "<a href = \" \"><div id = \"bouton\">"
+                        . "<h3>Mettre à jour informations</h3>"
+                    . "</div></a>"
                     . "<br /><br />"
-                    . "<div id = \"bouton\">"
-                        . "Mettre à jour disponibilité"
-                    . "</div>"
+                    . "<a href = \" \"><div id = \"bouton\">"
+                        . "<h3>Mettre à jour disponibilité</h3>"
+                    . "</div></a>"
                     . "<br /><br />"
-                    . "<div id = \"bouton\">"
-                        . "Consulter la liste des clients"
-                    . "</div>"
+                    . "<a href = \" \"><div id = \"bouton\">"
+                        . "<h3>Consulter la liste des clients</h3>"
+                    . "</div></a>"
                     . "<br /><br />"
                 . "</div>";
     
