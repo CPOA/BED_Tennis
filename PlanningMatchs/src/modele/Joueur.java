@@ -2,11 +2,11 @@ package modele;
 
 public class Joueur extends Personne {
 
-	private int login;
-	private int motDePasse;
+	private String login;
+	private String motDePasse;
 	private int classementATP;
 
-        public Joueur(int id, String nom, String prenom, String mail, int sexe, String nationalite, int login, int motDePasse, int classementATP) {
+        public Joueur(int id, String nom, String prenom, String mail, int sexe, String nationalite, String login, String motDePasse, int classementATP) {
             super(id, nom, prenom, mail, sexe, nationalite);
             this.login = login;
             this.motDePasse = motDePasse;
@@ -22,16 +22,16 @@ public class Joueur extends Personne {
 		
 	}
 
-	public void getLogin() {
-		
+	public String getLogin() {
+		return this.login;
 	}
 
 	public void setLogin() {
 		
 	}
 
-	public void getClassementATP() {
-		
+	public int getClassementATP() {
+		return this.classementATP;
 	}
 
 }
