@@ -20,7 +20,7 @@ class CompteHebergement extends Compte{
     private $_placesDispo;
     private $_service;
     public function __construct($login, $motDePasse, $adresseMail) {
-        parent($login, $motDePasse,$adresseMail);
+        parent::__construct($login, $motDePasse,$adresseMail);
         $_type='h';
         $_service=array();
     }
@@ -83,6 +83,4 @@ class CompteHebergement extends Compte{
     function addService($service) {
         array_push($this->_service, $service);
     }
-
-
 }

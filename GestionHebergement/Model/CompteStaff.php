@@ -15,6 +15,14 @@ class CompteStaff extends Compte{
     public function __construct($login, $motDePasse, $adresseMail) {
         parent($login, $motDePasse,$adresseMail);
         $_type='s';
-    }   
+    }
+    
+    public function creerCompteHebergement($login, $motDePasse, $adresseMail) {
+        new CompteHebergement($login, $motDePasse, $adresseMail);
+    }
+    
+    public function effectuerReservation($idVIP, $dateDebut, $dateFin, $nbPersonnes) {
+        new Reservation($this->_login, $idVIP, $dateDebut, $dateFin, $nbPersonnes);
+    }
 }
 
