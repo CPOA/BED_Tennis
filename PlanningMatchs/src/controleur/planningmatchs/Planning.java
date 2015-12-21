@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package planningmatchs;
+package controleur.planningmatchs;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import modele.Creneau;
@@ -22,13 +23,20 @@ import modele.arbitre.ArbitreFilet;
  */
 public class Planning {
     
-    java.util.Set<Joueur> joueurs;
     
-    java.util.Set<Arbitre> arbitres;
+    /*
+    private java.util.Set<Joueur> joueurs;
+    
+    private java.util.Set<Arbitre> arbitres;
     
     private java.util.Set<Creneau> creneaux;
     
+    private HashMap<Integer, Match> matchs;
+    
     public Planning(Date dateDebut, Date dateFin) {
+        
+        matchs = new HashMap<>();
+        
         
         Creneau creneau;
         
@@ -93,10 +101,6 @@ public class Planning {
         return 0;
     }
     
-    public int ajouterResultatMatch(List<modele.Set> sets) {
-        
-        return 0;
-    }
     
     
     public Creneau getPremierCreneauDispo() {
@@ -106,6 +110,8 @@ public class Planning {
         }
         return null;
     }
+
+    */
     
     
 }

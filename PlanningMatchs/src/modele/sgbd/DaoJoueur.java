@@ -15,8 +15,8 @@ public class DaoJoueur {
 
     public DaoJoueur() {
     }
-    
-    public void openConnection(javax.swing.DefaultListModel listModel)  {
+    /*
+    public void openConnexion(javax.swing.DefaultListModel listModel)  {
         
         connexion = ConnexionOracleFactory.creerConnexion();
         if (connexion == null) {
@@ -25,28 +25,43 @@ public class DaoJoueur {
         }
     }
 
-    public void closeConnection() {
+    public void closeConnexion() {
       try {
         connexion.close();	// Fermeture de la connexion
       }catch (java.sql.SQLException e){
             System.out.println("ERREUR ORACLE" + e.getMessage());
       }
     }
-    
-    public List<Joueur> getJoueur(){
+    */
+    public List<Joueur> getJoueurs(){
         List<Joueur> joueurList = new ArrayList<>();
         try {
-            connexion = ConnexionOracleFactory.creerConnexion();
+            System.out.print("Creating connexion...");
+            
+            //connexion = ConnexionOracleFactory.creerConnexion();
+            connexion = ConnexionMySql.getConnexion();
+            
             if (connexion == null) {
                 System.exit(1);
             }
+            System.out.println(" done.");
             
             java.sql.Statement requete;
             requete = connexion.createStatement();
-            java.sql.ResultSet res;
+            java.sql.ResultSet res = null;
+            System.out.print("Executing query...");
+            /*
             res = requete.executeQuery("select idjoueur,rpad(nomjoueur,20),rpad(prenomjoueur,20),rpad(adressemailjoueur,50),"
                     + "rpad(sexejoueur,10),rpad(nationalitejoueur,20),rpad(loginjoueur,20),"
                     + "rpad(mdpjoueur,20), classementatp from joueur");
+            */
+            /*
+            res = requete.executeQuery("select idjoueur, nomjoueur, prenomjoueur, adressemailjoueur,"
+                    + "sexejoueur, nationalitejoueur, loginjoueur,"
+                    + "mdpjoueur, classementatp from joueur");
+            */
+            
+            System.out.println(" done.");
             while (res.next()) {
                     joueur = new Joueur(
                             res.getInt(1),      // id
@@ -57,13 +72,13 @@ public class DaoJoueur {
                             res.getString(6),   // nationalite
                             res.getString(7),   // login
                             res.getString(8),   // mdp
-                            res.getInt(9)       // classementApt
+                            res.getInt(9)       // classementATP
                     );
                 joueurList.add(joueur);
             }
             res.close();
             requete.close();
-            closeConnection();
+            connexion.close();
             
         } catch (SQLException ex) {
             Logger.getLogger(DaoJoueur.class.getName()).log(Level.SEVERE, null, ex);

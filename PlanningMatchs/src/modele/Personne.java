@@ -60,7 +60,9 @@ public abstract class Personne {
         
         @Override
         public String toString() {
-            return m_prenom + " " + m_prenom;
+            return m_prenom + " " + m_nom + " (" + type() + " - " + getNationalite() + ")";
         }
         
+        
+        public abstract String type();
 }

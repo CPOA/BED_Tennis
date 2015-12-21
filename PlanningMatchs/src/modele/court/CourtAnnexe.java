@@ -4,9 +4,15 @@ package modele.court;
 
 
 
-public class CoursAnnexe extends Court {
+public class CourtAnnexe extends Court {
 
-    public CoursAnnexe(int id, int nom, int adresse, int capacité) {
+    public CourtAnnexe(int id, int nom, int adresse, int capacité) {
         super(id, nom, adresse, capacité);
     }
+
+    @Override
+    public String getType() {
+        return "Court Annexe";
+    }
+    
 }

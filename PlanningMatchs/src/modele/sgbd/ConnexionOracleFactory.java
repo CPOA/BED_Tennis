@@ -1,14 +1,15 @@
 package modele.sgbd;
 
-
+        
 public class ConnexionOracleFactory {
-
+    
 public static java.sql.Connection creerConnexion(){
     try {
         java.util.Properties props;
         props = new java.util.Properties();
         java.io.FileInputStream fichier;
-        fichier = new java.io.FileInputStream("./src/connexion/connexion.properties");
+        //fichier = new java.io.FileInputStream("./src/connexion/connexion_1.properties");
+        fichier = new java.io.FileInputStream("./src/modele/sgbd/connexion_1.properties");
         props.load(fichier);
         oracle.jdbc.pool.OracleDataSource ods;
         

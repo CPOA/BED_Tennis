@@ -14,7 +14,7 @@ import modele.court.Court;
 
 public class Match {
         
-        private static int dernierIdDonne = 0;
+        private static int dernierIdDonne;
     
 	private int m_idMatch;
         
@@ -43,27 +43,110 @@ public class Match {
         private Map<Integer, ArbitreLigne> m_arbitresLigne;
         
         private EquipeRamasseurs m_equipeRamasseurs;
+    
         
-        public Match() {
-            dernierIdDonne++;
-            m_idMatch = dernierIdDonne;
-            
-            m_sets = new ArrayList();
-            
-            m_arbitresLigne = new HashMap<>();
-        }
+    static {
+        dernierIdDonne = 0;
+    }
+        
+    /**
+     * Basic constructor.
+     * 
+     */
+    public Match() {
+        dernierIdDonne++;
+        m_idMatch = dernierIdDonne;
+
+        m_sets = new ArrayList();
+
+        m_arbitresLigne = new HashMap<>();
+    }
+    
+    
+    /**
+     * Constructs a NEW Match wich didn't exist before.
+     * To represent a match already existing in the database, use the constructor with the id attribute instead.
+     * 
+     * @param m_sets
+     * @param m_court
+     * @param m_creneau
+     * @param m_type
+     * @param m_joueur1
+     * @param m_joueur2
+     * @param m_arbitreChaise
+     * @param m_arbitreFilet
+     * @param m_arbitresLigne
+     * @param m_equipeRamasseurs 
+     */
+    public Match(List<Set> m_sets, Court m_court, Creneau m_creneau, String m_type, Joueur m_joueur1, Joueur m_joueur2, ArbitreChaise m_arbitreChaise, ArbitreFilet m_arbitreFilet, Map<Integer, ArbitreLigne> m_arbitresLigne, EquipeRamasseurs m_equipeRamasseurs) {
+        super();
+        this.m_sets = m_sets;
+        this.m_court = m_court;
+        this.m_creneau = m_creneau;
+        this.m_type = m_type;
+        this.m_joueur1 = m_joueur1;
+        this.m_joueur2 = m_joueur2;
+        this.m_arbitreChaise = m_arbitreChaise;
+        this.m_arbitreFilet = m_arbitreFilet;
+        this.m_arbitresLigne = m_arbitresLigne;
+        this.m_equipeRamasseurs = m_equipeRamasseurs;
+    }
+
+    
+    /**
+     * Constructor for a Match which already exists in the database (already has an id)
+     * @param m_idMatch
+     * @param m_sets
+     * @param m_court
+     * @param m_creneau
+     * @param m_type
+     * @param m_gagnant
+     * @param m_perdant
+     * @param m_fini
+     * @param m_joueur1
+     * @param m_joueur2
+     * @param m_arbitreChaise
+     * @param m_arbitreFilet
+     * @param m_arbitresLigne
+     * @param m_equipeRamasseurs 
+     */
+    public Match(int m_idMatch, List<Set> m_sets, Court m_court, Creneau m_creneau, String m_type, Joueur m_gagnant, Joueur m_perdant, boolean m_fini, Joueur m_joueur1, Joueur m_joueur2, ArbitreChaise m_arbitreChaise, ArbitreFilet m_arbitreFilet, Map<Integer, ArbitreLigne> m_arbitresLigne, EquipeRamasseurs m_equipeRamasseurs) {
+        this.m_idMatch = m_idMatch;
+        this.m_sets = m_sets;
+        this.m_court = m_court;
+        this.m_creneau = m_creneau;
+        this.m_type = m_type;
+        this.m_gagnant = m_gagnant;
+        this.m_perdant = m_perdant;
+        this.m_fini = m_fini;
+        this.m_joueur1 = m_joueur1;
+        this.m_joueur2 = m_joueur2;
+        this.m_arbitreChaise = m_arbitreChaise;
+        this.m_arbitreFilet = m_arbitreFilet;
+        this.m_arbitresLigne = m_arbitresLigne;
+        this.m_equipeRamasseurs = m_equipeRamasseurs;
+    }
+    
+    
+    
+        
+        
         
 	public int setJoueur1(Joueur j1) {
-            if (m_joueur2.getId() == j1.getId()) {
-                return -1;
+            
+            if (m_joueur2 != null) {
+                if (m_joueur2.getId() == j1.getId())
+                    return -1;
             }
             m_joueur1 = j1;
             return 0;
         }
         
         public int setJoueur2(Joueur j2) {
-            if (m_joueur1.getId() == j2.getId())
-                return -1;
+            if (m_joueur1 != null) {
+                if (m_joueur1.getId() == j2.getId())
+                    return -1;
+            }
             m_joueur2 = j2;
             return 0;
         }

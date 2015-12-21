@@ -16,7 +16,6 @@ public class EquipeRamasseurs {
         }
         
         
-        
 	public int getId() {
             return m_id;
 	}
@@ -29,8 +28,8 @@ public class EquipeRamasseurs {
             return m_nbRamasseurs;
 	}
 
-	public void estComplete() {
-		
-	}
+	public boolean estComplete() {
+            return (m_nbRamasseurs == 8);
+        }
 
 }

@@ -38,6 +38,7 @@ public abstract class Court {
             this.capacité = capacité;
         }
 
+        public abstract String getType();
 
 
 }

@@ -7,5 +7,10 @@ public class Ramasseur extends Personne {
         super(id, nom, prenom, mail, sexe, nationalite);
     }
 
+    @Override
+    public String type() {
+        return "Ramasseur de balle";
+    }
+
     
 }
