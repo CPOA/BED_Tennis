@@ -15,6 +15,10 @@ public class EquipeRamasseurs {
             this.m_ramasseurs = m_ramasseurs;
             this.m_nbRamasseurs = m_ramasseurs.size();
         }
+
+    public EquipeRamasseurs() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
         
         
 	public int getId() {
@@ -23,6 +27,7 @@ public class EquipeRamasseurs {
 
 	public void ajouterRamasseur(Ramasseur ramasseur) {
           m_ramasseurs.add(ramasseur);
+          System.out.println("Ramasseur ajouté : " + ramasseur);
 	}
 
 	public int getNbRamasseurs() {

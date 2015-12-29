@@ -26,15 +26,9 @@ import modele.arbitre.TypeArbitre;
  */
 public class DaoArbitre extends Dao {
     
-    private java.sql.Connection connexion;
-    private Arbitre arbitre;
-
-    public DaoArbitre() {
-        
-    }
     
     
-    public List<Arbitre> getArbitres(){
+    public static List<Arbitre> getArbitres(){
         List<Arbitre> arbitres = new ArrayList<>();
         
         /*
@@ -124,40 +118,8 @@ public class DaoArbitre extends Dao {
     
     
     
-    public int getIdMax() {
-        /*
-        try {
-            System.out.print("Creating connexion...");
-            
-            //connexion = ConnexionOracleFactory.creerConnexion();
-            connexion = ConnexionMySql.getConnexion();
-            
-            if (connexion == null) {
-                System.exit(1);
-            }
-            System.out.println(" done.");
-            
-            java.sql.Statement requete;
-            requete = connexion.createStatement();
-            java.sql.ResultSet res = null;
-            
-            String query = "SELECT max(idMatch) FROM match";
-            System.out.println("Query : " + query);
-            System.out.print("Executing query...");
-            
-            res = requete.executeQuery(query);
-            res.next();
-            n = res.getInt(0);
-            System.out.println(" done. n =  " + n);
-           
-            res.close();
-            requete.close();
-            connexion.close();
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(DaoMatch.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        */
+    public static int getMaxIdArbitre() {
+        
         int n = 0;
         ResultSet res = query("Select max(id_arbitre) from arbitre");
         try {
@@ -172,7 +134,7 @@ public class DaoArbitre extends Dao {
     
     
     
-    public int getNbJoueurs() {
+    public static int getNbJoueurs() {
         /*
         try {
             System.out.print("Creating connexion...");

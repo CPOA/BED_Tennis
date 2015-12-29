@@ -1,5 +1,7 @@
 package vue;
 
+import javax.swing.table.TableModel;
+
 
 public class IHMPlanningMatch extends javax.swing.JFrame {
 
@@ -153,6 +155,21 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
             }
         });
     }
+    
+    
+    
+    public void actualiserPlanning() {
+        TableModel tm = tableAffichagePlanning.getModel();
+        
+        //tm.setValueAt(tm, WIDTH, WIDTH);
+        
+        
+    }
+    
+    
+    
+    
+    
     //pour plus tard
     //private javax.swing.JPanel panelBoutons;
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -48,9 +48,9 @@ public class Match {
     
         
     static {
-        DaoMatch daoMatch = new DaoMatch();
-        dernierIdDonne = daoMatch.getIdMax();
-        System.out.println("daoMatch.getIdMax");
+        //DaoMatch daoMatch = new DaoMatch();
+        //dernierIdDonne = DaoMatch.getIdMax();
+        //System.out.println("daoMatch.getIdMax");
         //dernierIdDonne = 0;
     }
         

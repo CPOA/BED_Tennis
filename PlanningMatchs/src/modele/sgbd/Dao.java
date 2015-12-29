@@ -5,6 +5,7 @@
  */
 package modele.sgbd;
 
+import com.sun.corba.se.impl.util.Utility;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,13 +20,13 @@ import modele.personne.Joueur;
  */
 public class Dao {
     
-    private java.sql.Connection connexion;
+    private static java.sql.Connection connexion;
 
     
-    public void connect() {
+    public static void connect() {
         try {
             System.out.print("Creating connexion...");
-            
+
             //connexion = ConnexionOracleFactory.creerConnexion();
             connexion = ConnexionMySql.getConnexion();
             
@@ -42,14 +43,13 @@ public class Dao {
     }
     
     
-    public java.sql.ResultSet query(String queryText) {
+    public static java.sql.ResultSet query(String queryText) {
         connect();
         java.sql.ResultSet res = null;
         
         try {
             java.sql.Statement statement;
             statement = connexion.createStatement();
-            
             
             System.out.println("Query : " + queryText);
             System.out.print("Executing query...");
@@ -62,7 +62,7 @@ public class Dao {
         return res;
     }
     
-    public int queryUpdate(String queryUpdate) {
+    public static int queryUpdate(String queryUpdate) {
         connect();
         int res = 0;
         
@@ -72,7 +72,7 @@ public class Dao {
             
             
             System.out.println("Update : " + queryUpdate);
-            System.out.print("Executing update...");
+            System.out.println("Executing update...");
             
             res = statement.executeUpdate(queryUpdate);
             
@@ -83,5 +83,20 @@ public class Dao {
         return res;
     }
     
+    int getIdMax() {
+        
+        int n = 0;
+        
+        int a = DaoArbitre.getMaxIdArbitre();
+        int j = DaoJoueur.getMaxIdJoueur();
+        int m = DaoMatch.getMaxIdMatch();
+        int r = DaoRamasseur.getMaxIdRamasseur();
+        
+        n = Math.max(a, j);
+        n = Math.max(n, m);
+        n = Math.max(n, r);
+        
+        return n;
+    }
     
 }

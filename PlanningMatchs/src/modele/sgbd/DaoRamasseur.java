@@ -8,6 +8,7 @@ package modele.sgbd;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,13 +26,10 @@ public class DaoRamasseur extends Dao{
     private java.sql.Connection connexion;
     private Ramasseur ramasseur;
 
-    public DaoRamasseur() {
-        
-    }
     
     
-    public List<Ramasseur> getRamasseurs(){
-        List<Ramasseur> ramasseurs = new ArrayList<>();
+    public static HashMap<Integer, Ramasseur> getRamasseurs(){
+        HashMap<Integer, Ramasseur> ramasseurs = new HashMap<Integer, Ramasseur>();
         /*
         try {
             System.out.print("Creating connexion...");
@@ -81,7 +79,6 @@ public class DaoRamasseur extends Dao{
         
         //return joueurList;*/
         
-        connect();
         
         ResultSet res = query("Select id_ramasseur, nom, prenom, adressemail, sexe from ramasseur");
         
@@ -95,7 +92,7 @@ public class DaoRamasseur extends Dao{
                                                     res.getString("adressemail"),
                                                     res.getObject("sexe", Sexe.class),
                                                     res.getString("nationalite"));
-                ramasseurs.add(ramasseur);
+                ramasseurs.put(res.getInt("id_ramasseur"), ramasseur);
                 
             }
         } catch (SQLException ex) {
@@ -107,54 +104,25 @@ public class DaoRamasseur extends Dao{
     
     
     
-    public int getIdMax() {
-        /*
+    public static int getMaxIdRamasseur() {
+        
         int n = 0;
+        
+        ResultSet res = query("Select max(id_ramasseur) from ramasseur");
+        
         try {
-            System.out.print("Creating connexion...");
-            
-            //connexion = ConnexionOracleFactory.creerConnexion();
-            connexion = ConnexionMySql.getConnexion();
-            
-            if (connexion == null) {
-                System.exit(1);
-            }
-            System.out.println(" done.");
-            
-            java.sql.Statement requete;
-            requete = connexion.createStatement();
-            java.sql.ResultSet res = null;
-            
-            String query = "SELECT max(id) FROM ramasseur";
-            System.out.println("Query : " + query);
-            System.out.print("Executing query...");
-            
-            res = requete.executeQuery(query);
-            
             res.next();
-            
-            n = res.getInt(0);
-            System.out.println(" done. n =  " + n);
-           
-            res.close();
-            requete.close();
-            connexion.close();
-            
+            n = res.getInt(1);
         } catch (SQLException ex) {
-            Logger.getLogger(DaoMatch.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoRamasseur.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        return n;
-        */
-        
-        int n = 0;
         
         return n;
     }
     
     
     
-    public int getNbJoueurs() {
+    public int getNbRamasseurs() {
         /*
         try {
             System.out.print("Creating connexion...");
@@ -186,6 +154,15 @@ public class DaoRamasseur extends Dao{
         return -1;*/
         
         int n = 0;
+        
+        ResultSet res = query("Select count(id_ramasseur) from ramasseur");
+        
+        try {
+            res.next();
+            n = res.getInt(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoRamasseur.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         return n;
     }

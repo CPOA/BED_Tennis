@@ -8,6 +8,7 @@ package modele.sgbd;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,15 +20,10 @@ import modele.Match;
  */
 public class DaoMatch extends Dao{
     
-    private java.sql.Connection connexion;
-    private Match match;
 
-    public DaoMatch() {
-        
-    }
     
-    
-    public List<Match> getMatchs(){
+    public static HashMap<Integer, Match> getMatchs(){
+        /*
         List<Match> matchs = new ArrayList<>();
         try {
             System.out.print("Creating connexion...");
@@ -51,7 +47,7 @@ public class DaoMatch extends Dao{
             System.out.println(" done.");
             
             while (res.next()) {
-                /*
+                
                     joueur = new Joueur(
                             res.getInt(1),      // id
                             res.getString(2),   // nom
@@ -64,7 +60,7 @@ public class DaoMatch extends Dao{
                             res.getInt(9)       // classementATP
                     );
                 joueurList.add(joueur);
-                */
+                
             }
             res.close();
             requete.close();
@@ -72,56 +68,36 @@ public class DaoMatch extends Dao{
             
         } catch (SQLException ex) {
             Logger.getLogger(DaoMatch.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+        
+        HashMap<Integer, Match> matchs = new HashMap<>();
+        
+        connect();
+        ResultSet res = query("Select id_match from match");
+        
+        try {
+            while (res.next()) {
+                Match m = new Match();
+                matchs.put(res.getInt("id_match"), m);
+            }
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoMatch.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        //return joueurList;
         
         return matchs;
     }
     
     
     
-    public int getIdMax() {
-            /*
-            int n = 0;
-            try {
-            System.out.print("Creating connexion...");
-            
-            //connexion = ConnexionOracleFactory.creerConnexion();
-            connexion = ConnexionMySql.getConnexion();
-            
-            if (connexion == null) {
-            System.exit(1);
-            }
-            System.out.println(" done.");
-            
-            java.sql.Statement requete;
-            requete = connexion.createStatement();
-            java.sql.ResultSet res = null;
-            
-            String query = "SELECT max(idMatch) FROM match";
-            System.out.println("Query : " + query);
-            System.out.print("Executing query...");
-            
-            res = requete.executeQuery(query);
-            n = res.getInt(0);
-            System.out.println(" done. n =  " + n);
-           
-            res.close();
-            requete.close();
-            connexion.close();
-            
-            } catch (SQLException ex) {
-            Logger.getLogger(DaoMatch.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            */
+    public static int getMaxIdMatch() {
         
         int n = 0;
         try {
             connect();
             
-            ResultSet res = query("Select count(*) from ");
+            ResultSet res = query("Select count(*) from match");
             res.next();
             n = res.getInt(1);
             
