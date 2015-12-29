@@ -1,5 +1,6 @@
 package modele;
 
+import modele.personne.Joueur;
 import java.util.Date;
 import modele.court.CourtEntrainement;
 import org.joda.time.DateTime;

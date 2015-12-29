@@ -7,11 +7,16 @@ import java.util.Date;
 import modele.court.Court;
 import org.joda.time.DateTime;
 
+/**
+ * Creneau est une classe associative entre un Court et un Match.
+ * 
+ * 
+*/
 public class Creneau {
         
         private DateTime m_dateTime;
         
-	private Date m_date;
+	//private Date m_date;
 	private TrancheHoraire m_heure;
         
         private Court m_court;
@@ -20,13 +25,8 @@ public class Creneau {
         
         private Match m_match;
         
-        public Creneau(Date date, TrancheHoraire heure) {
-            m_date = date;
-            m_heure = heure;
-            m_libre = true;
-        }
         
-        public Creneau (int year, int month, int day, TrancheHoraire trancheHoraire) {
+        public Creneau (Court court, int year, int month, int day, TrancheHoraire trancheHoraire) {
             int heure = 0, minutes = 0;
             switch(trancheHoraire) {
                 case MATIN:
@@ -48,12 +48,15 @@ public class Creneau {
             
             m_dateTime = new DateTime(year, month, day, heure, minutes);
             
+            m_libre = true;
+            m_match = null;
+            m_court = court;
         }
         
-        public int occupe(Match match, Court court) {
+        public int assigne(Match match) {
             if (m_libre == false) 
                 return -1;
-            m_court = court;
+            m_match = match;
             m_libre = false;
             return 0;
         }
@@ -62,6 +65,8 @@ public class Creneau {
             if (m_libre)
                 return -1;
             m_libre = true;
+            m_court = null;
+            m_match = null;
             return 0;
         }
         
@@ -97,7 +102,7 @@ public class Creneau {
         
         @Override
 	public String toString() {
-            return m_dateTime.toString("creneau{d-M-y@H:m, " + m_court + ", " + m_libre + "}");
+            return "creneau{" + m_dateTime.toString("d-M-y@HH:mm, ") + m_court + ", " + m_libre + "}";
         }
         
         public boolean conflitCreneau(Creneau other) {

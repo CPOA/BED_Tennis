@@ -2,12 +2,20 @@
 
 package modele.court;
 
-
+// Singleton
 
 public class CourtAnnexe extends Court {
-
-    public CourtAnnexe(int id, int nom, int adresse, int capacité) {
+    
+    private static CourtAnnexe m_instance;
+    
+    private CourtAnnexe(int id, String nom, String adresse, int capacité) {
         super(id, nom, adresse, capacité);
+    }
+    
+    public static CourtAnnexe getInstance() {
+        if (m_instance == null)
+            m_instance = new CourtAnnexe(1, "Court Annexe", "adresse", 5000);
+        return m_instance;
     }
 
     @Override

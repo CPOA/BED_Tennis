@@ -1,14 +1,17 @@
 package modele;
 
+import modele.personne.Joueur;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import modele.arbitre.AssociationArbitrageLigne;
 import modele.arbitre.Arbitre;
 import modele.arbitre.ArbitreChaise;
 import modele.arbitre.ArbitreFilet;
 import modele.arbitre.ArbitreLigne;
 import modele.court.Court;
+import modele.sgbd.DaoMatch;
 
 
 
@@ -34,7 +37,6 @@ public class Match {
         private Joueur m_joueur1;
         private Joueur m_joueur2;
         
-        
         private EquipeJoueurs m_equipe1;
         private EquipeJoueurs m_equipe2;
        
@@ -46,7 +48,10 @@ public class Match {
     
         
     static {
-        dernierIdDonne = 0;
+        DaoMatch daoMatch = new DaoMatch();
+        dernierIdDonne = daoMatch.getIdMax();
+        System.out.println("daoMatch.getIdMax");
+        //dernierIdDonne = 0;
     }
         
     /**
@@ -67,7 +72,6 @@ public class Match {
      * Constructs a NEW Match wich didn't exist before.
      * To represent a match already existing in the database, use the constructor with the id attribute instead.
      * 
-     * @param m_sets
      * @param m_court
      * @param m_creneau
      * @param m_type
@@ -78,9 +82,8 @@ public class Match {
      * @param m_arbitresLigne
      * @param m_equipeRamasseurs 
      */
-    public Match(List<Set> m_sets, Court m_court, Creneau m_creneau, String m_type, Joueur m_joueur1, Joueur m_joueur2, ArbitreChaise m_arbitreChaise, ArbitreFilet m_arbitreFilet, Map<Integer, ArbitreLigne> m_arbitresLigne, EquipeRamasseurs m_equipeRamasseurs) {
+    public Match(Court court, Creneau creneau, String type, Joueur joueur1, Joueur joueur2, ArbitreChaise m_arbitreChaise, ArbitreFilet arbitreFilet, Map<Integer, ArbitreLigne> arbitresLigne, EquipeRamasseurs equipeRamasseurs) {
         super();
-        this.m_sets = m_sets;
         this.m_court = m_court;
         this.m_creneau = m_creneau;
         this.m_type = m_type;
@@ -90,6 +93,14 @@ public class Match {
         this.m_arbitreFilet = m_arbitreFilet;
         this.m_arbitresLigne = m_arbitresLigne;
         this.m_equipeRamasseurs = m_equipeRamasseurs;
+    }
+    
+    public Match(Creneau creneau, String type, Joueur joueur1, Joueur joueur2) {
+        super();
+        this.m_creneau = m_creneau;
+        this.m_type = m_type;
+        this.m_joueur1 = m_joueur1;
+        this.m_joueur2 = m_joueur2;
     }
 
     
@@ -128,7 +139,13 @@ public class Match {
     }
     
     
-    
+        public Joueur getJoueur1() {
+            return m_joueur1;
+        }
+        
+        public Joueur getJoueur2() {
+            return m_joueur2;
+        }
         
         
         
@@ -151,6 +168,18 @@ public class Match {
             return 0;
         }
         
+        
+        public EquipeJoueurs getEquipe1() {
+            return m_equipe1;
+        }
+        
+        public EquipeJoueurs getEquipe2() {
+            return m_equipe2;
+        }
+        
+        
+        
+        
         /**
          * Méthode servant à ajouter les arbitres au match.
          * La méthode gère d'elle-même les différents types d'arbitres.
@@ -169,7 +198,19 @@ public class Match {
             
 	}
         
-
+        public void setArbitreChaise(ArbitreChaise a) {
+            m_arbitreChaise = a;
+        }
+        
+        public void setArbitreFilet(ArbitreFilet a) { 
+            m_arbitreFilet = a;
+        }
+        
+        public void setArbitresLigne(Map<Integer, ArbitreLigne> arbitresLignes) {
+            m_arbitresLigne = arbitresLignes;
+        }
+        
+        
 	public void affecterCourt(Court court) {
             m_court = court;
 	}
@@ -242,5 +283,17 @@ public class Match {
         public String toString() {
             return "Match n°" + m_idMatch + ", type = " + m_type + ", opposant " + m_joueur1 + " et " + m_joueur2 + ", Creneau : " + m_creneau + ", Court : " + m_court + ", ArbitreChaise : " + m_arbitreChaise + ", ArbitreFilet : " + m_arbitreFilet + " ... " ;
         }
-
+        
+        @Override
+        public int hashCode() {
+            return m_idMatch;
+        }
+        
+        @Override
+        public boolean equals(Object other) {
+            if (other instanceof Match)
+                return (((Match) other).getId() == (this.m_idMatch));
+            else
+                return false;
+        }
 }

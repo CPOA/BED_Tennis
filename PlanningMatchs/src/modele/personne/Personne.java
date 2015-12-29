@@ -1,4 +1,4 @@
-package modele;
+package modele.personne;
 
 public abstract class Personne {
 
@@ -6,10 +6,10 @@ public abstract class Personne {
 	private String m_nom;
 	private String m_prenom;
 	private String m_adresseMail;
-	private int m_sexe; // 1 = homme, 2 = femme
+	private Sexe m_sexe;
 	private String m_nationalite;
         
-        public Personne(int id, String nom, String prenom, String mail, int sexe, String nationalite) {
+        public Personne(int id, String nom, String prenom, String mail, Sexe sexe, String nationalite) {
             m_id = id;
             m_nom = nom;
             m_prenom = prenom;
@@ -42,12 +42,12 @@ public abstract class Personne {
             return m_adresseMail;
 	}
 
-	public void setAdressMail() {
-		
+	public void setAdresseMail(String nouvelleAdresse) {
+            m_adresseMail = nouvelleAdresse;
 	}
 
-	public void getSexe() {
-		
+	public Sexe getSexe() {
+            return m_sexe;
 	}
 
 	public String getNationalite() {
@@ -60,9 +60,9 @@ public abstract class Personne {
         
         @Override
         public String toString() {
-            return m_prenom + " " + m_nom + " (" + type() + " - " + getNationalite() + ")";
+            return m_prenom + " " + m_nom + " (" + typePersonne() + " - " + getNationalite() + ")";
         }
         
         
-        public abstract String type();
+        public abstract String typePersonne();
 }

@@ -1,41 +1,48 @@
 package modele.court;
 
+
+// Singleton
+
 public abstract class Court {
 
-	private int id;
-	private int nom;
-	private int adresse;
-	private int capacité;
+	private int m_id;
+	private String m_nom;
+	private String m_adresse;
+	private int m_capacite;
         
-        public Court(int id, int nom, int adresse, int capacité) {
-            this.id = id;
-            this.nom = nom;
-            this.adresse = adresse;
-            this.capacité = capacité;
+        public Court(int id, String nom, String adresse, int capacité) {
+            this.m_id = id;
+            this.m_nom = nom;
+            this.m_adresse = adresse;
+            this.m_capacite = capacité;
         }
 
         public int getId() {
-            return id;
+            return m_id;
         }
 
         public void setId(int id) {
-            this.id = id;
+            this.m_id = id;
+        }
+        
+        public String getNom() {
+            return m_nom;
         }
 
-        public int getAdresse() {
-            return adresse;
+        public String getAdresse() {
+            return m_adresse;
         }
 
-        public void setAdresse(int adresse) {
-            this.adresse = adresse;
+        public void setAdresse(String adresse) {
+            this.m_adresse = adresse;
         }
 
-        public int getCapacité() {
-            return capacité;
+        public int getCapacite() {
+            return m_capacite;
         }
 
-        public void setCapacité(int capacité) {
-            this.capacité = capacité;
+        public void setCapacite(int capacite) {
+            this.m_capacite = capacite;
         }
 
         public abstract String getType();

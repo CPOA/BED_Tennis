@@ -1,6 +1,7 @@
 
 package modele;
 
+import modele.personne.Ramasseur;
 import java.util.List;
 
 public class EquipeRamasseurs {

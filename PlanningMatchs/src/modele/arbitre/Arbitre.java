@@ -1,42 +1,59 @@
 
 package modele.arbitre;
 
+import modele.Match;
+import modele.personne.Sexe;
 
 
-public abstract class Arbitre extends modele.Personne {
 
-	private String categorie;
-	private int nbMatchsSimples;
-	private int nbMatchsDoubles;
+public abstract class Arbitre extends modele.personne.Personne {
 
-        public Arbitre(String categorie, int nbMatchsSimples, int nbMatchsDoubles, int id, String nom, String prenom, String mail, int sexe, String nationalite) {
+	private TypeArbitre m_typeArbitre;
+	private int m_nbMatchsSimples;
+	private int m_nbMatchsDoubles;
+
+        public Arbitre(TypeArbitre typeArbitre, int id, String nom, String prenom, String mail, Sexe sexe, String nationalite, int nbMatchsSimples, int nbMatchsDoubles) {
             super(id, nom, prenom, mail, sexe, nationalite);
-            this.categorie = categorie;
-            this.nbMatchsSimples = nbMatchsSimples;
-            this.nbMatchsDoubles = nbMatchsDoubles;
+            this.m_typeArbitre = typeArbitre;
+            this.m_nbMatchsSimples = nbMatchsSimples;
+            this.m_nbMatchsDoubles = nbMatchsDoubles;
         }
 
-	public void getNbMatchsSimples() {
-		
+	public int getNbMatchsSimples() {
+            return this.m_nbMatchsSimples;
 	}
 
-	public void getNbMatchsDoubles() {
-		
+	public int getNbMatchsDoubles() {
+            return this.m_nbMatchsDoubles;
 	}
+        
+        public void assigneMatchSimple() {
+            m_nbMatchsSimples++;
+        }
+        
+        public void assigneMatchDouble() {
+            m_nbMatchsDoubles++;
+        }
 
-	public String getCategorie() {
-            return null;
-	}
-
-	public void setCategorie() {
-		
-	}
-
-	public boolean peutArbitrer() {
-            if (nbMatchsDoubles >= 2) 
-                return false;
-            if (nbMatchsSimples >= 2)
-                return false;
+	public boolean peutArbitrer(Match match) {
+            
+            
+            if (match.getType() == "simple") {
+                if (m_nbMatchsSimples >= 2)
+                    return false;
+                
+                if (this.aMemeNationalite(match.getJoueur1()))
+                    return false;
+                if (this.aMemeNationalite(match.getJoueur2()))
+                    return false;
+            }
+            
+            if (match.getType() == "double") {
+                if (m_nbMatchsDoubles >= 2)
+                    return false;
+            }
+            
+            
             return true;
 	}
         
@@ -45,6 +62,10 @@ public abstract class Arbitre extends modele.Personne {
                 return true;
             else
                 return false;
+        }
+        
+        public TypeArbitre getTypeArbitre() {
+            return m_typeArbitre;
         }
 
 }
