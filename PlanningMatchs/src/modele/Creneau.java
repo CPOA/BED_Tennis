@@ -12,8 +12,11 @@ import org.joda.time.DateTime;
  * 
  * 
 */
-public class Creneau {
+public class Creneau implements Comparable<Creneau>{
         
+        private int m_idCreneau;
+        
+    
         private DateTime m_dateTime;
         
 	//private Date m_date;
@@ -25,7 +28,14 @@ public class Creneau {
         
         private Match m_match;
         
-        
+        /**
+         * Création d'un nouveau créneau n'existant pas déjà dans la base de données
+         * @param court
+         * @param year
+         * @param month
+         * @param day
+         * @param trancheHoraire 
+         */
         public Creneau (Court court, int year, int month, int day, TrancheHoraire trancheHoraire) {
             int heure = 0, minutes = 0;
             switch(trancheHoraire) {
@@ -51,6 +61,19 @@ public class Creneau {
             m_libre = true;
             m_match = null;
             m_court = court;
+        }
+        
+        public Creneau(int idCreneau, Court court, int year, int month, int day, TrancheHoraire trancheHoraire) {
+            this(court, year, month, day, trancheHoraire);
+            m_idCreneau = idCreneau;
+        }
+        
+        public void setId(int idCreneau) {
+            m_idCreneau = idCreneau;
+        }
+        
+        public int getId() {
+           return m_idCreneau;
         }
         
         public int assigne(Match match) {
@@ -94,6 +117,15 @@ public class Creneau {
         public void setCourt(Court m_court) {
             this.m_court = m_court;
         }
+        
+        public Match getMatch() {
+            return m_match;
+        }
+        
+        public void setMatch(Match match) {
+            this.m_match = match;
+        }
+        
 	
         
         public boolean estLibre() {
@@ -102,12 +134,22 @@ public class Creneau {
         
         @Override
 	public String toString() {
-            return "creneau{" + m_dateTime.toString("d-M-y@HH:mm, ") + m_court + ", " + m_libre + "}";
+            return m_dateTime.toString("dd/MM/yy à HH:mm");
+        }
+        
+        public String description() {
+            return "creneau {" + m_dateTime.toString("d-M-y@HH:mm, ") + "court=" + m_court + ", libre=" + m_libre + "}";
         }
         
         public boolean conflitCreneau(Creneau other) {
             
             int dureeMatch = 3;
+            
+            if (this == other)
+                return false; // un créneau n'est pas en conflit avec lui-même
+            
+            if (this.m_dateTime.equals(other.getDateTime()))
+                return true;
             
             if (this.m_dateTime.dayOfYear().equals(other.getDateTime().dayOfYear())) {
                 if (other.getDateTime().isAfter(m_dateTime)) {
@@ -123,5 +165,10 @@ public class Creneau {
             }
             return false;
         }
+
+    @Override
+    public int compareTo(Creneau other) {
+        return this.m_dateTime.compareTo(other.getDateTime());
+    }
 
 }

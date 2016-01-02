@@ -9,7 +9,8 @@ public class CourtAnnexe extends Court {
     private static CourtAnnexe m_instance;
     
     private CourtAnnexe(int id, String nom, String adresse, int capacité) {
-        super(id, nom, adresse, capacité);
+        // id connu car court unique
+        super(2, nom, adresse, capacité);
     }
     
     public static CourtAnnexe getInstance() {

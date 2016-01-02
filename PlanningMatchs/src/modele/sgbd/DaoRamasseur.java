@@ -16,6 +16,9 @@ import modele.Match;
 import modele.personne.Ramasseur;
 import modele.personne.Sexe;
 import modele.arbitre.Arbitre;
+import modele.personne.Joueur;
+import modele.personne.TypeVIP;
+import static modele.sgbd.Dao.queryUpdate;
 
 /**
  *
@@ -28,8 +31,8 @@ public class DaoRamasseur extends Dao{
 
     
     
-    public static HashMap<Integer, Ramasseur> getRamasseurs(){
-        HashMap<Integer, Ramasseur> ramasseurs = new HashMap<Integer, Ramasseur>();
+    public static List<Ramasseur> getRamasseurs(){
+        List<Ramasseur> ramasseurs = new ArrayList<Ramasseur>();
         /*
         try {
             System.out.print("Creating connexion...");
@@ -80,7 +83,7 @@ public class DaoRamasseur extends Dao{
         //return joueurList;*/
         
         
-        ResultSet res = query("Select id_ramasseur, nom, prenom, adressemail, sexe from ramasseur");
+        ResultSet res = query("Select id_ramasseur, nom, prenom, adressemail, sexe, nationalite from ramasseur");
         
         try {
             while (res.next()) {
@@ -90,9 +93,10 @@ public class DaoRamasseur extends Dao{
                                                     res.getString("nom"), 
                                                     res.getString("prenom"),
                                                     res.getString("adressemail"),
-                                                    res.getObject("sexe", Sexe.class),
+                                                    Sexe.valueOf(res.getString("sexe")),
                                                     res.getString("nationalite"));
-                ramasseurs.put(res.getInt("id_ramasseur"), ramasseur);
+                //ramasseurs.put(res.getInt("id_ramasseur"), ramasseur);
+                ramasseurs.add(ramasseur);
                 
             }
         } catch (SQLException ex) {
@@ -123,36 +127,6 @@ public class DaoRamasseur extends Dao{
     
     
     public int getNbRamasseurs() {
-        /*
-        try {
-            System.out.print("Creating connexion...");
-            
-            //connexion = ConnexionOracleFactory.creerConnexion();
-            connexion = ConnexionMySql.getConnexion();
-            
-            if (connexion == null) {
-                System.exit(1);
-            }
-            System.out.println(" done.");
-            
-            java.sql.Statement requete;
-            requete = connexion.createStatement();
-            java.sql.ResultSet res = null;
-            
-            String query = "SELECT count(*)  FROM ramasseur";
-            System.out.println("Query : " + query);
-            System.out.print("Executing query...");
-            res = requete.executeQuery(query);
-            res.next();
-            System.out.println(" done." + res);
-            
-            return res.getInt(1);
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(DaoJoueur.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return -1;*/
-        
         int n = 0;
         
         ResultSet res = query("Select count(id_ramasseur) from ramasseur");
@@ -167,5 +141,43 @@ public class DaoRamasseur extends Dao{
         return n;
     }
     
+    /**
+     * Crée un nouveau joueur dans la table joueur, l'insère également dans la table VIP,
+     * Et instancie un nouvel objet Joueur avec un id valide, puis retourne ce joueur.
+     * 
+     * 
+     */
+    public static Ramasseur insertRamasseur(String nom, String prenom, String adresseMail, Sexe sexe, String nationalite) {
+       
+        //int id = Dao.getIdMax() + 1;
+        int id = Dao.idMaxAttribue+1;
+        Ramasseur nouveauRamasseur = new Ramasseur(id, nom, prenom, adresseMail, sexe, nationalite);
+        
+        queryUpdate("Insert into ramasseur values ("
+                                            + nouveauRamasseur.getId() + ", "
+                                            + "'" + nouveauRamasseur.getNom() + "', " 
+                                            + "'" + nouveauRamasseur.getPrenom() + "', "
+                                            + "'" + nouveauRamasseur.getAdresseMail() + "', " 
+                                            + "'" + nouveauRamasseur.getSexe() + "', "
+                                            + "'" + nouveauRamasseur.getNationalite() + "')");
+        Dao.idMaxAttribue++;
+        return nouveauRamasseur;
+    }
+    
+     public static void viderRamasseurs() {
+
+        queryUpdate("DELETE from ramasseur");
+        
+        System.out.println("Table ramasseur vidée.");
+        
+    }
+    
+    public static void deleteRamasseur(int idRamasseur) {
+        queryUpdate("DELETE from joueur WHERE id_ramasseur = " + idRamasseur);
+    }
+    
+    public static void deleteRamasseur(Ramasseur r) {
+        deleteRamasseur(r.getId());
+    }
     
 }

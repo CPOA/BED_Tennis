@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import modele.Match;
+import modele.personne.Joueur;
+import modele.personne.Sexe;
+import modele.personne.TypeVIP;
+import static modele.sgbd.Dao.queryUpdate;
 
 /**
  *
@@ -23,61 +27,18 @@ public class DaoMatch extends Dao{
 
     
     public static HashMap<Integer, Match> getMatchs(){
-        /*
-        List<Match> matchs = new ArrayList<>();
-        try {
-            System.out.print("Creating connexion...");
-            
-            //connexion = ConnexionOracleFactory.creerConnexion();
-            connexion = ConnexionMySql.getConnexion();
-            
-            if (connexion == null) {
-                System.exit(1);
-            }
-            System.out.println(" done.");
-            
-            java.sql.Statement requete;
-            requete = connexion.createStatement();
-            java.sql.ResultSet res = null;
-            
-            String query = "SELECT * from joueur";
-            System.out.println("Query : " + query);
-            System.out.print("Executing query...");
-            
-            System.out.println(" done.");
-            
-            while (res.next()) {
-                
-                    joueur = new Joueur(
-                            res.getInt(1),      // id
-                            res.getString(2),   // nom
-                            res.getString(3),   // prenom
-                            res.getString(4),   // mail
-                            res.getInt(5),      // sexe
-                            res.getString(6),   // nationalite
-                            res.getString(7),   // login
-                            res.getString(8),   // mdp
-                            res.getInt(9)       // classementATP
-                    );
-                joueurList.add(joueur);
-                
-            }
-            res.close();
-            requete.close();
-            connexion.close();
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(DaoMatch.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        
         
         HashMap<Integer, Match> matchs = new HashMap<>();
         
         connect();
-        ResultSet res = query("Select id_match from match");
+        ResultSet res = query("Select id_match, creneau, type, genre, fini, sets, joueur_1_A, joueur_1_B, joueur_2_A, joueur_2_B, arbitre_chaise, arbitre_filet, arbitre_ligne_1, arbitre_ligne_2, arbitre_ligne_3, arbitre_ligne_4, arbitre_ligne_5, arbitre_ligne_6, arbitre_ligne_7, arbitre_ligne_8, ramasseur_1, ramasseur_2, ramasseur_3, ramasseur_4, ramasseur_5, ramasseur_6, ramasseur_7, ramasseur_8 from match");
         
         try {
             while (res.next()) {
-                Match m = new Match();
+                Match m = new Match(
+                                    
+                                    );
                 matchs.put(res.getInt("id_match"), m);
             }
             
@@ -105,6 +66,55 @@ public class DaoMatch extends Dao{
             Logger.getLogger(DaoMatch.class.getName()).log(Level.SEVERE, null, ex);
         }
         return n;
+    }
+    
+    public static void insertMatch(Match match) {
+       
+        //int id = Dao.getIdMax() + 1;
+        int id = Dao.idMaxAttribue + 1;
+        match.setIdMatch(id);
+        
+        String stringSets = "";
+        List<modele.Set> listSets = match.getScoreFinal();
+        for (modele.Set set : listSets) {
+            stringSets += set.getPointsJoueur1() + "-" + set.getPointsJoueur2() + "," ;
+        }
+        
+        int joueur_1_A = match.getEquipe1().getJoueurA().getId();
+        int joueur_1_B = 0;
+        int joueur_2_A = match.getEquipe2().getJoueurA().getId();
+        int joueur_2_B = 0;
+        if (match.getType() == "double") {
+            joueur_1_B = match.getEquipe1().getJoueurB().getId();
+            joueur_2_B = match.getEquipe2().getJoueurB().getId();
+        }
+        
+        
+        
+        queryUpdate("Insert into match values ("
+                                            + id + ", "
+                                            + match.getCreneau().getId() + ", '"
+                                            + match.getType() + "', '"
+                                            + match.getGenre().toString() + "', '"
+                                            + Boolean.toString(match.estFini()) + "', '"
+                                            + stringSets + "', "
+                                            + joueur_1_A + ", "
+                                            + joueur_1_B + ", "
+                                            + joueur_2_A + ", "
+                                            + joueur_2_B + ", "
+                                            + ")"
+                                            );
+        
+        
+        Dao.idMaxAttribue++;
+    }
+    
+    public static void viderMatchs() {
+
+        queryUpdate("DELETE from match");
+        
+        System.out.println("Table match vidée.");
+        
     }
     
 }

@@ -46,6 +46,10 @@ public abstract class Court {
         }
 
         public abstract String getType();
-
+        
+        @Override
+        public String toString() {
+            return getType();
+        }
 
 }

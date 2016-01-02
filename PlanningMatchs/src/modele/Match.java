@@ -5,29 +5,31 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import modele.arbitre.AssociationArbitrageLigne;
 import modele.arbitre.Arbitre;
 import modele.arbitre.ArbitreChaise;
 import modele.arbitre.ArbitreFilet;
 import modele.arbitre.ArbitreLigne;
 import modele.court.Court;
+import modele.personne.Sexe;
+import modele.sgbd.Dao;
 import modele.sgbd.DaoMatch;
 
 
 
-public class Match {
+public class Match implements Comparable<Match>{
         
         private static int dernierIdDonne;
     
 	private int m_idMatch;
         
 	private List<modele.Set> m_sets;
-        
-        private Court m_court;
+            
+        //private Court m_court;
         
         private Creneau m_creneau;
         
 	private String m_type;
+        private Sexe m_sexe;
         
 	private Joueur m_gagnant;
 	private Joueur m_perdant;
@@ -59,12 +61,15 @@ public class Match {
      * 
      */
     public Match() {
-        dernierIdDonne++;
-        m_idMatch = dernierIdDonne;
-
+        //dernierIdDonne++;
+        //m_idMatch = dernierIdDonne;
+        
+        System.out.println("Match() - id = " + m_idMatch);
         m_sets = new ArrayList();
 
         m_arbitresLigne = new HashMap<>();
+        
+        m_equipeRamasseurs = new EquipeRamasseurs();
     }
     
     
@@ -72,35 +77,28 @@ public class Match {
      * Constructs a NEW Match wich didn't exist before.
      * To represent a match already existing in the database, use the constructor with the id attribute instead.
      * 
-     * @param m_court
      * @param m_creneau
-     * @param m_type
+     * @param m_type le type de match, "simple" ou "double"
+     * @param sexe 
      * @param m_joueur1
      * @param m_joueur2
-     * @param m_arbitreChaise
-     * @param m_arbitreFilet
-     * @param m_arbitresLigne
-     * @param m_equipeRamasseurs 
      */
-    public Match(Court court, Creneau creneau, String type, Joueur joueur1, Joueur joueur2, ArbitreChaise m_arbitreChaise, ArbitreFilet arbitreFilet, Map<Integer, ArbitreLigne> arbitresLigne, EquipeRamasseurs equipeRamasseurs) {
-        super();
-        this.m_court = m_court;
-        this.m_creneau = m_creneau;
-        this.m_type = m_type;
-        this.m_joueur1 = m_joueur1;
-        this.m_joueur2 = m_joueur2;
-        this.m_arbitreChaise = m_arbitreChaise;
-        this.m_arbitreFilet = m_arbitreFilet;
-        this.m_arbitresLigne = m_arbitresLigne;
-        this.m_equipeRamasseurs = m_equipeRamasseurs;
-    }
     
-    public Match(Creneau creneau, String type, Joueur joueur1, Joueur joueur2) {
-        super();
-        this.m_creneau = m_creneau;
-        this.m_type = m_type;
-        this.m_joueur1 = m_joueur1;
-        this.m_joueur2 = m_joueur2;
+    
+    public Match(Creneau creneau, String type, Sexe sexe, Joueur joueur1, Joueur joueur2) {
+        this();
+        // on met l'id à zéro, et un id valide sera attribué lors de l'ajout dans la base de données
+        //      voir DaoMatch.insertMatch()
+        this.m_idMatch = 0;
+        
+        this.m_creneau = creneau;
+        this.m_type = type;
+        this.m_sexe = sexe;
+        //this.m_joueur1 = joueur1;
+        //this.m_joueur2 = joueur2;
+        this.m_equipe1 = new EquipeJoueurs(joueur1);
+        this.m_equipe2 = new EquipeJoueurs(joueur2);
+        System.out.println(m_equipe1.toString() + m_equipe2.toString());
     }
 
     
@@ -121,30 +119,39 @@ public class Match {
      * @param m_arbitresLigne
      * @param m_equipeRamasseurs 
      */
-    public Match(int m_idMatch, List<Set> m_sets, Court m_court, Creneau m_creneau, String m_type, Joueur m_gagnant, Joueur m_perdant, boolean m_fini, Joueur m_joueur1, Joueur m_joueur2, ArbitreChaise m_arbitreChaise, ArbitreFilet m_arbitreFilet, Map<Integer, ArbitreLigne> m_arbitresLigne, EquipeRamasseurs m_equipeRamasseurs) {
+    public Match(int idMatch, List<Set> sets, Creneau creneau, String type, Joueur gagnant, Joueur perdant, boolean fini, Joueur joueur1, Joueur joueur2, ArbitreChaise arbitreChaise, ArbitreFilet arbitreFilet, Map<Integer, ArbitreLigne> arbitresLigne, EquipeRamasseurs equipeRamasseurs) {
+        this();
         this.m_idMatch = m_idMatch;
         this.m_sets = m_sets;
-        this.m_court = m_court;
         this.m_creneau = m_creneau;
         this.m_type = m_type;
         this.m_gagnant = m_gagnant;
         this.m_perdant = m_perdant;
         this.m_fini = m_fini;
-        this.m_joueur1 = m_joueur1;
-        this.m_joueur2 = m_joueur2;
+        //this.m_joueur1 = m_joueur1;
+        //this.m_joueur2 = m_joueur2;
+        this.m_equipe1 = new EquipeJoueurs(joueur1);
+        this.m_equipe2 = new EquipeJoueurs(joueur2);
+        
+        
         this.m_arbitreChaise = m_arbitreChaise;
         this.m_arbitreFilet = m_arbitreFilet;
         this.m_arbitresLigne = m_arbitresLigne;
         this.m_equipeRamasseurs = m_equipeRamasseurs;
     }
     
+        public void setIdMatch(int idMatch) {
+            this.m_idMatch = idMatch;
+        }
     
         public Joueur getJoueur1() {
-            return m_joueur1;
+            //return m_joueur1;
+            return m_equipe1.getJoueurA();
         }
         
         public Joueur getJoueur2() {
-            return m_joueur2;
+            //return m_joueur2;
+            return m_equipe2.getJoueurA();
         }
         
         
@@ -210,14 +217,29 @@ public class Match {
             m_arbitresLigne = arbitresLignes;
         }
         
+        public Arbitre getArbitreChaise() {
+            return m_arbitreChaise;
+        }
         
-	public void affecterCourt(Court court) {
-            m_court = court;
-	}
+        public Arbitre getArbitreFilet() {
+            return m_arbitreFilet;
+        }
+        
+        public Map<Integer, ArbitreLigne> getArbitresLigne() {
+            return m_arbitresLigne;
+        }
+        
+        public Court getCourt() {
+            return m_creneau.getCourt();
+        }
 
 	public void affecterEquipeRamasseurs(EquipeRamasseurs equipeRamasseurs) {
             m_equipeRamasseurs = equipeRamasseurs;
 	}
+        
+        public EquipeRamasseurs getEquipeRamasseurs() {
+            return m_equipeRamasseurs;
+        }
 
 	public void affecterCreneau(Creneau creneau) {
             m_creneau = creneau;
@@ -228,6 +250,14 @@ public class Match {
 	public int getId() {
             return m_idMatch;
 	}
+        
+        public Creneau getCreneau() {
+            return m_creneau;
+        }
+        
+        public void setCreneau(Creneau c) {
+            m_creneau = c;
+        }
 
 	public Joueur getGagnant() {
             return m_gagnant;
@@ -244,6 +274,10 @@ public class Match {
 	public String getType() {
             return m_type;
     	}
+        
+        public Sexe getGenre() {
+            return m_sexe;
+        }
         
         public int setScore(List<modele.Set> sets) {
             if (sets.isEmpty()) return -1;
@@ -281,13 +315,18 @@ public class Match {
         
         @Override
         public String toString() {
-            return "Match n°" + m_idMatch + ", type = " + m_type + ", opposant " + m_joueur1 + " et " + m_joueur2 + ", Creneau : " + m_creneau + ", Court : " + m_court + ", ArbitreChaise : " + m_arbitreChaise + ", ArbitreFilet : " + m_arbitreFilet + " ... " ;
+            String arbitresLignes = "";
+            for (int i = 0; i < 8; i++) {
+                arbitresLignes += "  \n " + i + ": " + m_arbitresLigne.get(i);
+            }
+            return "Match n°" + m_idMatch + ", type = " + m_type + ", opposant " + m_joueur1 + " et " + m_joueur2 + ", Creneau : " + m_creneau + ", Court : " + getCourt() + ", ArbitreChaise : " + m_arbitreChaise + ", ArbitreFilet : " + m_arbitreFilet + " ... " ;
         }
         
         @Override
         public int hashCode() {
             return m_idMatch;
         }
+        
         
         @Override
         public boolean equals(Object other) {
@@ -296,4 +335,10 @@ public class Match {
             else
                 return false;
         }
+
+        @Override
+        public int compareTo(Match other) {
+            return this.m_creneau.compareTo(other.getCreneau());
+        }
+
 }

@@ -34,60 +34,8 @@ public class DaoJoueur extends Dao {
     }
     */
     
-    public static HashMap<Integer, Joueur> getJoueurs(){
-        HashMap<Integer, Joueur> joueurs = new HashMap<>();
-        /*
-        try {
-            System.out.print("Creating connexion...");
-            
-            //connexion = ConnexionOracleFactory.creerConnexion();
-            connexion = ConnexionMySql.getConnexion();
-            
-            if (connexion == null) {
-                System.exit(1);
-            }
-            System.out.println(" done.");
-            
-            java.sql.Statement requete;
-            requete = connexion.createStatement();
-            java.sql.ResultSet res = null;
-            System.out.print("Executing query...");*/
-            /*
-            res = requete.executeQuery("select idjoueur,rpad(nomjoueur,20),rpad(prenomjoueur,20),rpad(adressemailjoueur,50),"
-                    + "rpad(sexejoueur,10),rpad(nationalitejoueur,20),rpad(loginjoueur,20),"
-                    + "rpad(mdpjoueur,20), classementatp from joueur");
-            */
-            /*
-            res = requete.executeQuery("select idjoueur, nomjoueur, prenomjoueur, adressemailjoueur,"
-                    + "sexejoueur, nationalitejoueur, loginjoueur,"
-                    + "mdpjoueur, classementatp from joueur");
-            */
-            /*
-            System.out.println(" done.");
-            
-            while (res.next()) {
-                    joueur = new Joueur(
-                            res.getInt(1),      // id
-                            res.getString(2),   // nom
-                            res.getString(3),   // prenom
-                            res.getString(4),   // mail
-                            Sexe.valueOf(res.getString(5).toUpperCase()),      // sexe
-                            res.getString(6),   // nationalite
-                            res.getString(7),   // login
-                            res.getString(8),   // mdp
-                            res.getInt(9)       // classementATP
-                    );
-                joueurList.add(joueur);
-            }
-            res.close();
-            requete.close();
-            connexion.close();
-            
-        } catch (SQLException ex) {
-            //Logger.getLogger(DaoJoueur.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println(ex.getMessage());
-        }
-        return joueurList;*/
+    public static List<Joueur> getJoueurs(){
+        List<Joueur> joueurs = new ArrayList<>();
             
         ResultSet res = query("Select id_joueur, nom, prenom, adressemail, sexe, nationalite, login, mdp, classementatp from joueur");
         
@@ -104,7 +52,8 @@ public class DaoJoueur extends Dao {
                                       res.getString("login"),
                                       res.getString("mdp"),
                                       res.getInt("classementatp"));
-                joueurs.put(res.getInt("id_joueur"), j);
+                //joueurs.put(res.getInt("id_joueur"), j);
+                joueurs.add(j);
             }
             
         } catch (SQLException ex) {
@@ -159,7 +108,6 @@ public class DaoJoueur extends Dao {
     
     public static int getMaxIdJoueur() {
         int n = 0;
-        connect();
         ResultSet res = query("Select max(id_joueur) from joueur");
         try {
             res.next();
@@ -171,37 +119,51 @@ public class DaoJoueur extends Dao {
         return n;
     }
     
-    public static void insertJoueur(Joueur joueur) {
-        
+    /**
+     * Crée un nouveau joueur dans la table joueur, l'insère également dans la table VIP,
+     * Et instancie un nouvel objet Joueur avec un id valide, puis retourne ce joueur.
+     * 
+     * 
+     */
+    
+    public static Joueur insertJoueur(String nom, String prenom, String adresseMail, Sexe sexe, String nationalite, String login, String motDePasse, int classementATP) {
+       
+        //int id = Dao.getIdMax() + 1;
+        int id = Dao.idMaxAttribue + 1;
+        Joueur nouveauJoueur = new Joueur(id, nom, prenom, login, sexe, nationalite, login, motDePasse, classementATP);
         
         queryUpdate("Insert into joueur values ("
-                                            + joueur.getId() + ", "
-                                            + "'" + joueur.getNom() + "', " 
-                                            + "'" + joueur.getPrenom() + "', "
-                                            + "'" + joueur.getAdresseMail() + "', " 
-                                            + "'" + joueur.getSexe() + "', "
-                                            + "'" + joueur.getNationalite() + "', "
-                                            + "'" + joueur.getLogin() + "', " 
-                                            + "'" + joueur.getMdP() + "', "
-                                            + joueur.getClassementATP() + ")");
+                                            + nouveauJoueur.getId() + ", "
+                                            + "'" + nouveauJoueur.getNom() + "', " 
+                                            + "'" + nouveauJoueur.getPrenom() + "', "
+                                            + "'" + nouveauJoueur.getAdresseMail() + "', " 
+                                            + "'" + nouveauJoueur.getSexe() + "', "
+                                            + "'" + nouveauJoueur.getNationalite() + "', "
+                                            + "'" + nouveauJoueur.getLogin() + "', " 
+                                            + "'" + nouveauJoueur.getMdP() + "', "
+                                            + nouveauJoueur.getClassementATP() + ")");
         
         // on n'a pas le droit de faire des triggers, on le fait donc comme ça...
         
         queryUpdate("Insert into vip values ("
-                                            + joueur.getId() + ", "
-                                            + "'" + joueur.getNom() + "', " 
-                                            + "'" + joueur.getPrenom() + "', "
+                                            + nouveauJoueur.getId() + ", "
+                                            + "'" + nouveauJoueur.getNom() + "', " 
+                                            + "'" + nouveauJoueur.getPrenom() + "', "
                                             //+ "'" + joueur.getAdresseMail() + "', " 
                                             //+ "'" + joueur.getSexe() + "', "
                                             //+ "'" + joueur.getNationalite() + "', " 
                                             + "'" + TypeVIP.JOUEUR + "')");
-        
+        Dao.idMaxAttribue++;
+        return nouveauJoueur;
     }
     
     public static void viderJoueurs() {
 
         queryUpdate("DELETE from joueur");
         queryUpdate("DELETE from vip WHERE typeVIP = 'JOUEUR'");
+        
+        System.out.println("Table joueur vidée.");
+        
     }
     
     public static void deleteJoueur(int idJoueur) {

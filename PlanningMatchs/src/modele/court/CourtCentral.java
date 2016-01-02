@@ -5,7 +5,8 @@ public class CourtCentral extends Court {
     private static CourtCentral m_instance;
     
     private CourtCentral(int id, String nom, String adresse, int capacité) {
-        super(id, nom, adresse, capacité);
+        // id connu car court unique
+        super(1, nom, adresse, capacité);
     }
     
     public static CourtCentral getInstance() {

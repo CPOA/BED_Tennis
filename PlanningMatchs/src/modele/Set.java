@@ -4,7 +4,12 @@ public class Set {
 
 	private int m_pointsJoueur1;
 	private int m_pointsJoueur2;
-
+        
+        public Set(int pointsJoueur1, int pointsJoueur2) {
+            m_pointsJoueur1 = pointsJoueur1;
+            m_pointsJoueur2 = pointsJoueur2;
+        }
+        
 	public int getPointsJoueur1() {
             return m_pointsJoueur1;
 	}

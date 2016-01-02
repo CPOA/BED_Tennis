@@ -60,7 +60,11 @@ public abstract class Personne {
         
         @Override
         public String toString() {
-            return m_prenom + " " + m_nom + " (" + typePersonne() + " - " + getNationalite() + ")";
+            return m_prenom + " " + m_nom;
+        }
+        
+        public String description() {
+            return m_prenom + " " + m_nom + " (" + typePersonne() + ", " + getNationalite() + ", " + m_sexe + ")";
         }
         
         

@@ -20,25 +20,31 @@ import modele.personne.Joueur;
  */
 public class Dao {
     
-    private static java.sql.Connection connexion;
+    private static java.sql.Connection connexion = null;
 
     
+    protected static int idMaxAttribue = 0;
+    
     public static void connect() {
-        try {
-            System.out.print("Creating connexion...");
+        if (connexion == null) {
+            try {
+                System.out.print("Creating connexion...");
 
-            //connexion = ConnexionOracleFactory.creerConnexion();
-            connexion = ConnexionMySql.getConnexion();
-            
-            if (connexion == null) {
-                throw new Exception("connexion = null");
+                //connexion = ConnexionOracleFactory.creerConnexion();
+                connexion = ConnexionMySql.getConnexion();
+
+                if (connexion == null) {
+                    throw new Exception("connexion = null");
+                }
+                else {
+                    System.out.println(" done.");
+                }
             }
-            else {
-                System.out.println(" done.");
+            catch (Exception e) {
+                e.printStackTrace();
             }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+        
+        idMaxAttribue = getIdMax();
         }
     }
     
@@ -52,10 +58,11 @@ public class Dao {
             statement = connexion.createStatement();
             
             System.out.println("Query : " + queryText);
-            System.out.print("Executing query...");
+            System.out.print("  Executing query...");
             
             res = statement.executeQuery(queryText);
             
+            System.out.println(" done.");
         } catch (SQLException ex) {
             Logger.getLogger(Dao.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -76,6 +83,7 @@ public class Dao {
             
             res = statement.executeUpdate(queryUpdate);
             
+            System.out.println(" done.");
             
         } catch (SQLException ex) {
             Logger.getLogger(Dao.class.getName()).log(Level.SEVERE, null, ex);
@@ -83,17 +91,17 @@ public class Dao {
         return res;
     }
     
-    int getIdMax() {
+    public static int getIdMax() {
         
         int n = 0;
         
         int a = DaoArbitre.getMaxIdArbitre();
         int j = DaoJoueur.getMaxIdJoueur();
-        int m = DaoMatch.getMaxIdMatch();
+        //int m = DaoMatch.getMaxIdMatch();
         int r = DaoRamasseur.getMaxIdRamasseur();
         
         n = Math.max(a, j);
-        n = Math.max(n, m);
+        //n = Math.max(n, m);
         n = Math.max(n, r);
         
         return n;
