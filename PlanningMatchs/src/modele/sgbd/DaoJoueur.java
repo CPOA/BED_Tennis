@@ -34,10 +34,13 @@ public class DaoJoueur extends Dao {
     }
     */
     
-    public static List<Joueur> getJoueurs(){
+    public static List<Joueur> getJoueurs(Sexe genre){
         List<Joueur> joueurs = new ArrayList<>();
-            
-        ResultSet res = query("Select id_joueur, nom, prenom, adressemail, sexe, nationalite, login, mdp, classementatp from joueur");
+        String condition = "";
+        if (genre != null) {
+            condition = " WHERE sexe='" + genre.toString() + "'";
+        }
+        ResultSet res = query("Select id_joueur, nom, prenom, adressemail, sexe, nationalite, login, mdp, classementatp from joueur" + condition);
         
         try {
             
@@ -62,6 +65,9 @@ public class DaoJoueur extends Dao {
         return joueurs;
     }
     
+    public static List<Joueur> getJoueurs() {
+        return getJoueurs(null);
+    }
     
     public static int getNbJoueurs() {
         /*

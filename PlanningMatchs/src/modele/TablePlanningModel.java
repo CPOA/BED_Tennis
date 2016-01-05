@@ -8,8 +8,10 @@ package modele;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -20,11 +22,11 @@ public class TablePlanningModel extends AbstractTableModel {
 
     List<Match> m_matchs;
     
+    TreeSet<Match> m_treeMatchs;
+    
     ArrayList<String> titreColonnes;
     
-    public TablePlanningModel(List<Match> matchs) {
-        m_matchs = matchs;
-        
+    public TablePlanningModel() {
         titreColonnes = new ArrayList<>();
         
         titreColonnes.add("idMatch");
@@ -33,6 +35,20 @@ public class TablePlanningModel extends AbstractTableModel {
         titreColonnes.add("Type de tournoi");
         titreColonnes.add("Equipe 1");
         titreColonnes.add("Equipe 2");
+    }
+    
+    public TablePlanningModel(List<Match> matchs) {
+        this();
+        m_matchs = matchs;
+        
+        
+        m_treeMatchs = new TreeSet<Match>();
+        for (Match m : m_matchs) {
+            m_treeMatchs.add(m);
+            //System.out.println("inserting match " + m_treeMatchs.size());
+        }
+        //System.out.println(m_matchs.size() + " matchs - " + m_treeMatchs.size() + " in tree");
+        
         
         //System.out.println("TablePlanningModel() - " + matchs.size() + " matchs");
     }
@@ -40,6 +56,8 @@ public class TablePlanningModel extends AbstractTableModel {
     @Override
     public int getRowCount() {
         //System.out.println(m_matchs.size() + " matchs existants");
+        if (m_matchs == null)
+            return 0;
         return m_matchs.size();
     }
 
@@ -52,7 +70,15 @@ public class TablePlanningModel extends AbstractTableModel {
     public Object getValueAt(int ligne, int colonne) {
         
         // = m_matchs.values().toArray();
-        Match match = m_matchs.get(ligne);
+        Match match = null;
+        Iterator<Match> iterator = m_treeMatchs.iterator();
+
+        int i = 0;
+        while (iterator.hasNext() && i <= ligne) {
+            match = iterator.next();
+            i++;
+        }
+        //System.out.println("ligne = " + ligne + " i = " + i);
         //System.out.println("in getValueAt(" + ligne + ", " + colonne + ") : " + match);
         switch (colonne) {
             case 0:

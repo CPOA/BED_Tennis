@@ -29,7 +29,7 @@ public class Match implements Comparable<Match>{
         private Creneau m_creneau;
         
 	private String m_type;
-        private Sexe m_sexe;
+        private Sexe m_genre;
         
 	private Joueur m_gagnant;
 	private Joueur m_perdant;
@@ -64,7 +64,7 @@ public class Match implements Comparable<Match>{
         //dernierIdDonne++;
         //m_idMatch = dernierIdDonne;
         
-        System.out.println("Match() - id = " + m_idMatch);
+        //System.out.println("Match() - id = " + m_idMatch);
         m_sets = new ArrayList();
 
         m_arbitresLigne = new HashMap<>();
@@ -93,12 +93,12 @@ public class Match implements Comparable<Match>{
         
         this.m_creneau = creneau;
         this.m_type = type;
-        this.m_sexe = sexe;
+        this.m_genre = sexe;
         //this.m_joueur1 = joueur1;
         //this.m_joueur2 = joueur2;
         this.m_equipe1 = new EquipeJoueurs(joueur1);
         this.m_equipe2 = new EquipeJoueurs(joueur2);
-        System.out.println(m_equipe1.toString() + m_equipe2.toString());
+        //System.out.println(m_equipe1.toString() + m_equipe2.toString());
     }
 
     
@@ -119,25 +119,28 @@ public class Match implements Comparable<Match>{
      * @param m_arbitresLigne
      * @param m_equipeRamasseurs 
      */
-    public Match(int idMatch, List<Set> sets, Creneau creneau, String type, Joueur gagnant, Joueur perdant, boolean fini, Joueur joueur1, Joueur joueur2, ArbitreChaise arbitreChaise, ArbitreFilet arbitreFilet, Map<Integer, ArbitreLigne> arbitresLigne, EquipeRamasseurs equipeRamasseurs) {
+    public Match(int idMatch, List<Set> sets, Creneau creneau, String type, Sexe genre, boolean fini, EquipeJoueurs equipe1, EquipeJoueurs equipe2, ArbitreChaise arbitreChaise, ArbitreFilet arbitreFilet, Map<Integer, ArbitreLigne> arbitresLigne, EquipeRamasseurs equipeRamasseurs) {
         this();
-        this.m_idMatch = m_idMatch;
-        this.m_sets = m_sets;
-        this.m_creneau = m_creneau;
-        this.m_type = m_type;
-        this.m_gagnant = m_gagnant;
-        this.m_perdant = m_perdant;
-        this.m_fini = m_fini;
+        this.m_idMatch = idMatch;
+        this.m_sets = sets;
+        this.m_creneau = creneau;
+        this.m_type = type;
+        this.m_genre = genre;
+        this.m_fini = fini;
         //this.m_joueur1 = m_joueur1;
         //this.m_joueur2 = m_joueur2;
-        this.m_equipe1 = new EquipeJoueurs(joueur1);
-        this.m_equipe2 = new EquipeJoueurs(joueur2);
+        //this.m_equipe1 = new EquipeJoueurs(joueur1);
+        //this.m_equipe2 = new EquipeJoueurs(joueur2);
+        this.m_equipe1 = equipe1;
+        this.m_equipe2 = equipe2;
         
+        this.m_arbitreChaise = arbitreChaise;
+        this.m_arbitreFilet = arbitreFilet;
+        this.m_arbitresLigne = arbitresLigne;
+        this.m_equipeRamasseurs = equipeRamasseurs;
         
-        this.m_arbitreChaise = m_arbitreChaise;
-        this.m_arbitreFilet = m_arbitreFilet;
-        this.m_arbitresLigne = m_arbitresLigne;
-        this.m_equipeRamasseurs = m_equipeRamasseurs;
+        calculerResultat();
+        
     }
     
         public void setIdMatch(int idMatch) {
@@ -276,12 +279,10 @@ public class Match implements Comparable<Match>{
     	}
         
         public Sexe getGenre() {
-            return m_sexe;
+            return m_genre;
         }
         
-        public int setScore(List<modele.Set> sets) {
-            if (sets.isEmpty()) return -1;
-            m_sets = sets;
+        private void calculerResultat() {
             int sets_j1 = 0;
             int sets_j2 = 0;
             for (modele.Set s : m_sets) {
@@ -301,7 +302,11 @@ public class Match implements Comparable<Match>{
                 m_gagnant = m_joueur2;
                 m_perdant = m_joueur1;
             }
-            
+        }
+        public int setScore(List<modele.Set> sets) {
+            if (sets.isEmpty()) return -1;
+            m_sets = sets;
+            calculerResultat();
             return 0;
         }
         
@@ -315,11 +320,12 @@ public class Match implements Comparable<Match>{
         
         @Override
         public String toString() {
-            String arbitresLignes = "";
+            String arbitresLignes = "{ ";
             for (int i = 0; i < 8; i++) {
-                arbitresLignes += "  \n " + i + ": " + m_arbitresLigne.get(i);
+                arbitresLignes += i + ": " + m_arbitresLigne.get(i) + ", ";
             }
-            return "Match n°" + m_idMatch + ", type = " + m_type + ", opposant " + m_joueur1 + " et " + m_joueur2 + ", Creneau : " + m_creneau + ", Court : " + getCourt() + ", ArbitreChaise : " + m_arbitreChaise + ", ArbitreFilet : " + m_arbitreFilet + " ... " ;
+            arbitresLignes += "}";
+            return "Match n°" + m_idMatch + ", type = " + m_type + ", opposant " + m_equipe1 + " et " + m_equipe2 + ", Creneau : " + m_creneau + ", Court : " + (getCourt() == null ? "" : getCourt()) + ", ArbitreChaise : " + m_arbitreChaise + ", ArbitreFilet : " + m_arbitreFilet + " arbitresLignes : " + arbitresLignes;
         }
         
         @Override

@@ -97,13 +97,21 @@ public class Dao {
         
         int a = DaoArbitre.getMaxIdArbitre();
         int j = DaoJoueur.getMaxIdJoueur();
-        //int m = DaoMatch.getMaxIdMatch();
+        int m = DaoMatch.getMaxIdMatch();
         int r = DaoRamasseur.getMaxIdRamasseur();
+        int cr = DaoCreneau.getMaxIdCreneau();
+        int co = DaoCourt.getMaxIdCourt();
         
         n = Math.max(a, j);
-        //n = Math.max(n, m);
+        n = Math.max(n, m);
         n = Math.max(n, r);
+        n = Math.max(n, co);
+        n = Math.max(n, cr);
         
+        
+        idMaxAttribue = n;
+        
+        System.out.println("Dao.idMaxAttribue = " + n);
         return n;
     }
     

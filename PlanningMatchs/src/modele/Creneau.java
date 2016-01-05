@@ -20,7 +20,9 @@ public class Creneau implements Comparable<Creneau>{
         private DateTime m_dateTime;
         
 	//private Date m_date;
-	private TrancheHoraire m_heure;
+	private TrancheHoraire m_trancheHoraire;
+        
+        //private int m_heure;
         
         private Court m_court;
         
@@ -37,7 +39,78 @@ public class Creneau implements Comparable<Creneau>{
          * @param trancheHoraire 
          */
         public Creneau (Court court, int year, int month, int day, TrancheHoraire trancheHoraire) {
-            int heure = 0, minutes = 0;
+            m_dateTime = new DateTime(year, month, day, getHeure(trancheHoraire), 0);
+            m_trancheHoraire = trancheHoraire;
+            m_match = null;
+            m_court = court;
+            m_libre = true;
+        }
+        
+        /** Créneau existant déjà dans la base de données.
+         * 
+         * @param idCreneau
+         * @param court
+         * @param year
+         * @param month
+         * @param day
+         * @param trancheHoraire 
+         */
+        public Creneau(int idCreneau, Court court, int year, int month, int day, TrancheHoraire trancheHoraire, boolean libre, Match match) {
+            this(court, year, month, day, trancheHoraire);
+            m_idCreneau = idCreneau;
+            m_libre = libre;
+            m_match = match;
+        }
+        
+        public void setId(int idCreneau) {
+            m_idCreneau = idCreneau;
+        }
+        
+        public int getId() {
+           return m_idCreneau;
+        }
+        
+        public int assigne(Match match) throws Error {
+            if (m_libre == false) 
+                throw new Error("Le créneau " + m_idCreneau + " (" + toString() + ") n'est pas disponible");
+            m_match = match;
+            m_libre = false;
+            return 0;
+        }
+        
+        public int libere() throws Error {
+            if (m_libre)
+                throw new Error("Le créneau est déjà libre");
+            m_libre = true;
+            m_court = null;
+            m_match = null;
+            return 0;
+        }
+        
+        public DateTime getDateTime() {
+            return m_dateTime;
+        }
+
+        public void setDateTime(DateTime m_dateTime) {
+            this.m_dateTime = m_dateTime;
+        }
+        /*
+        public int getHeure() {
+            return m_heure;
+        }*/
+        
+        public TrancheHoraire getTrancheHoraire() {
+            return m_trancheHoraire;
+        }
+
+        public void setTrancheHoraire(TrancheHoraire trancheHoraire) {
+            m_trancheHoraire = trancheHoraire;
+            m_dateTime = new DateTime(m_dateTime.year().get(), m_dateTime.monthOfYear().get(), m_dateTime.dayOfMonth().get(), getHeure(trancheHoraire), 0);
+
+        }
+        
+        private int getHeure(TrancheHoraire trancheHoraire) {
+            int heure = 0;
             switch(trancheHoraire) {
                 case MATIN:
                     heure = 8;
@@ -55,60 +128,8 @@ public class Creneau implements Comparable<Creneau>{
                     heure = 21;
                     break;
             }
-            
-            m_dateTime = new DateTime(year, month, day, heure, minutes);
-            
-            m_libre = true;
-            m_match = null;
-            m_court = court;
+            return heure;
         }
-        
-        public Creneau(int idCreneau, Court court, int year, int month, int day, TrancheHoraire trancheHoraire) {
-            this(court, year, month, day, trancheHoraire);
-            m_idCreneau = idCreneau;
-        }
-        
-        public void setId(int idCreneau) {
-            m_idCreneau = idCreneau;
-        }
-        
-        public int getId() {
-           return m_idCreneau;
-        }
-        
-        public int assigne(Match match) {
-            if (m_libre == false) 
-                return -1;
-            m_match = match;
-            m_libre = false;
-            return 0;
-        }
-        
-        public int libere() {
-            if (m_libre)
-                return -1;
-            m_libre = true;
-            m_court = null;
-            m_match = null;
-            return 0;
-        }
-        
-        public DateTime getDateTime() {
-            return m_dateTime;
-        }
-
-        public void setDateTime(DateTime m_dateTime) {
-            this.m_dateTime = m_dateTime;
-        }
-
-        public TrancheHoraire getHeure() {
-            return m_heure;
-        }
-
-        public void setHeure(TrancheHoraire m_heure) {
-            this.m_heure = m_heure;
-        }
-        
         
         public Court getCourt() {
             return m_court;
@@ -168,7 +189,17 @@ public class Creneau implements Comparable<Creneau>{
 
     @Override
     public int compareTo(Creneau other) {
-        return this.m_dateTime.compareTo(other.getDateTime());
+        int compareDate = this.m_dateTime.compareTo(other.getDateTime());
+        if (compareDate == 0) {
+            // si le moment est le même (dans ce cas il s'agit de cours différents)
+            if (this.m_court.getId() <= other.getCourt().getId()) {
+                return -1;
+            }
+            else
+                return 1;
+        }
+        else
+            return compareDate;
     }
 
 }

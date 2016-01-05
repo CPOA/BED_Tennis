@@ -54,8 +54,13 @@ public abstract class Personne {
             return m_nationalite;
 	}
         
+        public boolean aMemeNationalite(String nat) {
+            return this.getNationalite().equalsIgnoreCase(nat);
+        }
+        
         public boolean aMemeNationalite(Personne p) {
-            return this.m_nationalite.equals(p.getNationalite());
+            // on compare les minuscules pour éviter les problèmes de casse
+            return this.aMemeNationalite(p.getNationalite());
         }
         
         @Override

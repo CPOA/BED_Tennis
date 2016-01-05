@@ -33,55 +33,6 @@ public class DaoRamasseur extends Dao{
     
     public static List<Ramasseur> getRamasseurs(){
         List<Ramasseur> ramasseurs = new ArrayList<Ramasseur>();
-        /*
-        try {
-            System.out.print("Creating connexion...");
-            
-            //connexion = ConnexionOracleFactory.creerConnexion();
-            connexion = ConnexionMySql.getConnexion();
-            
-            if (connexion == null) {
-                System.exit(1);
-            }
-            System.out.println(" done.");
-            
-            java.sql.Statement requete;
-            requete = connexion.createStatement();
-            java.sql.ResultSet res = null;
-            
-            String query = "SELECT * from ramasseur";
-            System.out.println("Query : " + query);
-            System.out.print("Executing query...");
-            
-            System.out.println(" done.");
-            
-            while (res.next()) {
-                
-                    joueur = new Joueur(
-                            res.getInt(1),      // id
-                            res.getString(2),   // nom
-                            res.getString(3),   // prenom
-                            res.getString(4),   // mail
-                            res.getInt(5),      // sexe
-                            res.getString(6),   // nationalite
-                            res.getString(7),   // login
-                            res.getString(8),   // mdp
-                            res.getInt(9)       // classementATP
-                    );
-                joueurList.add(joueur);
-                
-            }
-            res.close();
-            requete.close();
-            connexion.close();
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(DaoArbitre.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
-        //return joueurList;*/
-        
         
         ResultSet res = query("Select id_ramasseur, nom, prenom, adressemail, sexe, nationalite from ramasseur");
         

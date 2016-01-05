@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import modele.Creneau;
+import modele.Error;
+import modele.Match;
 import modele.TrancheHoraire;
 import modele.court.Court;
 import static modele.sgbd.Dao.query;
@@ -28,24 +30,32 @@ public class DaoCreneau extends Dao {
         
         connect();
         
-        //HashMap<Integer, Court> courts = DaoCourt.getCourts();
-        List<Court> courts = DaoCourt.getCourts();
+        HashMap<Integer, Court> courts = DaoCourt.getCourts();
+
         
-        ResultSet res = query("Select id_creneau, id_court, year, month, day, tranchehoraire from creneau");
+        ResultSet res = query("Select id_creneau, id_court, annee, mois, jour, tranchehoraire, libre, id_match from creneau");
         
         try {
             while(res.next()) {
                 
+                int idMatch = res.getInt("id_match");
+                Match match = null;
+                if (idMatch != 0)
+                    match = DaoMatch.getMatchs().get(idMatch);
                 Creneau c = new Creneau(res.getInt("id_creneau"),
                                         courts.get(res.getInt("id_court")),
-                                        res.getInt("year"),
-                                        res.getInt("month"),
-                                        res.getInt("day"),
-                                        TrancheHoraire.valueOf(res.getString("tranchehoraire")));
-                
+                                        res.getInt("annee"),
+                                        res.getInt("mois"),
+                                        res.getInt("jour"),
+                                        TrancheHoraire.valueOf(res.getString("tranchehoraire")),
+                                        res.getBoolean("libre"),
+                                        match);
+                System.out.println("Créneau récupéré : " + c.toString() + ", " + c.estLibre());
                 creneaux.add(c);
             }
         } catch (SQLException ex) {
+            Logger.getLogger(DaoCreneau.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Error ex) {
             Logger.getLogger(DaoCreneau.class.getName()).log(Level.SEVERE, null, ex);
         }
         
@@ -72,16 +82,26 @@ public class DaoCreneau extends Dao {
         int id = Dao.idMaxAttribue+1;
         creneau.setId(id);
         
+        int idMatch = 0;
+        if (creneau.getMatch() != null) {
+            idMatch = creneau.getMatch().getId();
+        }
         queryUpdate("Insert into creneau values ("
                                                     + creneau.getId() + ", "
                                                     + creneau.getCourt().getId() + ", "
-                                                    + creneau.getDateTime().year() + ", "
-                                                    + creneau.getDateTime().monthOfYear() + ", "
-                                                    + creneau.getDateTime().dayOfMonth() + ", '"
-                                                    + creneau.getHeure().toString() 
-                                                    + "')");
+                                                    + creneau.getDateTime().year().get() + ", "
+                                                    + creneau.getDateTime().monthOfYear().get() + ", "
+                                                    + creneau.getDateTime().dayOfMonth().get() + ", '"
+                                                    + creneau.getTrancheHoraire().toString() + "', '"
+                                                    + Boolean.toString(creneau.estLibre()) + "', "
+                                                    + idMatch + ")");
         Dao.idMaxAttribue++;
-        
+    }
+
+    
+    public static void viderCreneaux() {
+        queryUpdate("DELETE from creneau");   
+        System.out.println("Table creneau vidée.");
     }
     
 }

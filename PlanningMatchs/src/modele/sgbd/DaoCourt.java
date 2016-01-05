@@ -27,15 +27,15 @@ public class DaoCourt extends Dao{
      * Récupère les courts d'entrainement dans la base de données, en plus des deux courts CourtCentral et CourtAnnexe.
      * @return 
      */
-    public static List<Court> getCourts() {
-        //HashMap<Integer, Court> courts = new HashMap<>();
-        List<Court> courts = new ArrayList<>();
+    public static HashMap<Integer, Court> getCourts() {
+        HashMap<Integer, Court> courts = new HashMap<>();
+        //List<Court> courts = new ArrayList<>();
         
         // courts connus
-        //courts.put(1, CourtCentral.getInstance());
-        //courts.put(2, CourtAnnexe.getInstance());
-        courts.add(CourtCentral.getInstance());
-        courts.add(CourtAnnexe.getInstance());
+        courts.put(1, CourtCentral.getInstance());
+        courts.put(2, CourtAnnexe.getInstance());
+        //courts.add(CourtCentral.getInstance());
+        //courts.add(CourtAnnexe.getInstance());
         
         // les courts restants sont uniquement des CourtEntrainement, stockés dans la base
         
@@ -51,8 +51,8 @@ public class DaoCourt extends Dao{
                                                     res.getString("adresse"),
                                                     res.getInt("capacite"));
                     
-                //courts.put(res.getInt("id_court"), court);
-                courts.add(court);
+                courts.put(res.getInt("id_court"), court);
+                //courts.add(court);
             }
         } catch (SQLException ex) {
             Logger.getLogger(DaoCourt.class.getName()).log(Level.SEVERE, null, ex);
@@ -73,5 +73,24 @@ public class DaoCourt extends Dao{
                                             + "'" + court.getAdresse() + "', "
                                             + "'" + court.getCapacite() + "')");
         Dao.idMaxAttribue++;
+    }
+    
+    public static int getMaxIdCourt() {
+        int n = 0;
+        ResultSet res = query("Select max(id_court) from court");
+        try {
+            res.next();
+            n = res.getInt(1);
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoArbitre.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return n;
+    }
+    
+    public static void viderCourts() {
+        queryUpdate("DELETE from court");
+        
+        System.out.println("Table court vidée.");
     }
 }

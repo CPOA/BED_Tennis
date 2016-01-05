@@ -34,13 +34,18 @@ import modele.arbitre.ArbitreChaise;
 import modele.arbitre.ArbitreFilet;
 import modele.arbitre.ArbitreLigne;
 import modele.arbitre.TypeArbitre;
+import static modele.arbitre.TypeArbitre.ARBITRE_CHAISE;
+import static modele.arbitre.TypeArbitre.ARBITRE_FILET;
+import static modele.arbitre.TypeArbitre.ARBITRE_LIGNE;
 import modele.court.Court;
 import modele.court.CourtAnnexe;
 import modele.court.CourtCentral;
 import modele.court.CourtEntrainement;
 import static modele.personne.Sexe.FEMME;
+import modele.sgbd.Dao;
 import modele.sgbd.DaoArbitre;
 import modele.sgbd.DaoCourt;
+import modele.sgbd.DaoCreneau;
 import modele.sgbd.DaoJoueur;
 import modele.sgbd.DaoMatch;
 import modele.sgbd.DaoRamasseur;
@@ -63,7 +68,8 @@ public class PlanningMatchs {
     
     private static List<Creneau> creneaux;
     
-    private static List<Match> matchs;
+    //private static List<Match> matchs;
+    private static HashMap<Integer, Match> matchs;
     
     private static List<AssociationReservationEntrainement> reservations;
     
@@ -74,45 +80,9 @@ public class PlanningMatchs {
         int mois = 3;
         int jourDebut = 14;
         
-        int nbJours = 1;
-        
-        // Récupération des courts
-        List<Court> courts = DaoCourt.getCourts();
-        
-        // Création des créneaux
-        creneaux = new ArrayList<>();
-        Creneau creneau = null;
-        for (int jour = 0; jour < nbJours; jour++) {
-            for (TrancheHoraire trancheHoraire : TrancheHoraire.values()) {
-                
-                // changer et boucler sur tous les types de courts existants,
-                //      à récupérer par DaoCourt
-                /*
-                // court central
-                Creneau creneau = new Creneau(CourtAnnexe.getInstance(), annee, mois, jourDebut + jour, trancheHoraire);
-                creneaux.add(creneau);
-                
-                // court annexe
-                creneau = new Creneau(CourtCentral.getInstance(), annee, mois, jourDebut + jour, trancheHoraire);
-                creneaux.add(creneau);
-                
-                
-                // courts d'entrainement  */
-                
-                for (Court court : courts) {
-                    System.out.println("- " + court + annee + mois + new Integer(jourDebut + jour) + trancheHoraire);
-                    creneau = new Creneau(court, annee, mois, jourDebut+jour, trancheHoraire);
-                    creneaux.add(creneau);
-                }
-            }
-        }
-        
-        System.out.println("Creneaux : ");
-        for (Creneau c : creneaux) {
-            System.out.println(c);
-        }
-        
-        
+        int nbJours = 7;
+        System.out.println("PlanningMatch {static}");
+        //creerCreneaux(annee, mois, jourDebut, nbJours);
         
         // récupération des joueurs
         
@@ -134,23 +104,61 @@ public class PlanningMatchs {
         //DaoRamasseur daoRamasseur = new DaoRamasseur();
         ramasseurs = DaoRamasseur.getRamasseurs();
         
-        
         // récupération des matchs
-        matchs = new ArrayList<>();
-        
+        //matchs = new ArrayList<>();
+        //matchs = new HashMap<>();
+        /*
+        try {    
+            //matchs = DaoMatch.getMatchs();
+        } catch (Error ex) {
+            Logger.getLogger(PlanningMatchs.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
     }
     
     public static void viderTables() {
-        //DaoMatch.viderMatchs();
+        DaoMatch.viderMatchs();
+        DaoCreneau.viderCreneaux();
         DaoJoueur.viderJoueurs();
         DaoArbitre.viderArbitres();
         DaoRamasseur.viderRamasseurs();
+        Dao.getIdMax();
+    }
+    
+    public static void creerCreneaux(int annee, int mois, int jourDebut, int nbJours) {
+        
+        DaoCreneau.viderCreneaux();
+        
+        // Récupération des courts
+        HashMap<Integer, Court> courts = DaoCourt.getCourts();
+        
+        // Création des créneaux
+        creneaux = new ArrayList<>();
+        Creneau creneau = null;
+        for (int jour = 0; jour < nbJours; jour++) {
+            for (TrancheHoraire trancheHoraire : TrancheHoraire.values()) {
+                
+                for (Court court : courts.values()) {
+                    System.out.println("- " + court + annee + mois + new Integer(jourDebut + jour) + trancheHoraire);
+                    creneau = new Creneau(court, annee, mois, jourDebut+jour, trancheHoraire);
+                    DaoCreneau.insertCreneau(creneau);
+                    creneaux.add(creneau);
+                }
+            }
+        }
+        
+        System.out.println("Creneaux : ");
+        for (Creneau c : creneaux) {
+            System.out.println(c);
+        }
+        
+        
+        
     }
     
     public static void creerRemplirTables() {
         System.out.println(DaoJoueur.getNbJoueurs() + " joueurs avant vidage");
         
-        //DaoMatch.viderMatchs();
+        DaoMatch.viderMatchs();
         
         DaoJoueur.viderJoueurs();
         
@@ -158,105 +166,412 @@ public class PlanningMatchs {
         
         DaoRamasseur.viderRamasseurs();
         
+        Dao.getIdMax();
+        
+        creerCreneaux(2016, 3, 14, 7);
         
         System.out.println(DaoJoueur.getNbJoueurs() + " joueurs avant ajout");
         //DaoJoueur.insertJoueur(new Joueur(1, "Jaloux", "Christophe", "profchauve@univ-lyon1.fr", HOMME, "nintendo", "c.jaloux", "mario", 1));
         
         DaoJoueur.insertJoueur("Jaloux", "Christophe", "profchauve@example.com", HOMME, "France", "c.jaloux", "cj", 1);
         DaoJoueur.insertJoueur("Einstein", "Albert", "alberteinstein@example.com", HOMME, "Allemagne", "a.einstein", "ae", 2);
-        DaoJoueur.insertJoueur("Bex", "Emile", "emilebex@example.com", HOMME, "France", "e.bex", "eb", 3);
         DaoJoueur.insertJoueur("Simon", "Claude", "ab@example.com", HOMME, "France", "a.b", "ab", 4);
         DaoJoueur.insertJoueur("Durif", "Sylvain Pierre", "christcosmique@example.com", HOMME, "Extraterrestre", "sp.durif", "spd", 9000);
         DaoJoueur.insertJoueur("Chirac", "Jacques", "jaqueschirac@example.com", HOMME, "France", "j.c", "jc", 5);
+        DaoJoueur.insertJoueur("Nutella", "Coco", "choco74@example.com", HOMME, "AMERIQUE", "admin", "nimda", 1);
+        DaoJoueur.insertJoueur("Paul", "Jack", "khot@example.com",HOMME , "FRANCE", "fr38", "etoile", 2);
+        DaoJoueur.insertJoueur("Ani", "Walk", "jedii@example.com",HOMME , "CANADA", "plop", "lol", 3);
+        DaoJoueur.insertJoueur("Pro", "Stalker", "illuminati@example.com",HOMME , "HOLLANDE", "oeil", "triangle", 4);
+        DaoJoueur.insertJoueur("Yanick", "Balboa", "tennissinnet@example.com",HOMME , "FRANCE", "balle", "trou", 5);
+        DaoJoueur.insertJoueur("Roni", "Jack", "atlas@example.com",HOMME , "ESPAGNE", "tals", "zip", 6);
+        DaoJoueur.insertJoueur("Vivier", "David", "shawinigan@example.com",HOMME , "FRANCE", "presque", "parti", 7);
+        DaoJoueur.insertJoueur("Boni", "Bryan", "cloud@example.com",HOMME , "FRANCE", "azerty", "12345", 8);
+        DaoJoueur.insertJoueur("Trik", "Almir", "tetris@example.com",HOMME , "ALLEMAGNE", "blue", "ocean", 10);
+        DaoJoueur.insertJoueur("Kris", "Red", "bbf@example.com",HOMME , "FRANCE", "coucou", "5698", 11);
+        DaoJoueur.insertJoueur("Onagi", "Plex", "bbqb@example.com",HOMME , "FRANCE", "enrevoir", "oupas", 12);
+        DaoJoueur.insertJoueur("Along", "William", "willllllll@example.com",HOMME , "FRANCE", "feglfhlsqrihnt", "jjdjdjd", 13);
+        DaoJoueur.insertJoueur("Kelle", "Willy", "fucj@example.com",HOMME , "RUSSIE", "mother", "russia", 14);
+        DaoJoueur.insertJoueur("Monkey", "Luffy", "onepiece@example.com",HOMME , "JAPON", "Ace", "rip2012", 15);
+        DaoJoueur.insertJoueur("Rocky", "Bannane", "rockycky@example.com",HOMME , "FRANCE", "dur", "acuire", 16);
+        DaoJoueur.insertJoueur("Deep", "Blue", "echecs@example.com",HOMME , "AMERIQUE", "Ima", "winner1997", 17);
+        DaoJoueur.insertJoueur("Garry", "Kasp", "echecs2@example.com",HOMME , "RUSSIE", "Ima", "looser1997", 18);
+        DaoJoueur.insertJoueur("Sky", "Luck", "star@example.com",HOMME , "AMERIQUE", "jesuis", "tonfils", 19);
+        DaoJoueur.insertJoueur("Dark", "Vadrouille", "wars@example.com",HOMME , "AMERIQUE", "nooooo", "ooooo", 20);
+        DaoJoueur.insertJoueur("Jffff", "Sian", "hello@example.com",HOMME , "FRANCE", "word", "php5", 21);
+        DaoJoueur.insertJoueur("Krigaya", "Kazuto", "SAO@example.com",HOMME , "JAPON", "krito", "asuna", 22);
+        DaoJoueur.insertJoueur("Bex", "Emile", "BED@example.com",HOMME , "FRANCE", "balls", "steels", 23);
+        DaoJoueur.insertJoueur("Fgray", "Shade", "book@example.com",HOMME , "ESPAGNE", "hhhhhhh", "7898", 24);
+        DaoJoueur.insertJoueur("Merveille", "Alice", "imaginaire@example.com",HOMME , "FRANCE", "lapin", "chapeau", 25);
+        DaoJoueur.insertJoueur("Samsung", "Apple", "Telephonie@example.com",HOMME , "FRANCE", "cher", "encoreplus", 26);
+        DaoJoueur.insertJoueur("Skype", "Fail", "freeware@example.com",HOMME , "AMERIQUE", "or", "not", 27);
+        DaoJoueur.insertJoueur("Djikstra", "Astar", "perdu58@example.com",HOMME , "FRANCE", "pathfinding", "dedale", 28);
+        DaoJoueur.insertJoueur("Sparkle", "Twi", "poney@example.com",HOMME , "ESPAGNE", "mylittle", "fantasy", 29);
+        DaoJoueur.insertJoueur("First", "Adam", "jardin00@example.com",HOMME , "FRANCE", "pomme", "serpent", 30);
+        DaoJoueur.insertJoueur("Simpson", "Bart", "Skate@example.com",HOMME , "AMERIQUE", "aye", "caramba", 31);
+        DaoJoueur.insertJoueur("Moi", "Etmoi", "seul@example.com",HOMME , "FRANCE", "estecrit", "cestables", 32);
         
         
-        System.out.println(DaoJoueur.getNbJoueurs() + " joueurs après ajout");
         
-        
-        
-        
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", HOMME, "Espagne", TypeArbitre.ARBITRE_CHAISE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", HOMME, "Allemagne", TypeArbitre.ARBITRE_FILET, 0, 0);
+        DaoJoueur.insertJoueur("Yugi", "Josie", "lok@example.com",FEMME , "FRANCE", "admine", "enimda", 1);
+        DaoJoueur.insertJoueur("Simpson", "Lisa", "example@example.com",FEMME , "AMERIQUE", "login74", "motdepasse", 2);
+        DaoJoueur.insertJoueur("Noel", "Marry", "xmas@example.com",FEMME , "FRANCE", "cadeau", "vilain13", 3);
+        DaoJoueur.insertJoueur("Disney", "Minnie", "Moussedecafe@example.com",FEMME , "FRANCE", "park", "sansatraction", 4);
+        DaoJoueur.insertJoueur("Coca", "Zero", "calorie@example.com",FEMME , "FRANCE", "mespas0", "conneries", 5);
+        DaoJoueur.insertJoueur("R2", "D2", "petitrobotincomprit@example.com",FEMME , "FRANCE", "etouiR2D2", "estunefemme", 6);
+        DaoJoueur.insertJoueur("Mich", "Jaquie", "xxx@example.com",FEMME , "FRANCE", "2girls", "1coupedefrance", 7);
+        DaoJoueur.insertJoueur("Lolld", "Loli", "littleTennis@example.com",FEMME , "ESPAGNE", "rateau", "1548963df", 8);
+        DaoJoueur.insertJoueur("Mais", "Bonduelle", "pub@example.com",FEMME , "ALLEMAGNE", "placement", "deproduits75", 10);
+        DaoJoueur.insertJoueur("Quiche", "Lorraine", "delicieuse@example.com",FEMME , "ALLEMAGNE", "maisque", "sicestfaitmaison", 11);
+        DaoJoueur.insertJoueur("Sonne", "Loire", "region@example.com",FEMME , "JAPON", "lohlgsz", "444445j", 12);
+        DaoJoueur.insertJoueur("Php", "MyAdmin", "cestnotre@example.com",FEMME , "ESPAGNE", "base", "dedonnees", 13);
+        DaoJoueur.insertJoueur("Univers", "Reponse", "geek@example.com",FEMME , "JAPON", "michelle42", "42x101100", 14);
+        DaoJoueur.insertJoueur("Joubert", "Aude", "math@example.com",FEMME , "JAPON", "prof", "admin", 15);
+        DaoJoueur.insertJoueur("Rood", "Helle", "dfhzs@example.com",FEMME , "FRANCE", "jenest", "marre", 16);
+        DaoJoueur.insertJoueur("Ces", "Table", "sonVraiment@example.com",FEMME , "ALLEMAGNE", "longue", "aremplir", 17);
+        DaoJoueur.insertJoueur("Mais", "Bon", "aumoin@example.com",FEMME , "FRANCE", "saoccupe", "lesmains69", 18);
+        DaoJoueur.insertJoueur("Toujours", "Pas", "didées@example.com",FEMME , "JAPON", "denom", "amettre", 19);
+        DaoJoueur.insertJoueur("Doc", "Quinn", "doctissiomo@example.com",FEMME , "JAPON", "jesuis", "unbonmedecin", 20);
+        DaoJoueur.insertJoueur("Maladie", "Lapeste", "moyenage@example.com",FEMME , "FRANCE", "oncherche", "encore", 21);
+        DaoJoueur.insertJoueur("Marie", "Antoinette", "tete@example.com",FEMME , "JAPON", "guillotine", "vraimentpascool1793", 22);
+        DaoJoueur.insertJoueur("Red", "Hood", "heroine@example.com",FEMME , "FRANCE", "memesi", "cestenfaitunhomme", 23);
+        DaoJoueur.insertJoueur("Monroe", "Marilyn", "normajeanemortenson@example.com",FEMME , "ALLEMAGNE", "blonde", "maispasque1960", 24);
+        DaoJoueur.insertJoueur("Pefez", "Geae", "fezbfzsjfedhsje@example.com",FEMME , "JAPON", "steel", "woman4444", 25);
+        DaoJoueur.insertJoueur("Graar", "Maggie", "jjjjjjyyyyjjj@example.com",FEMME , "ESPAGNE", "input0", "output1", 26);
+        DaoJoueur.insertJoueur("Holez", "Bda", "plop@example.com",FEMME , "ALLEMAGNE", "oups", "pasgrave", 27);
+        DaoJoueur.insertJoueur("Koiiddz", "Grrra", "dgfcZ8986@example.com",FEMME , "ESPAGNE", "fallout", "gamu7447", 28);
+        DaoJoueur.insertJoueur("Lopez", "Jennifer", "staracademie@example.com",FEMME , "ALLEMAGNE", "oubliee", "delatelerealite", 29);
+        DaoJoueur.insertJoueur("Hhirfthrf", "Jffff", "complex@example.com",FEMME , "FRANCE", "number", "burt69", 30);
+        DaoJoueur.insertJoueur("Steel", "Dong", "llllllddddkkkddd@example.com",FEMME , "FRANCE", "mince", "jairippe", 31);
+        DaoJoueur.insertJoueur("Enfin", "Ladreniere", "maispas@example.com",FEMME , "ESPAGNE", "destoutes", "lestables", 32);
 
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", HOMME, "Espagne", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", HOMME, "Italie", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", FEMME, "France", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", HOMME, "Québec", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", HOMME, "Irlande", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", HOMME, "Angleterre", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", FEMME, "Croatie", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", HOMME, "Russie", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", HOMME, "Espagne", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", HOMME, "Italie", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", FEMME, "France", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", HOMME, "Québec", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", HOMME, "Irlande", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", HOMME, "Angleterre", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", FEMME, "Croatie", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", HOMME, "Russie", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", HOMME, "Espagne", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", HOMME, "Italie", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", FEMME, "France", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", HOMME, "Québec", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", HOMME, "Irlande", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", HOMME, "Angleterre", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", FEMME, "Croatie", TypeArbitre.ARBITRE_LIGNE, 0, 0);
-        DaoArbitre.insertArbitre("A", "B", "a@example.com", HOMME, "Russie", TypeArbitre.ARBITRE_LIGNE, 0, 0);
+
         
         
+        DaoArbitre.insertArbitre("Roko", "Basilic", "theorie@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Super", "Ordinateur", "faitavecdesminitel@example.com", FEMME, "Chine", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Princesse", "Hellena", "paysimaginaire@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Capitain", "Crochet", "tictac@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Lang", "Baron", "CavaSripton@example.com", FEMME, "Chine", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Moonswag", "Super", "java@example.com", HOMME, "France", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Deslandres", "Véronique", "lirisCnrs@example.com", FEMME, "France", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Chin", "Chang", "pasraciste@example.com", HOMME, "Chine", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Rick", "Albert", "normal@example.com", HOMME, "Allemagne", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Tonini", "Spageti", "pattes@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("TTT", "AA", "TaTaT@example.com", HOMME, "Allemagne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Laroque", "Dolme", "villagedariege@example.com", HOMME, "Allemagne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Andorre", "Pasdelacase", "entrelespagneetlariege@example.com", HOMME, "Allemagne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Fff", "Ttt", "FrFrf@example.com", HOMME, "Pologne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Calamity", "Camille", "blazblue@example.com", FEMME, "Pologne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Mieux", "Vaut", "tardquejamais@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Castafolte", "Henry", "aboutrobot@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Le", "Renard", "levisiteurdupasse@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Aert", "Zyio", "Zalapfghj@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Mortal", "Kombat", "gamegame74@example.com", HOMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Hello", "World", "...@example.com", FEMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Guy", "Humain", "ouais@example.com", HOMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Pyramide", "Pharaon", "egypteenfrance@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Nice", "Janne", "Tarzan@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Gary", "Colman", "celebre45@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Attia", "Adam", "pedobear@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Huyn", "Christian", "manchotquiplonge@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Hawking", "Stephen", "hawking@example.com", HOMME, "Angleterre", ARBITRE_LIGNE, 0, 0);
         
+        DaoArbitre.insertArbitre("Roko", "Basilic", "theorie@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Super", "Ordinateur", "faitavecdesminitel@example.com", FEMME, "Chine", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Princesse", "Hellena", "paysimaginaire@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Capitain", "Crochet", "tictac@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Lang", "Baron", "CavaSripton@example.com", FEMME, "Chine", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Moonswag", "Super", "java@example.com", HOMME, "France", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Deslandres", "Véronique", "lirisCnrs@example.com", FEMME, "France", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Chin", "Chang", "pasraciste@example.com", HOMME, "Chine", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Rick", "Albert", "normal@example.com", HOMME, "Allemagne", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Tonini", "Spageti", "pattes@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("TTT", "AA", "TaTaT@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Laroque", "Dolme", "villagedariege@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Andorre", "Pasdelacase", "entrelespagneetlariege@example.com", HOMME, "Allemagne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Fff", "Ttt", "FrFrf@example.com", HOMME, "Pologne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Calamity", "Camille", "blazblue@example.com", FEMME, "Pologne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Mieux", "Vaut", "tardquejamais@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Castafolte", "Henry", "aboutrobot@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Le", "Renard", "levisiteurdupasse@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Aert", "Zyio", "Zalapfghj@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Mortal", "Kombat", "gamegame74@example.com", HOMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Hello", "World", "...@example.com", FEMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Guy", "Humain", "ouais@example.com", HOMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Pyramide", "Pharaon", "egypteenfrance@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Nice", "Janne", "Tarzan@example.com", FEMME, "Japon", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Gary", "Colman", "celebre45@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Attia", "Adam", "pedobear@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Huyn", "Christian", "manchotquiplonge@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Roko", "Basilic", "theorie@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Super", "Ordinateur", "faitavecdesminitel@example.com", FEMME, "Chine", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Princesse", "Hellena", "paysimaginaire@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Capitain", "Crochet", "tictac@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Lang", "Baron", "CavaSripton@example.com", FEMME, "Chine", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Moonswag", "Super", "java@example.com", HOMME, "France", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Deslandres", "Véronique", "lirisCnrs@example.com", FEMME, "France", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Chin", "Chang", "pasraciste@example.com", HOMME, "Chine", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Rick", "Albert", "normal@example.com", HOMME, "Allemagne", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Tonini", "Spageti", "pattes@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("TTT", "AA", "TaTaT@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Laroque", "Dolme", "villagedariege@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Andorre", "Pasdelacase", "entrelespagneetlariege@example.com", HOMME, "Allemagne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Fff", "Ttt", "FrFrf@example.com", HOMME, "Pologne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Calamity", "Camille", "blazblue@example.com", FEMME, "Pologne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Mieux", "Vaut", "tardquejamais@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Castafolte", "Henry", "aboutrobot@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Le", "Renard", "levisiteurdupasse@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Aert", "Zyio", "Zalapfghj@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Mortal", "Kombat", "gamegame74@example.com", HOMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Hello", "World", "...@example.com", FEMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Guy", "Humain", "ouais@example.com", HOMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Pyramide", "Pharaon", "egypteenfrance@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Nice", "Janne", "Tarzan@example.com", FEMME, "Japon", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Gary", "Colman", "celebre45@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Attia", "Adam", "pedobear@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Huyn", "Christian", "manchotquiplonge@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+
+        DaoArbitre.insertArbitre("Roko", "Basilic", "theorie@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Super", "Ordinateur", "faitavecdesminitel@example.com", FEMME, "Chine", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Princesse", "Hellena", "paysimaginaire@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Capitain", "Crochet", "tictac@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Lang", "Baron", "CavaSripton@example.com", FEMME, "Chine", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Moonswag", "Super", "java@example.com", HOMME, "France", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Deslandres", "Véronique", "lirisCnrs@example.com", FEMME, "France", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Chin", "Chang", "pasraciste@example.com", HOMME, "Chine", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Rick", "Albert", "normal@example.com", HOMME, "Allemagne", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Tonini", "Spageti", "pattes@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("TTT", "AA", "TaTaT@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Laroque", "Dolme", "villagedariege@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Andorre", "Pasdelacase", "entrelespagneetlariege@example.com", HOMME, "Allemagne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Fff", "Ttt", "FrFrf@example.com", HOMME, "Pologne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Calamity", "Camille", "blazblue@example.com", FEMME, "Pologne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Mieux", "Vaut", "tardquejamais@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Castafolte", "Henry", "aboutrobot@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Le", "Renard", "levisiteurdupasse@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Aert", "Zyio", "Zalapfghj@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Mortal", "Kombat", "gamegame74@example.com", HOMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Hello", "World", "...@example.com", FEMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Guy", "Humain", "ouais@example.com", HOMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Pyramide", "Pharaon", "egypteenfrance@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Nice", "Janne", "Tarzan@example.com", FEMME, "Japon", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Gary", "Colman", "celebre45@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Attia", "Adam", "pedobear@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Huyn", "Christian", "manchotquiplonge@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+
+        DaoArbitre.insertArbitre("Roko", "Basilic", "theorie@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Super", "Ordinateur", "faitavecdesminitel@example.com", FEMME, "Chine", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Princesse", "Hellena", "paysimaginaire@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Capitain", "Crochet", "tictac@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Lang", "Baron", "CavaSripton@example.com", FEMME, "Chine", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Moonswag", "Super", "java@example.com", HOMME, "France", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Deslandres", "Véronique", "lirisCnrs@example.com", FEMME, "France", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Chin", "Chang", "pasraciste@example.com", HOMME, "Chine", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Rick", "Albert", "normal@example.com", HOMME, "Allemagne", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Tonini", "Spageti", "pattes@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("TTT", "AA", "TaTaT@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Laroque", "Dolme", "villagedariege@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Andorre", "Pasdelacase", "entrelespagneetlariege@example.com", HOMME, "Allemagne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Fff", "Ttt", "FrFrf@example.com", HOMME, "Pologne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Calamity", "Camille", "blazblue@example.com", FEMME, "Pologne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Mieux", "Vaut", "tardquejamais@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Castafolte", "Henry", "aboutrobot@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Le", "Renard", "levisiteurdupasse@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Aert", "Zyio", "Zalapfghj@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Mortal", "Kombat", "gamegame74@example.com", HOMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Hello", "World", "...@example.com", FEMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Guy", "Humain", "ouais@example.com", HOMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Pyramide", "Pharaon", "egypteenfrance@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Nice", "Janne", "Tarzan@example.com", FEMME, "Japon", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Gary", "Colman", "celebre45@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Attia", "Adam", "pedobear@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Huyn", "Christian", "manchotquiplonge@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+
+        DaoArbitre.insertArbitre("Roko", "Basilic", "theorie@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Super", "Ordinateur", "faitavecdesminitel@example.com", FEMME, "Chine", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Princesse", "Hellena", "paysimaginaire@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Capitain", "Crochet", "tictac@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Lang", "Baron", "CavaSripton@example.com", FEMME, "Chine", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Moonswag", "Super", "java@example.com", HOMME, "France", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Deslandres", "Véronique", "lirisCnrs@example.com", FEMME, "France", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Chin", "Chang", "pasraciste@example.com", HOMME, "Chine", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Rick", "Albert", "normal@example.com", HOMME, "Allemagne", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Tonini", "Spageti", "pattes@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("TTT", "AA", "TaTaT@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Laroque", "Dolme", "villagedariege@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Andorre", "Pasdelacase", "entrelespagneetlariege@example.com", HOMME, "Allemagne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Fff", "Ttt", "FrFrf@example.com", HOMME, "Pologne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Calamity", "Camille", "blazblue@example.com", FEMME, "Pologne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Mieux", "Vaut", "tardquejamais@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Castafolte", "Henry", "aboutrobot@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Le", "Renard", "levisiteurdupasse@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Aert", "Zyio", "Zalapfghj@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Mortal", "Kombat", "gamegame74@example.com", HOMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Hello", "World", "...@example.com", FEMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Guy", "Humain", "ouais@example.com", HOMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Pyramide", "Pharaon", "egypteenfrance@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Nice", "Janne", "Tarzan@example.com", FEMME, "Japon", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Gary", "Colman", "celebre45@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Attia", "Adam", "pedobear@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Huyn", "Christian", "manchotquiplonge@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+
+        DaoArbitre.insertArbitre("Roko", "Basilic", "theorie@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Super", "Ordinateur", "faitavecdesminitel@example.com", FEMME, "Chine", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Princesse", "Hellena", "paysimaginaire@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Capitain", "Crochet", "tictac@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Lang", "Baron", "CavaSripton@example.com", FEMME, "Chine", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Moonswag", "Super", "java@example.com", HOMME, "France", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Deslandres", "Véronique", "lirisCnrs@example.com", FEMME, "France", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Chin", "Chang", "pasraciste@example.com", HOMME, "Chine", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Rick", "Albert", "normal@example.com", HOMME, "Allemagne", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Tonini", "Spageti", "pattes@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("TTT", "AA", "TaTaT@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Laroque", "Dolme", "villagedariege@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Andorre", "Pasdelacase", "entrelespagneetlariege@example.com", HOMME, "Allemagne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Fff", "Ttt", "FrFrf@example.com", HOMME, "Pologne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Calamity", "Camille", "blazblue@example.com", FEMME, "Pologne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Mieux", "Vaut", "tardquejamais@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Castafolte", "Henry", "aboutrobot@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Le", "Renard", "levisiteurdupasse@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Aert", "Zyio", "Zalapfghj@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Mortal", "Kombat", "gamegame74@example.com", HOMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Hello", "World", "...@example.com", FEMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Guy", "Humain", "ouais@example.com", HOMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Pyramide", "Pharaon", "egypteenfrance@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Nice", "Janne", "Tarzan@example.com", FEMME, "Japon", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Gary", "Colman", "celebre45@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Attia", "Adam", "pedobear@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Huyn", "Christian", "manchotquiplonge@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        
+        DaoArbitre.insertArbitre("Roko", "Basilic", "theorie@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Super", "Ordinateur", "faitavecdesminitel@example.com", FEMME, "Chine", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Princesse", "Hellena", "paysimaginaire@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Capitain", "Crochet", "tictac@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Lang", "Baron", "CavaSripton@example.com", FEMME, "Chine", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Moonswag", "Super", "java@example.com", HOMME, "France", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Deslandres", "Véronique", "lirisCnrs@example.com", FEMME, "France", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Chin", "Chang", "pasraciste@example.com", HOMME, "Chine", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Rick", "Albert", "normal@example.com", HOMME, "Allemagne", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Tonini", "Spageti", "pattes@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("TTT", "AA", "TaTaT@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Laroque", "Dolme", "villagedariege@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Andorre", "Pasdelacase", "entrelespagneetlariege@example.com", HOMME, "Allemagne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Fff", "Ttt", "FrFrf@example.com", HOMME, "Pologne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Calamity", "Camille", "blazblue@example.com", FEMME, "Pologne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Mieux", "Vaut", "tardquejamais@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Castafolte", "Henry", "aboutrobot@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Le", "Renard", "levisiteurdupasse@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Aert", "Zyio", "Zalapfghj@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Mortal", "Kombat", "gamegame74@example.com", HOMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Hello", "World", "...@example.com", FEMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Guy", "Humain", "ouais@example.com", HOMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Pyramide", "Pharaon", "egypteenfrance@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Nice", "Janne", "Tarzan@example.com", FEMME, "Japon", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Gary", "Colman", "celebre45@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Attia", "Adam", "pedobear@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Huyn", "Christian", "manchotquiplonge@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+
+        DaoArbitre.insertArbitre("Roko", "Basilic", "theorie@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Super", "Ordinateur", "faitavecdesminitel@example.com", FEMME, "Chine", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Princesse", "Hellena", "paysimaginaire@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Capitain", "Crochet", "tictac@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Lang", "Baron", "CavaSripton@example.com", FEMME, "Chine", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Moonswag", "Super", "java@example.com", HOMME, "France", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Deslandres", "Véronique", "lirisCnrs@example.com", FEMME, "France", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Chin", "Chang", "pasraciste@example.com", HOMME, "Chine", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Rick", "Albert", "normal@example.com", HOMME, "Allemagne", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Tonini", "Spageti", "pattes@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("TTT", "AA", "TaTaT@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Laroque", "Dolme", "villagedariege@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Andorre", "Pasdelacase", "entrelespagneetlariege@example.com", HOMME, "Allemagne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Fff", "Ttt", "FrFrf@example.com", HOMME, "Pologne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Calamity", "Camille", "blazblue@example.com", FEMME, "Pologne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Mieux", "Vaut", "tardquejamais@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Castafolte", "Henry", "aboutrobot@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Le", "Renard", "levisiteurdupasse@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Aert", "Zyio", "Zalapfghj@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Mortal", "Kombat", "gamegame74@example.com", HOMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Hello", "World", "...@example.com", FEMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Guy", "Humain", "ouais@example.com", HOMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Pyramide", "Pharaon", "egypteenfrance@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Nice", "Janne", "Tarzan@example.com", FEMME, "Japon", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Gary", "Colman", "celebre45@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Attia", "Adam", "pedobear@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Huyn", "Christian", "manchotquiplonge@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+
+        DaoArbitre.insertArbitre("Roko", "Basilic", "theorie@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Super", "Ordinateur", "faitavecdesminitel@example.com", FEMME, "Chine", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Princesse", "Hellena", "paysimaginaire@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Capitain", "Crochet", "tictac@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Lang", "Baron", "CavaSripton@example.com", FEMME, "Chine", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Moonswag", "Super", "java@example.com", HOMME, "France", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Deslandres", "Véronique", "lirisCnrs@example.com", FEMME, "France", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Chin", "Chang", "pasraciste@example.com", HOMME, "Chine", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Rick", "Albert", "normal@example.com", HOMME, "Allemagne", ARBITRE_CHAISE, 0, 0);
+        DaoArbitre.insertArbitre("Tonini", "Spageti", "pattes@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("TTT", "AA", "TaTaT@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Laroque", "Dolme", "villagedariege@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Andorre", "Pasdelacase", "entrelespagneetlariege@example.com", HOMME, "Allemagne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Fff", "Ttt", "FrFrf@example.com", HOMME, "Pologne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Calamity", "Camille", "blazblue@example.com", FEMME, "Pologne", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Mieux", "Vaut", "tardquejamais@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Castafolte", "Henry", "aboutrobot@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Le", "Renard", "levisiteurdupasse@example.com", FEMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Aert", "Zyio", "Zalapfghj@example.com", HOMME, "Allemagne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Mortal", "Kombat", "gamegame74@example.com", HOMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Hello", "World", "...@example.com", FEMME, "Pologne", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Guy", "Humain", "ouais@example.com", HOMME, "Japon", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Pyramide", "Pharaon", "egypteenfrance@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Nice", "Janne", "Tarzan@example.com", FEMME, "Japon", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Gary", "Colman", "celebre45@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Attia", "Adam", "pedobear@example.com", HOMME, "France", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Huyn", "Christian", "manchotquiplonge@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Roll", "Rick", "nevergonnagiveyouup@example.com", HOMME, "Angleterre", ARBITRE_LIGNE, 0, 0);
+        DaoArbitre.insertArbitre("Poutine", "Vladislav", "weloverussia@example.com", HOMME, "URSS", ARBITRE_LIGNE, 0, 0);
+
+        
+        
+        // ramasseurs
+        
+        DaoRamasseur.insertRamasseur("Pedro", "Henry", "porto@example.com",HOMME , "Espagne");
+        DaoRamasseur.insertRamasseur("Guzz", "Prod", "youtube@example.com",HOMME , "Japon");
+        DaoRamasseur.insertRamasseur("Shia", "Labeouf", "justedoit@example.com",HOMME , "Corée");
+        DaoRamasseur.insertRamasseur("Dream", "Come", "Trueornot@example.com",HOMME , "Allemagne");
+        DaoRamasseur.insertRamasseur("Tsar", "Jasmine", "Aladin@example.com",FEMME , "France");
+        DaoRamasseur.insertRamasseur("Super", "Nes", "retro@example.com",FEMME , "France");
+        DaoRamasseur.insertRamasseur("Heartfilia", "Lucy", "fairytail@example.com",FEMME , "Japon");
+        DaoRamasseur.insertRamasseur("Belle", "Mere", "blancheneige@example.com",FEMME , "Chine");
+        DaoRamasseur.insertRamasseur("Ledernier", "Ramaseur", "estunefemme@example.com",FEMME , "Espagne");
         DaoRamasseur.insertRamasseur("truc", "machin", "truc@example.com", HOMME, "France");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("a", "b", "qzelf@example.com", FEMME, "Roumanie");
+        DaoRamasseur.insertRamasseur("Daniel", "Antoine", "wtc@example.com", FEMME, "Internet");
+        DaoRamasseur.insertRamasseur("Melenchon", "Jean-Luc", "jlm@example.com", HOMME, "URSS");
+        DaoRamasseur.insertRamasseur("Moulin", "Jean", "max@example.com", FEMME, "Roumanie");
+        DaoRamasseur.insertRamasseur("Mason", "Nick", "qzelf@example.com", FEMME, "Angleterre");
+        DaoRamasseur.insertRamasseur("3003", "Pacificsound", "qzelf@example.com", FEMME, "Internet");
+        DaoRamasseur.insertRamasseur("Crying", "Johnny", "drogue@example.com", HOMME, "Internet");
+        DaoRamasseur.insertRamasseur("U2", "Bono", "u2@example.com", HOMME, "Irlande");
+        DaoRamasseur.insertRamasseur("Zephyrr", "Minecraft", "peaceandredstone@example.com", HOMME, "Québec");
+        DaoRamasseur.insertRamasseur("Pierre", "Aymeric", "aypierre@example.com", HOMME, "France");
+        DaoRamasseur.insertRamasseur("Yoda", "Maître", "petitmaispuissantjesuis@example.com", HOMME, "Dagobah");
         
+        DaoRamasseur.insertRamasseur("Pedro", "Henry", "porto@example.com",HOMME , "Espagne");
+        DaoRamasseur.insertRamasseur("Guzz", "Prod", "youtube@example.com",HOMME , "Japon");
+        DaoRamasseur.insertRamasseur("Shia", "Labeouf", "justedoit@example.com",HOMME , "Corée");
+        DaoRamasseur.insertRamasseur("Dream", "Come", "Trueornot@example.com",HOMME , "Allemagne");
+        DaoRamasseur.insertRamasseur("Tsar", "Jasmine", "Aladin@example.com",FEMME , "France");
+        DaoRamasseur.insertRamasseur("Super", "Nes", "retro@example.com",FEMME , "France");
+        DaoRamasseur.insertRamasseur("Heartfilia", "Lucy", "fairytail@example.com",FEMME , "Japon");
+        DaoRamasseur.insertRamasseur("Belle", "Mere", "blancheneige@example.com",FEMME , "Chine");
+        DaoRamasseur.insertRamasseur("Ledernier", "Ramaseur", "estunefemme@example.com",FEMME , "Espagne");
+        DaoRamasseur.insertRamasseur("truc", "machin", "truc@example.com", HOMME, "France");
+        DaoRamasseur.insertRamasseur("Daniel", "Antoine", "wtc@example.com", HOMME, "Internet");
+        DaoRamasseur.insertRamasseur("Melenchon", "Jean-Luc", "jlm@example.com", HOMME, "URSS");
+        DaoRamasseur.insertRamasseur("Moulin", "Jean", "max@example.com", FEMME, "Roumanie");
+        DaoRamasseur.insertRamasseur("Mason", "Nick", "qzelf@example.com", FEMME, "Angleterre");
+        DaoRamasseur.insertRamasseur("3003", "Pacificsound", "qzelf@example.com", FEMME, "Internet");
+        DaoRamasseur.insertRamasseur("Crying", "Johnny", "drogue@example.com", HOMME, "Internet");
+        DaoRamasseur.insertRamasseur("U2", "Bono", "u2@example.com", HOMME, "Irlande");
+        DaoRamasseur.insertRamasseur("Zephyrr", "Minecraft", "peaceandredstone@example.com", HOMME, "Québec");
         
         System.out.println("Remplissage des tables terminé.");
         
@@ -279,26 +594,30 @@ public class PlanningMatchs {
         for (Joueur j : joueurs) {
             System.out.println(j.getDetails());
         }
-        
+        /*
         try {
             planifierMatchs("simple", HOMME);
         } catch (Error ex) {
             Logger.getLogger(PlanningMatchs.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
         
     }
 
     
     public static void planifierMatchs(String typeTournoi, Sexe genre) throws Error {
         
+        if (matchs == null)
+            matchs = new HashMap<>();
+        
+        creneaux = DaoCreneau.getCreneaux();
         
         //List<Joueur> joueursRestants = joueurs;
         DaoJoueur daoJoueur = new DaoJoueur();
         List<Joueur> joueursRestants = new ArrayList<Joueur>();
-        joueursRestants = daoJoueur.getJoueurs();
+        joueursRestants = daoJoueur.getJoueurs(genre);
         Joueur joueur1 = null, joueur2 = null;
         int i = joueursRestants.size();
-        System.out.println(i + " joueurs recupérés");
+        System.out.println(i + " joueurs recupérés (" + genre.toString() + ").");
         
         
         arbitres = DaoArbitre.getArbitres();
@@ -307,7 +626,7 @@ public class PlanningMatchs {
         
         ramasseurs = DaoRamasseur.getRamasseurs();
         System.out.println(ramasseurs.size() + " ramasseurs récupérés.");
-        System.out.println("Ramasseurs : " + ramasseurs);
+        //System.out.println("Ramasseurs : " + ramasseurs);
         
         /*
         while (!(joueursRestants.size() > 2)) {
@@ -324,7 +643,7 @@ public class PlanningMatchs {
         
         for (Creneau creneau : creneaux) {
             
-            System.out.println("Attribution pour créneau : " + creneau);
+            System.out.println("Attribution pour créneau : " + creneau + ", " + creneau.estLibre());
             if (!creneau.estLibre())
                 continue;
             
@@ -337,13 +656,17 @@ public class PlanningMatchs {
             
             
             joueur1 = getJoueurLibre(joueursRestants, creneau, genre);
-            if (joueur1 == null)
+            if (joueur1 == null) {
+                System.out.println("fin de la liste de joueurs.");
                 break;
+            }
             joueursRestants.remove(joueur1);
             
             joueur2 = getJoueurLibre(joueursRestants, creneau, genre);
-            if (joueur2 == null)
+            if (joueur2 == null) {
+                System.out.println("fin de la liste de joueurs.");
                 break;
+            }
             joueursRestants.remove(joueur2);
             
             /*
@@ -357,25 +680,47 @@ public class PlanningMatchs {
             
             Match nouveauMatch = new Match(creneau, typeTournoi, genre, joueur1, joueur2);
             System.out.println("nouveauMatch : " + nouveauMatch);
-            // assignation des arbitres
             
+
+            // assignation des arbitres
+            ArbitreChaise arbitreChaise = null;
             for (Arbitre a : arbitres.values()) {
                 if (a instanceof ArbitreChaise) {
+                    System.out.print("ArbitreChaise " + a.getId() + " : ");
                     if (a.peutArbitrer(nouveauMatch)) {
-                        nouveauMatch.ajouterArbitre(a);
+                        System.out.println(" oui.");
+                        arbitreChaise = (ArbitreChaise) a;
+                        nouveauMatch.ajouterArbitre(arbitreChaise);
+                        a.assigneMatchSimple();
                         break;
+                    }
+                    else {
+                        System.out.println("non.");
                     }
                 }
             }
+            if (arbitreChaise == null)
+                throw new Error("Pas assez d'arbitres de chaise disponibles.");
             
+            ArbitreFilet arbitreFilet = null;
             for (Arbitre a : arbitres.values()) {
                 if (a instanceof ArbitreFilet) {
+                    System.out.print("ArbitreFilet " + a.getId() + " : ");
                     if (a.peutArbitrer(nouveauMatch)) {
-                        nouveauMatch.ajouterArbitre(a);
+                        System.out.println(" oui.");
+                        arbitreFilet = (ArbitreFilet) a;
+                        a.assigneMatchSimple();
+                        nouveauMatch.ajouterArbitre(arbitreFilet);
                         break;
                     }
+                    else 
+                        System.out.println("non.");
                 }
             }
+            if (arbitreFilet == null) {
+                throw new Error("Pas assez d'arbitres de filet disponibles.");
+            }
+            
             
             
             // 8 arbitres de ligne
@@ -383,18 +728,24 @@ public class PlanningMatchs {
             int nbArbitresLigne = 0;
             for (Arbitre arbitre : arbitres.values()) {
                 if (arbitre instanceof ArbitreLigne) {
+                    System.out.print("ArbitreLigne " + arbitre.getId() + " : ");
                     if (arbitre.peutArbitrer(nouveauMatch)) {
+                        System.out.println(" oui.");
                         arbitresLignes.put(nbArbitresLigne, (ArbitreLigne) arbitre);
+                        arbitre.assigneMatchSimple();
                         //System.out.println("arbitre ajouté : " + arbitre.getId() + " - " + arbitresLignes.size() + " arbitres de ligne");
                         nbArbitresLigne++;
                         if (nbArbitresLigne == 8) 
                             break;
                     }
+                    else
+                        System.out.println("non.");
                 }
                 
             }
             if (nbArbitresLigne < 8) {
                 System.out.println("Pas assez d'arbitres de ligne disponibles (" + nbArbitresLigne + "/8 arbitres disponibles)");
+                throw new Error("Pas assez d'arbitres de ligne disponibles.");
             }
 
             nouveauMatch.setArbitresLigne(arbitresLignes);
@@ -407,7 +758,8 @@ public class PlanningMatchs {
             int n = ramasseurs.size();
             
             //HashMap<Integer, Ramasseur> ramasseursRestants = (HashMap<Integer, Ramasseur>) ramasseurs.clone();
-            List<Ramasseur> ramasseursRestants = DaoRamasseur.getRamasseurs();
+            //List<Ramasseur> ramasseursRestants = DaoRamasseur.getRamasseurs();
+            List<Ramasseur> ramasseursRestants = new ArrayList<>(ramasseurs);
             
             while (equipeRamasseurs.getNbRamasseurs() < 8) {
                 //System.out.println("nbRamasseurs = " + equipeRamasseurs.getNbRamasseurs() + " Ramasseurs restants : " + ramasseursRestants.size());
@@ -447,7 +799,12 @@ public class PlanningMatchs {
             nouveauMatch.affecterEquipeRamasseurs(equipeRamasseurs);
             creneau.assigne(nouveauMatch);
             //matchs.put(nouveauMatch.getId(), nouveauMatch);
-            matchs.add(nouveauMatch);
+            
+            DaoMatch.insertMatch(nouveauMatch);
+            int id = nouveauMatch.getId();
+            System.out.println("nouveauMatch (" + id + ") : " + nouveauMatch);
+            matchs.put(id, nouveauMatch);
+            //matchs.add(nouveauMatch);
             
             //nouveau Match : " + nouveauMatch
             
@@ -468,12 +825,12 @@ public class PlanningMatchs {
         Joueur joueur;
         boolean joueurValide = false;
         int i = joueursRestants.size()-1;
-        
+        System.out.println(" size = " + joueursRestants.size());
         do {
-            //System.out.println("i=" + i);
+            
             joueur = joueursRestants.get(i);
             joueurValide = true;
-            
+            System.out.println("i=" + i + ", joueur : " + joueur.toString() + " " + joueur.getSexe());
             if (!joueur.getSexe().equals(sexe))
                 joueurValide = false;
             
@@ -491,34 +848,48 @@ public class PlanningMatchs {
                 }
             }*/
             i--;
-        } while (!joueurValide);
+        } while (!joueurValide && joueursRestants.size() > 1);
         if (!joueurValide) {
             return null;
         }
         return joueur;
     }
     
+    public static void recupererMatchs() {
+        try {
+            matchs = DaoMatch.getMatchs();
+        } catch (Error ex) {
+            Logger.getLogger(PlanningMatchs.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     public static void ajouterResultatMatch(int idMatch, List<modele.Set> sets) {
         
-        Match match = matchs.get(idMatch);
+        //Match match = matchs.get(idMatch);
         
-        match.setScore(sets);
-        
-        
+        //match.setScore(sets);
+    }
+    
+    public static int nbMatchs() {
+        if (matchs == null)
+            return 0;
+        return matchs.size();
     }
     
     public static Match getMatch(int idMatch) {
+        /*
         for (Match m : matchs) {
             if (idMatch == m.getId()) {
                 return m;
             }
-        }
-        return null;
+        }*/
+        return matchs.get(idMatch);
     }
     
-    public static List<Match> getMatchs() {
-        System.out.println("matchs : " + matchs + "nbMatchs : " + matchs.size());
+    public static HashMap<Integer, Match> getMatchs() {
+        if (matchs != null)
+            System.out.println("matchs : " + matchs + "nbMatchs : " + matchs.size());
+        
         return matchs;
     }
     

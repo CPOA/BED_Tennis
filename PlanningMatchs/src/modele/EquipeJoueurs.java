@@ -19,6 +19,11 @@ public class EquipeJoueurs {
             m_joueurA = joueurA;
         }
         
+        public EquipeJoueurs(Joueur joueurA, Joueur joueurB) {
+            m_joueurA = joueurA;
+            m_joueurB = joueurB;
+        }
+        
 	public int getId() {
             return m_id;
 	}
@@ -50,8 +55,13 @@ public class EquipeJoueurs {
         }
 
 	public int getNbJoueurs() {
-            return m_nbJoueurs;
-	}
+            int n = 0;
+            if (m_joueurA != null)
+                n++;
+            if (m_joueurB != null)
+                n++;
+            return n;
+        }
         
         public String getNationalite() {
             // joueur 1 et 2 ont nécessairement la même nationalité, voir ajouterJoueur()
@@ -59,7 +69,7 @@ public class EquipeJoueurs {
         }
         
 	public boolean estComplete() {
-            return (m_nbJoueurs == 2);
+            return (getNbJoueurs() == 2);
 	}
         
         @Override

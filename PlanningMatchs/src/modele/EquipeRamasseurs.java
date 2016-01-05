@@ -36,6 +36,10 @@ public class EquipeRamasseurs {
             //System.out.println("Ramasseur ajouté : " + ramasseur + " - " + m_ramasseurs.size() + " ramasseurs dans l'équipe.");
 	}
 
+        public List<Ramasseur> getRamasseurs() {
+            return m_ramasseurs;
+        }
+        
 	public int getNbRamasseurs() {
             return m_ramasseurs.size();
 	}

@@ -3,6 +3,7 @@ package modele.arbitre;
 
 import modele.Match;
 import modele.personne.Sexe;
+import modele.sgbd.DaoArbitre;
 
 
 
@@ -29,6 +30,7 @@ public abstract class Arbitre extends modele.personne.Personne {
         
         public void assigneMatchSimple() {
             m_nbMatchsSimples++;
+            DaoArbitre.assignerMatchSimple(this.getId());
         }
         
         public void assigneMatchDouble() {
@@ -37,18 +39,16 @@ public abstract class Arbitre extends modele.personne.Personne {
 
 	public boolean peutArbitrer(Match match) {
             
-            
             if (match.getType() == "simple") {
                 if (m_nbMatchsSimples >= 2)
                     return false;
                 
-                if (this.aMemeNationalite(match.getJoueur1()))
+                if (this.aMemeNationalite(match.getEquipe1().getNationalite()))
                     return false;
-                if (this.aMemeNationalite(match.getJoueur2()))
+                if (this.aMemeNationalite(match.getEquipe2().getNationalite()))
                     return false;
             }
-            
-            if (match.getType() == "double") {
+            else if (match.getType() == "double") {
                 if (m_nbMatchsDoubles >= 2)
                     return false;
             }
