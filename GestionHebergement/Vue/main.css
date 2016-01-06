@@ -1,11 +1,13 @@
 body{
    background-color: #424242; 
-   margin:5%;
-   padding:5%; 
+   margin:0%;
+   padding:0; 
 }
 
 #corps{
     color: white;
+    //margin: 5%;
+    padding: 10%;
 }
 
 #corps a{
@@ -14,21 +16,90 @@ body{
 }
 
 #bouton{
-    background-color:  #e8e8e8;
-    border:5px outset #e8e8e8;
-    width: 25%;
-    margin: 10px;  
-    color: #424242;
+    border:5px outset white;
+    width: 30%; 
+}
+#bouton a{
+    padding: 20px;
+    margin: 0px;
 }
 
 #bouton:active{
     border-style: inset;
+    background-color: white;
+    color: #424242;
+}
+
+#bouton a:active{
+    color: #424242;
+    
 }
 #cadre{
+   with: 10%;
+   max-width: 750px;
    border: 2px solid white;
+   margin: 5%;
+   padding: 5%;
    padding-top: 3%;
    padding-bottom: 3%;
 }
 #header{
+    background-color: white;  
+    position: fixed;
+    padding: 0px;
+    margin: 0px;
+    width: 100%;
+}
+
+.headLeftBouton{
+    float: left;
+    display: inline-block;
+    padding: 10px;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+.headLeftBouton a{
+    text-decoration: none;
+    color: black;
+}
+
+.headLeftBouton:hover{
+    background-color: gray;
+}
+
+.headLeftBouton a:active{
+    color: darkorange;
+}
+
+.headMidBouton{
+    display: inline-block;
+    margin: 0px;
+    color: #990000;
     
+}
+
+.headRightBouton{
+    float: right;
+    display: inline-block;
+    padding: 10px;
+    padding-right: 20px;
+    padding-left: 20px;
+    
+}
+
+.headRightBouton a{
+    text-decoration: none;
+    color: black;
+}
+
+.headRightBouton:hover{
+    background-color: gray;
+}
+
+.headRightBouton a:active{
+    color: darkorange;
+}
+
+#footer{
+    color: white;
 }
