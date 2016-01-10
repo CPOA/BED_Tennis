@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package modele.sgbd;
+package donnees;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -67,7 +67,7 @@ public class DaoCourt extends Dao{
         int id = Dao.idMaxAttribue+1;
         court.setId(id);
                 
-        queryUpdate("Insert into ramasseur values ("
+        queryUpdate("Insert into court values ("
                                             + id + ", "
                                             + "'" + court.getNom() + "', " 
                                             + "'" + court.getAdresse() + "', "

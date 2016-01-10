@@ -7,14 +7,14 @@
  */
 
 /**
- * Description of VIP
+ * Description of CompteStaff
  *
  * @author Emile Bex
  */
-class VIP {
-    function __construct() {
-        
-    }
-
-//put your code here
+class CompteStaff extends Compte{
+    public function __construct($login, $motDePasse, $adresseMail) {
+        parent($login, $motDePasse,$adresseMail);
+        $_type='s';
+    }   
 }
+

@@ -17,9 +17,10 @@ abstract class Compte {
     private $_adresseMail;
     private $_type;
     
-    public function __construct($login, $motDePasse) {
-        $this->_login=$login;
-        $this->_motDePasse=$motDePasse;
+    public function __construct($login, $motDePasse, $adresseMail) {
+        $_login=$login;
+        $_motDePasse=$motDePasse;
+        $_adresseMail=$adresseMail;
     }
     function getLogin() {
         return $this->_login;

@@ -1,20 +1,21 @@
 package vue;
 
 import controleur.planningmatchs.PlanningMatchs;
+import java.awt.Point;
 import static java.awt.event.KeyEvent.VK_ENTER;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.table.TableModel;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import modele.Error;
 import modele.Match;
 import modele.TablePlanningModel;
-import modele.personne.Sexe;
 import static modele.personne.Sexe.HOMME;
-import modele.sgbd.DaoMatch;
+import donnees.Dao;
+import donnees.DaoMatch;
 
 
 public class IHMPlanningMatch extends javax.swing.JFrame {
@@ -62,10 +63,28 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
         
         //actualiserPlanning();
         
-        afficherMatchs();
+        
+            
+        ///  code écrit par anupammaiti sur Stackoverflow  https://stackoverflow.com/questions/14852719/double-click-listener-on-jtable-in-java et adapté
+        //     sous licence Creative Commons Attribution-ShareAlike  https://creativecommons.org/licenses/by-sa/3.0/
+            tableAffichagePlanning.addMouseListener(new MouseAdapter() {
+                    public void mousePressed(MouseEvent me) {
+                        JTable table =(JTable) me.getSource();
+                        Point p = me.getPoint();
+                        int row = table.rowAtPoint(p);
+                        if (me.getClickCount() == 2) {
+                            afficherDetailsMatchSelectionne(row);
+                        }
+                    }
+                });
+        
+        /// fin du code écrit par anupammaiti
+
+        
+        //afficherMatchs();
         
         jRadioButtonSimple.setSelected(true);
-        jRadioButtonMessieurs.setSelected(true);
+        //jRadioButtonMessieurs.setSelected(true);
         
         this.setTitle("Planning des Matchs");
         
@@ -85,8 +104,6 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
         jPanel_planification = new javax.swing.JPanel();
         jRadioButtonSimple = new javax.swing.JRadioButton();
         jRadioButtonDouble = new javax.swing.JRadioButton();
-        jRadioButtonDames = new javax.swing.JRadioButton();
-        jRadioButtonMessieurs = new javax.swing.JRadioButton();
         jButton_PlanifierMatchs = new javax.swing.JButton();
         jPanel_bdd = new javax.swing.JPanel();
         jButton_RecupererMatchs = new javax.swing.JButton();
@@ -96,6 +113,7 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
         jPanel_Match = new javax.swing.JPanel();
         jButton_detailsMatch = new javax.swing.JButton();
         jButton_resultatMatch = new javax.swing.JButton();
+        jButton_deplacerMatch = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -129,7 +147,7 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
         jPanel_planification.setName("jPanel_planification"); // NOI18N
 
         buttonGroupTypeTournoi.add(jRadioButtonSimple);
-        jRadioButtonSimple.setText("Simple");
+        jRadioButtonSimple.setText("Simple Messieurs");
         jRadioButtonSimple.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButtonSimpleActionPerformed(evt);
@@ -137,18 +155,12 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
         });
 
         buttonGroupTypeTournoi.add(jRadioButtonDouble);
-        jRadioButtonDouble.setText("Double");
+        jRadioButtonDouble.setText("Double Messieurs");
         jRadioButtonDouble.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButtonDoubleActionPerformed(evt);
             }
         });
-
-        buttonGroupGenreTournoi.add(jRadioButtonDames);
-        jRadioButtonDames.setText("Dames");
-
-        buttonGroupGenreTournoi.add(jRadioButtonMessieurs);
-        jRadioButtonMessieurs.setText("Messieurs");
 
         jButton_PlanifierMatchs.setText("Planifier Matchs");
         jButton_PlanifierMatchs.addActionListener(new java.awt.event.ActionListener() {
@@ -167,30 +179,20 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
                     .addComponent(jButton_PlanifierMatchs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel_planificationLayout.createSequentialGroup()
                         .addGroup(jPanel_planificationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel_planificationLayout.createSequentialGroup()
-                                .addComponent(jRadioButtonDouble)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jRadioButtonMessieurs))
-                            .addGroup(jPanel_planificationLayout.createSequentialGroup()
-                                .addComponent(jRadioButtonSimple)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jRadioButtonDames)))
-                        .addGap(0, 37, Short.MAX_VALUE)))
+                            .addComponent(jRadioButtonDouble)
+                            .addComponent(jRadioButtonSimple))
+                        .addGap(0, 135, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel_planificationLayout.setVerticalGroup(
             jPanel_planificationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_planificationLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel_planificationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButtonSimple)
-                    .addComponent(jRadioButtonDames))
+                .addComponent(jRadioButtonSimple)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel_planificationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButtonDouble)
-                    .addComponent(jRadioButtonMessieurs))
+                .addComponent(jRadioButtonDouble)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton_PlanifierMatchs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton_PlanifierMatchs, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -245,7 +247,7 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
                 .addComponent(jButton_ViderTables)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton_RemplirTables)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addComponent(jButton_RecupererMatchs)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton_ViderMatchs, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -262,6 +264,18 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
         });
 
         jButton_resultatMatch.setText("Inscrire les résultats du Match");
+        jButton_resultatMatch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_resultatMatchActionPerformed(evt);
+            }
+        });
+
+        jButton_deplacerMatch.setText("Déplacer");
+        jButton_deplacerMatch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_deplacerMatchActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel_MatchLayout = new javax.swing.GroupLayout(jPanel_Match);
         jPanel_Match.setLayout(jPanel_MatchLayout);
@@ -271,8 +285,9 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel_MatchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton_detailsMatch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton_resultatMatch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(225, Short.MAX_VALUE))
+                    .addComponent(jButton_resultatMatch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton_deplacerMatch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(148, Short.MAX_VALUE))
         );
         jPanel_MatchLayout.setVerticalGroup(
             jPanel_MatchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -281,6 +296,8 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
                 .addComponent(jButton_detailsMatch)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton_resultatMatch)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton_deplacerMatch)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -327,6 +344,7 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButtonDoubleActionPerformed
 
     private void jButton_PlanifierMatchsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_PlanifierMatchsActionPerformed
+        
         String type = "";
         if (jRadioButtonSimple.isSelected())
             type = "simple";
@@ -336,8 +354,8 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
             System.out.println("Vous devez sélectionner un type de tournoi.");
             return;
         }
-        
-        Sexe genre;
+        /*
+        Sexe genre;     
         if (jRadioButtonDames.isSelected())
             genre = Sexe.FEMME;
         else if (jRadioButtonMessieurs.isSelected())
@@ -345,10 +363,10 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
         else {
             System.out.println("Vous devez sélectionner le genre du tournoi.");
             return;
-        }
+        }*/
         
         try {
-            PlanningMatchs.planifierMatchs(type, genre);
+            PlanningMatchs.planifierMatchs(type, HOMME);
         } catch (Error ex) {
             Logger.getLogger(IHMPlanningMatch.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -366,7 +384,10 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
     
     private void tableAffichagePlanningKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tableAffichagePlanningKeyPressed
         if (evt.getKeyCode() == VK_ENTER) {
-            afficherDetailsMatchSelectionne();
+            
+            int row = tableAffichagePlanning.getSelectedRow();
+            afficherDetailsMatchSelectionne(row);
+            
         }
     }//GEN-LAST:event_tableAffichagePlanningKeyPressed
 
@@ -380,18 +401,91 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
         verrouillerIHM();
         PlanningMatchs.viderTables();
         deverrouillerIHM();
+        JOptionPane.showMessageDialog(this, "Tables vidées - " + Dao.getIdMax());
     }//GEN-LAST:event_jButton_ViderTablesActionPerformed
 
     private void jButton_detailsMatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_detailsMatchActionPerformed
-        verrouillerIHM();
-        afficherDetailsMatchSelectionne();
-        deverrouillerIHM();
+
+        int row = tableAffichagePlanning.getSelectedRow();
+        afficherDetailsMatchSelectionne(row);
+
     }//GEN-LAST:event_jButton_detailsMatchActionPerformed
 
     private void jButton_ViderMatchsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_ViderMatchsActionPerformed
-        DaoMatch.viderMatchs();
-        afficherMatchs();
+        
+        int res = JOptionPane.showConfirmDialog(this, "Cela supprimera tous les matchs planifiés. Continuer ?", "Supprimer les matchs",  JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        //JOptionPane.showMessageDialog(this, JOptionPane.WARNING_MESSAGE, "Cela supprimera tous les matchs planifiés. Continuer ?", 0);
+        JOptionPane.showMessageDialog(this, "res = " + res);
+        if (res == 0) { // yes
+            DaoMatch.viderMatchs();
+            afficherMatchs();
+        }
+        else {    // no
+            return;
+        }
     }//GEN-LAST:event_jButton_ViderMatchsActionPerformed
+
+    private void jButton_resultatMatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_resultatMatchActionPerformed
+        //List<modele.Set> sets = new ArrayList<>();
+        
+        int row = tableAffichagePlanning.getSelectedRow();
+        if (row < 0)
+            return;
+        Match match = PlanningMatchs.getMatch((int)tableAffichagePlanning.getValueAt(row, 0));
+        
+        //IHM_ResultatMatch ihm_resultatMatch = new IHM_ResultatMatch(match);
+        //ihm_resultatMatch.setVisible(true);
+        
+        if (match.estFini()) {
+            Object[] options = {"Retour - Ne rien modifier", "Modifier le score existant", "Effacer le score et marquer ce match comme non joué", "Effacer le score existant et le rentrer à nouveau"};
+            int res = (JOptionPane.showOptionDialog(this, "Les informations du score ont ", "Match déjà joué", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]));
+            JOptionPane.showMessageDialog(this, "res = " + res);
+            if (res == 0) { // yes
+                
+            }
+            else if (res == 1) {
+                
+            }
+            else if (res == 2) {
+                
+            }
+            else if (res == 3) {
+                
+            }
+        }
+        
+        JDialog_ResultatMatch resultatMatch = new JDialog_ResultatMatch(this, true, match);
+        
+        resultatMatch.setVisible(true);
+        
+        
+        
+        //while (!match.estFini()) {
+            
+        //}
+        
+        System.out.println("result - " + match.getScoreFinal().toString());
+    }//GEN-LAST:event_jButton_resultatMatchActionPerformed
+
+    private void jButton_deplacerMatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_deplacerMatchActionPerformed
+        
+        int row = tableAffichagePlanning.getSelectedRow();
+        if (row < 0) 
+            return;
+        Match matchADeplacer = PlanningMatchs.getMatch((int)tableAffichagePlanning.getValueAt(row, 0));
+        
+        if (matchADeplacer.estFini()) {
+            JOptionPane.showMessageDialog(this, "Ce match a déjà été joué ! Il ne peut pas être déplacé.");
+            return;
+        }
+        
+        JDialog_DeplacerMatch jDialog_DeplacerMatch = new JDialog_DeplacerMatch(this, true, matchADeplacer);
+        
+        jDialog_DeplacerMatch.setVisible(true);
+        
+        afficherMatchs();
+        
+    }//GEN-LAST:event_jButton_deplacerMatchActionPerformed
     
     
     private void afficherMatchs() {
@@ -410,8 +504,8 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
         tableAffichagePlanning.getColumnModel().getColumn(1).setMaxWidth(130);
         tableAffichagePlanning.getColumnModel().getColumn(1).setMinWidth(130);
         
-        tableAffichagePlanning.getColumnModel().getColumn(2).setMaxWidth(110);
-        tableAffichagePlanning.getColumnModel().getColumn(2).setMinWidth(110);
+        tableAffichagePlanning.getColumnModel().getColumn(2).setMaxWidth(160);
+        tableAffichagePlanning.getColumnModel().getColumn(2).setMinWidth(160);
         
         tableAffichagePlanning.getColumnModel().getColumn(3).setMaxWidth(110);
         tableAffichagePlanning.getColumnModel().getColumn(3).setMinWidth(110);
@@ -423,18 +517,21 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
         tableAffichagePlanning.getColumnModel().getColumn(5).setMinWidth(200);
     }
     
-    private void afficherDetailsMatchSelectionne() {
-        int row = tableAffichagePlanning.getSelectedRow();
+    private void afficherDetailsMatchSelectionne(int row) {
+        verrouillerIHM();
+        
         if (row < 0)
             return;
         Match match = PlanningMatchs.getMatch((int)tableAffichagePlanning.getValueAt(row, 0));
         IHMInfoMatch infoMatch = new IHMInfoMatch(match);
         infoMatch.setVisible(true);
         infoMatch = null;
+        
+        deverrouillerIHM();
     }
     
     
-    private void verrouillerIHM() {
+    public void verrouillerIHM() {
        jPanel_table.setEnabled(false);
        jPanel_bdd.setEnabled(false);
             jButton_RemplirTables.setEnabled(false);
@@ -522,15 +619,14 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
     private javax.swing.JButton jButton_RemplirTables;
     private javax.swing.JButton jButton_ViderMatchs;
     private javax.swing.JButton jButton_ViderTables;
+    private javax.swing.JButton jButton_deplacerMatch;
     private javax.swing.JButton jButton_detailsMatch;
     private javax.swing.JButton jButton_resultatMatch;
     private javax.swing.JPanel jPanel_Match;
     private javax.swing.JPanel jPanel_bdd;
     private javax.swing.JPanel jPanel_planification;
     private javax.swing.JPanel jPanel_table;
-    private javax.swing.JRadioButton jRadioButtonDames;
     private javax.swing.JRadioButton jRadioButtonDouble;
-    private javax.swing.JRadioButton jRadioButtonMessieurs;
     private javax.swing.JRadioButton jRadioButtonSimple;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tableAffichagePlanning;

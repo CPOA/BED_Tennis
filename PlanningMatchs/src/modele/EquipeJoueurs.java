@@ -23,6 +23,10 @@ public class EquipeJoueurs {
             m_joueurA = joueurA;
             m_joueurB = joueurB;
         }
+
+        public EquipeJoueurs() {
+
+        }
         
 	public int getId() {
             return m_id;

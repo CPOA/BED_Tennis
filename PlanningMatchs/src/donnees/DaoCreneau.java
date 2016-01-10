@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package modele.sgbd;
+package donnees;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +17,7 @@ import modele.Error;
 import modele.Match;
 import modele.TrancheHoraire;
 import modele.court.Court;
-import static modele.sgbd.Dao.query;
+import static donnees.Dao.query;
 
 /**
  *
@@ -75,6 +75,45 @@ public class DaoCreneau extends Dao {
         
         return n;
     }
+    
+    
+    public static List<Creneau> getCreneauxLibres() {
+        List<Creneau> creneaux = new ArrayList<Creneau>();
+        
+        connect();
+        
+        HashMap<Integer, Court> courts = DaoCourt.getCourts();
+
+        
+        ResultSet res = query("Select id_creneau, id_court, annee, mois, jour, tranchehoraire, libre, id_match from creneau WHERE libre='true'");
+        
+        try {
+            while(res.next()) {
+                
+                int idMatch = res.getInt("id_match");
+                Match match = null;
+                if (idMatch != 0)
+                    match = DaoMatch.getMatchs().get(idMatch);
+                Creneau c = new Creneau(res.getInt("id_creneau"),
+                                        courts.get(res.getInt("id_court")),
+                                        res.getInt("annee"),
+                                        res.getInt("mois"),
+                                        res.getInt("jour"),
+                                        TrancheHoraire.valueOf(res.getString("tranchehoraire")),
+                                        res.getBoolean("libre"),
+                                        match);
+                System.out.println("Créneau récupéré : " + c.toString() + ", " + c.estLibre());
+                creneaux.add(c);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoCreneau.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Error ex) {
+            Logger.getLogger(DaoCreneau.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return creneaux;
+    }
+    
     
     public static void insertCreneau(Creneau creneau) {
        

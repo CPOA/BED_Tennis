@@ -5,12 +5,15 @@ public class Joueur extends Personne {
 	private String m_login;
 	private String m_motDePasse;
 	private int m_classementATP;
+        
+        private int m_rangTournoi;
 
-        public Joueur(int id, String nom, String prenom, String mail, Sexe sexe, String nationalite, String login, String motDePasse, int classementATP) {
+        public Joueur(int id, String nom, String prenom, String mail, Sexe sexe, String nationalite, String login, String motDePasse, int classementATP, int rangTournoi) {
             super(id, nom, prenom, mail, sexe, nationalite);
             this.m_login = login;
             this.m_motDePasse = motDePasse;
             this.m_classementATP = classementATP;
+            this.m_rangTournoi = rangTournoi;
         }
         
         public String getMdP() {
@@ -20,7 +23,7 @@ public class Joueur extends Personne {
 
 	public int setMotDePasse(String ancienMdp, String nouveauMdp) {
             if (ancienMdp.equals(this.m_motDePasse))
-                return -1;
+                throw new Error("Mot de passe incorrect");
             m_motDePasse = nouveauMdp;
             return 0;
 	}
@@ -36,6 +39,16 @@ public class Joueur extends Personne {
 	public int getClassementATP() {
             return this.m_classementATP;
 	}
+        
+        public int getRangTournoi() {
+            return m_rangTournoi;
+        }
+        
+        public void setRangTournoi(int rangTournoi) {
+            if (rangTournoi != 16 && rangTournoi != 8 && rangTournoi != 4 && rangTournoi != 2 && rangTournoi != 1)
+                throw new Error("Rang de tournoi incorrect : " + rangTournoi);
+            m_rangTournoi = rangTournoi;
+        }
 
     @Override
     public String typePersonne() {

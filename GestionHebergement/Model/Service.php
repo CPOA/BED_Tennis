@@ -14,35 +14,27 @@
 class Service {
     private $_idType;
     private $_type;
-    function __construct($idType) {
-        try {
-            $bd=Connection::getInstance();
-            $bd->prepare("Select * from service where id=?");
-            $bd->execute(array($idType));
-            $c=$bd->fetch();
-            $bd->closeCursor();
-            $this->_idType=$c['id'];
-            $this->_type=$c['type'];
-        }
-        catch (PDOException $e) {
-            echo ($e->getMessage());
-        }      
+    function __construct($idType, $_type) {
+        $_idType=$idType;
+        $_type=$type;
     }
- 
-    function getIdType() {
-        return $this->_idType;
-    }
-
-    function getType() {
-        return $this->_type;
-    }
-
-    function setIdType($idType) {
-        $this->_idType = $idType;
-    }
-
-    function setType($type) {
-        $this->_type = $type;
-    }
+    
 }
+
+function getIdType() {
+    return $this->_idType;
+}
+
+ function getType() {
+    return $this->_type;
+}
+
+ function setIdType($idType) {
+    $this->_idType = $idType;
+}
+
+ function setType($type) {
+    $this->_type = $type;
+}
+
 
