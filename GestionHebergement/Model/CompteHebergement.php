@@ -39,11 +39,13 @@ class CompteHebergement extends Compte{
             $this->_nbEtoile=$c['nbetoile'];
             $this->_typeVIP=$c['typevip'];
             $this->_placesDispo=$c['placesdispo'];
-            $this->_type='h';
+            $this->setType("h");
             $services=explode(",", $c['service']);
             foreach($services as $idService) {
-                $service=new Service($idService);
-                array_push($this->_service, $service);
+                if (strcmp($idService, "")!=0) {
+                    $service=new Service($idService);
+                    array_push($this->_service, $service);
+                }
             }
         }
     }
@@ -100,7 +102,6 @@ class CompteHebergement extends Compte{
     }
     
     function getService() {
-        
         return $this->_service;
     }
 
@@ -115,8 +116,8 @@ class CompteHebergement extends Compte{
             $bd->prepare("Select * from CompteHebergement");
             $bd->execute();
             $liste=array();
-            while ($hotel=$bd->fetch()) {
-                echo($hotel['login']);
+            $hotels=$bd->fetchAll();
+            foreach ($hotels as $hotel){
                 $compte=new CompteHebergement($hotel['login'], $hotel['mdp']);
                 array_push($liste,$compte);
             }

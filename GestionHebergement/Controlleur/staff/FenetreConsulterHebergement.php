@@ -1,22 +1,35 @@
 <?php
+    require_once '../../Model/CompteStaff.php';
+    require_once '../../Model/Service.php';
+    session_start();
+    
+    if (!isset($_SESSION['compte'])) {
+        header("Location: ../FenetreConnexion.php");
+    } else {
+        $compte=$_SESSION['compte'];
+        if(strcmp($_SESSION['compte']->getType(), "s")!=0) {
+            header("Location: ../hebergement/FenetreMenuCompteHebergement.php");
+        }
+    }
+    
     $title;
-    $content;
+    $content="";
     $title="Liste des Hebergements";
     require_once '../../Model/CompteHebergement.php';
-    //$compte = unserialize(stripslashes(urldecode($_GET['compte'])));
     $hotels=CompteHebergement::getListHotels();
     foreach ($hotels as $hotel){
-        $content= $hotel->getNom()."\n"
+        $content=$content."<p>".$hotel->getNom()."\n"
         .$hotel->getAdresse()."\n"
         .$hotel->getNbEtoile()."\n"
         .$hotel->getTypeVIP()."\n";
-        if(!empty($hotel->getService())) {
-            "Services :\n";
-            foreach($hotel->getService() as $service) {
-                $content=$content.$service->getType()."\n";
+        $services=$hotel->getService();
+        if(!empty($services)){
+            $content=$content."Services :\n<ul>";
+            foreach($services as $service) {
+                $content=$content."<li>".$service->getType()."</li>";
             }     
         }
-        $content=$content.$hotel->getPlacesDispo();
+        $content=$content."</ul>\n".$hotel->getPlacesDispo()."</p>";
         
     }
     require_once ("../../Vue/Layout.php");
