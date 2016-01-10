@@ -45,11 +45,15 @@ public class EquipeRamasseurs {
 	}
 
 	public boolean estComplete() {
-            return (m_nbRamasseurs == 8);
+            return (m_ramasseurs.size() == 12);
         }
 
         public boolean contient(Ramasseur ramasseur) {
-            return m_ramasseurs.contains(ramasseur);
+            for (Ramasseur r : m_ramasseurs) {
+                if (r.getId() == ramasseur.getId())
+                    return true;
+            }
+            return false;
         }
         
 }

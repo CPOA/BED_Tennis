@@ -86,11 +86,17 @@ public class TablePlanningModel extends AbstractTableModel {
             case 1:
                 return match.getCreneau();
             case 2:
-                return match.getCourt();
+                return match.getCourt().getNom();
             case 3:
-                return match.getType() + " - " + match.getGenre();
+                return match.getType();
             case 4:
                 //return match.getJoueur1().toString();
+                String txt = "";
+                if (match.estFini()) {
+                    if (match.getGagnant() == 1) {
+                        txt = "";
+                    }
+                }
                 return match.getEquipe1().toString();
             case 5: 
                 return match.getJoueur2().toString();
@@ -102,6 +108,7 @@ public class TablePlanningModel extends AbstractTableModel {
     
 
     public String getColumnName(int col) {
+        
         return titreColonnes.get(col);
     }
     

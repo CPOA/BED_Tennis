@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package modele.sgbd;
+package donnees;
 
 import java.sql.*;
 import com.mysql.jdbc.Driver;
@@ -24,7 +24,7 @@ public class ConnexionMySql {
     private static int creerConnexion() {
         
         try {
-            java.io.FileInputStream fichier = new java.io.FileInputStream("./src/modele/sgbd/connexion_1.properties");
+            java.io.FileInputStream fichier = new java.io.FileInputStream("./src/donnees/connexion_1.properties");
             java.util.Properties props;
             props = new java.util.Properties();
             props.load(fichier);

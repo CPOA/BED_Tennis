@@ -15,7 +15,7 @@ public class CourtAnnexe extends Court {
     
     public static CourtAnnexe getInstance() {
         if (m_instance == null)
-            m_instance = new CourtAnnexe(1, "Court Annexe", "adresse", 5000);
+            m_instance = new CourtAnnexe(1, "Court Annexe", "adresse du court annexe", 3000);
         return m_instance;
     }
 

@@ -130,18 +130,10 @@
                       <Component id="jButton_PlanifierMatchs" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jRadioButtonDouble" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jRadioButtonMessieurs" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" attributes="0">
-                                  <Component id="jRadioButtonSimple" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="jRadioButtonDames" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="jRadioButtonDouble" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jRadioButtonSimple" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="37" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="135" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -152,17 +144,11 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jRadioButtonSimple" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jRadioButtonDames" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="jRadioButtonSimple" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jRadioButtonDouble" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jRadioButtonMessieurs" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="jRadioButtonDouble" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jButton_PlanifierMatchs" max="32767" attributes="0"/>
+                  <Component id="jButton_PlanifierMatchs" pref="60" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -174,7 +160,7 @@
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="buttonGroupTypeTournoi"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Simple"/>
+            <Property name="text" type="java.lang.String" value="Simple Messieurs"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jRadioButtonSimpleActionPerformed"/>
@@ -185,27 +171,11 @@
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="buttonGroupTypeTournoi"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Double"/>
+            <Property name="text" type="java.lang.String" value="Double Messieurs"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jRadioButtonDoubleActionPerformed"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JRadioButton" name="jRadioButtonDames">
-          <Properties>
-            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="buttonGroupGenreTournoi"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Dames"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JRadioButton" name="jRadioButtonMessieurs">
-          <Properties>
-            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="buttonGroupGenreTournoi"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Messieurs"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="jButton_PlanifierMatchs">
           <Properties>
@@ -248,7 +218,7 @@
                   <Component id="jButton_ViderTables" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButton_RemplirTables" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="18" max="32767" attributes="0"/>
+                  <EmptySpace pref="20" max="32767" attributes="0"/>
                   <Component id="jButton_RecupererMatchs" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButton_ViderMatchs" min="-2" pref="25" max="-2" attributes="0"/>
@@ -310,8 +280,9 @@
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="jButton_detailsMatch" max="32767" attributes="0"/>
                       <Component id="jButton_resultatMatch" max="32767" attributes="0"/>
+                      <Component id="jButton_deplacerMatch" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="225" max="32767" attributes="0"/>
+                  <EmptySpace pref="148" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -322,6 +293,8 @@
                   <Component id="jButton_detailsMatch" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButton_resultatMatch" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jButton_deplacerMatch" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -340,6 +313,17 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Inscrire les r&#xe9;sultats du Match"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton_resultatMatchActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="jButton_deplacerMatch">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="D&#xe9;placer"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton_deplacerMatchActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

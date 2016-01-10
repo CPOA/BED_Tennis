@@ -11,7 +11,7 @@ public class CourtCentral extends Court {
     
     public static CourtCentral getInstance() {
         if (m_instance == null)
-            m_instance = new CourtCentral(1, "Court Central", "adresse", 3000);
+            m_instance = new CourtCentral(1, "Court Central", "adresse du court central", 5600);
         return m_instance;
     }
 

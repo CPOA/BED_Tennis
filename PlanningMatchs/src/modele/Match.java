@@ -11,8 +11,8 @@ import modele.arbitre.ArbitreFilet;
 import modele.arbitre.ArbitreLigne;
 import modele.court.Court;
 import modele.personne.Sexe;
-import modele.sgbd.Dao;
-import modele.sgbd.DaoMatch;
+import donnees.Dao;
+import donnees.DaoMatch;
 
 
 
@@ -31,8 +31,8 @@ public class Match implements Comparable<Match>{
 	private String m_type;
         private Sexe m_genre;
         
-	private Joueur m_gagnant;
-	private Joueur m_perdant;
+	private EquipeJoueurs m_equipeGagnante;
+	private EquipeJoueurs m_equipePerdante;
         
 	private boolean m_fini;
         
@@ -41,6 +41,8 @@ public class Match implements Comparable<Match>{
         
         private EquipeJoueurs m_equipe1;
         private EquipeJoueurs m_equipe2;
+        
+        private int m_quiAGagne; // Qui a gagné : 1 ou 2
        
         private ArbitreChaise m_arbitreChaise;
         private ArbitreFilet m_arbitreFilet;
@@ -262,13 +264,17 @@ public class Match implements Comparable<Match>{
             m_creneau = c;
         }
 
-	public Joueur getGagnant() {
-            return m_gagnant;
+	public EquipeJoueurs getEquipeGagnante() {
+            return m_equipeGagnante;
 	}
 
-	public Joueur getPerdant() {
+        public int getGagnant() {
+            return m_quiAGagne;
+        }
+        
+	/*public Joueur getPerdant() {
             return m_perdant;
-	}
+	}*/
 
 	public void ajouterSet(modele.Set set) {
             m_sets.add(set);
@@ -283,29 +289,36 @@ public class Match implements Comparable<Match>{
         }
         
         private void calculerResultat() {
-            int sets_j1 = 0;
-            int sets_j2 = 0;
-            for (modele.Set s : m_sets) {
-                if (s.gagnant() == 1) {
-                    sets_j1++;
+            if (estFini()) {
+                int sets_e1 = 0;
+                int sets_e2 = 0;
+                for (modele.Set s : m_sets) {
+                    if (s.gagnant() == 1) {
+                        sets_e1++;
+                    }
+                    else {
+                        sets_e2++;
+                    }
+                }
+
+                if (sets_e1 > sets_e2) {
+                    m_equipeGagnante = m_equipe1;
+                    m_equipePerdante = m_equipe2;
+                    m_quiAGagne = 1;
                 }
                 else {
-                    sets_j2++;
+                    m_equipeGagnante = m_equipe2;
+                    m_equipePerdante = m_equipe1;
+                    m_quiAGagne = 2;
                 }
             }
-            
-            if (sets_j1 > sets_j2) {
-                m_gagnant = m_joueur1;
-                m_perdant = m_joueur2;
-            }
-            else {
-                m_gagnant = m_joueur2;
-                m_perdant = m_joueur1;
-            }
         }
-        public int setScore(List<modele.Set> sets) {
-            if (sets.isEmpty()) return -1;
+        
+        public int setScore(List<modele.Set> sets) throws Error {
+            if (sets.isEmpty())
+                throw new Error("La liste de sets est vide");
             m_sets = sets;
+            m_fini = true;
             calculerResultat();
             return 0;
         }
@@ -317,6 +330,15 @@ public class Match implements Comparable<Match>{
 	public boolean estFini() {
             return m_fini;
 	}
+        
+        public boolean contient(ArbitreLigne arbitreLigne) {
+            for (ArbitreLigne a : m_arbitresLigne.values()) {
+                if (a.getId() == arbitreLigne.getId())
+                    return true;
+            }
+            return false;
+             
+        }
         
         @Override
         public String toString() {

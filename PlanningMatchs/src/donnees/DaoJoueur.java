@@ -1,4 +1,4 @@
-package modele.sgbd;
+package donnees;
 
 import modele.personne.Joueur;
 
@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import modele.EquipeJoueurs;
 import modele.personne.Sexe;
 import modele.personne.TypeVIP;
 
@@ -34,13 +35,14 @@ public class DaoJoueur extends Dao {
     }
     */
     
-    public static List<Joueur> getJoueurs(Sexe genre){
-        List<Joueur> joueurs = new ArrayList<>();
-        String condition = "";
+    public static HashMap<Integer, Joueur> getJoueurs(){
+        //List<Joueur> joueurs = new ArrayList<>();
+        HashMap<Integer, Joueur> joueurs = new HashMap<>();
+        /*String condition = "";
         if (genre != null) {
             condition = " WHERE sexe='" + genre.toString() + "'";
-        }
-        ResultSet res = query("Select id_joueur, nom, prenom, adressemail, sexe, nationalite, login, mdp, classementatp from joueur" + condition);
+        }*/
+        ResultSet res = query("Select id_joueur, nom, prenom, adressemail, sexe, nationalite, login, mdp, classementatp, rang_tournoi from joueur");
         
         try {
             
@@ -54,9 +56,10 @@ public class DaoJoueur extends Dao {
                                       res.getString("nationalite"),
                                       res.getString("login"),
                                       res.getString("mdp"),
-                                      res.getInt("classementatp"));
-                //joueurs.put(res.getInt("id_joueur"), j);
-                joueurs.add(j);
+                                      res.getInt("classementatp"),
+                                      res.getInt("rang_tournoi"));
+                joueurs.put(res.getInt("id_joueur"), j);
+                //joueurs.add(j);
             }
             
         } catch (SQLException ex) {
@@ -65,9 +68,62 @@ public class DaoJoueur extends Dao {
         return joueurs;
     }
     
+    /*
     public static List<Joueur> getJoueurs() {
         return getJoueurs(null);
+    }*/
+    
+    public static List<EquipeJoueurs> getEquipes(String typeTournoi, int rangTournoi){
+        List<EquipeJoueurs> equipes = new ArrayList<>();
+        String condition = "";
+        
+        if (rangTournoi != 0) {
+            condition = " WHERE rang_tournoi = " + rangTournoi;
+        }
+        ResultSet res = query("Select id_joueur, nom, prenom, adressemail, sexe, nationalite, login, mdp, classementatp, rang_tournoi from joueur " + condition);
+        
+        EquipeJoueurs equipe = new EquipeJoueurs();
+        
+        try {
+            int pos = 1;
+            
+            while(res.next()) {
+                Joueur j = new Joueur(
+                                      res.getInt("id_joueur"),   
+                                      res.getString("nom"),
+                                      res.getString("prenom"),
+                                      res.getString("adressemail"),
+                                      Sexe.valueOf(res.getString("sexe")),
+                                      res.getString("nationalite"),
+                                      res.getString("login"),
+                                      res.getString("mdp"),
+                                      res.getInt("classementatp"),
+                                      res.getInt("rang_tournoi"));
+                //joueurs.put(res.getInt("id_joueur"), j);
+                
+                if (typeTournoi == "simple") {
+                    equipe = new EquipeJoueurs(j);
+                    equipes.add(equipe);
+                }
+                else {  // double
+                    if (pos == 1) {
+                        equipe = new EquipeJoueurs(j);
+                        pos = 2;
+                    }
+                    else { // pos == 2
+                        equipe.ajouterJoueur(j);
+                        equipes.add(equipe);
+                        pos = 1;
+                    }
+                }
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoJoueur.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return equipes;
     }
+    
     
     public static int getNbJoueurs() {
         /*
@@ -112,6 +168,10 @@ public class DaoJoueur extends Dao {
         return n;
     }
     
+    public static List<EquipeJoueurs> getEquipes(String typeTournoi) {
+        return getEquipes(typeTournoi, 0);
+    }
+    
     public static int getMaxIdJoueur() {
         int n = 0;
         ResultSet res = query("Select max(id_joueur) from joueur");
@@ -132,11 +192,11 @@ public class DaoJoueur extends Dao {
      * 
      */
     
-    public static Joueur insertJoueur(String nom, String prenom, String adresseMail, Sexe sexe, String nationalite, String login, String motDePasse, int classementATP) {
+    public static Joueur insertJoueur(String nom, String prenom, String adresseMail, Sexe sexe, String nationalite, String login, String motDePasse, int classementATP, int rangTournoi) {
        
         //int id = Dao.getIdMax() + 1;
         int id = Dao.idMaxAttribue + 1;
-        Joueur nouveauJoueur = new Joueur(id, nom, prenom, login, sexe, nationalite, login, motDePasse, classementATP);
+        Joueur nouveauJoueur = new Joueur(id, nom, prenom, login, sexe, nationalite, login, motDePasse, classementATP, rangTournoi);
         
         queryUpdate("Insert into joueur values ("
                                             + nouveauJoueur.getId() + ", "
@@ -147,7 +207,8 @@ public class DaoJoueur extends Dao {
                                             + "'" + nouveauJoueur.getNationalite() + "', "
                                             + "'" + nouveauJoueur.getLogin() + "', " 
                                             + "'" + nouveauJoueur.getMdP() + "', "
-                                            + nouveauJoueur.getClassementATP() + ")");
+                                            + nouveauJoueur.getClassementATP() + ", "
+                                            + nouveauJoueur.getRangTournoi() + ")");
         
         // on n'a pas le droit de faire des triggers, on le fait donc comme ça...
         
@@ -163,6 +224,14 @@ public class DaoJoueur extends Dao {
         return nouveauJoueur;
     }
     
+    
+    
+    public static void updateJoueurRangTournoi(Joueur joueur, int rangTournoi) {
+        queryUpdate("UPDATE joueur"
+                + "     SET rang_tournoi = " + rangTournoi + ""
+                + "     WHERE joueur.id_joueur = " + joueur.getId());    
+    }
+        
     public static void viderJoueurs() {
 
         queryUpdate("DELETE from joueur");

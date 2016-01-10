@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package modele.sgbd;
+package donnees;
 
 import com.sun.corba.se.impl.util.Utility;
 import java.sql.ResultSet;
@@ -78,7 +78,7 @@ public class Dao {
             statement = connexion.createStatement();
             
             
-            System.out.println("Update : " + queryUpdate);
+            System.out.print("Update : " + queryUpdate);
             System.out.println("Executing update...");
             
             res = statement.executeUpdate(queryUpdate);

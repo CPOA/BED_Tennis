@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package modele.sgbd;
+package donnees;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,7 +21,7 @@ import modele.arbitre.ArbitreFilet;
 import modele.arbitre.ArbitreLigne;
 import modele.arbitre.TypeArbitre;
 import modele.personne.TypeVIP;
-import static modele.sgbd.Dao.queryUpdate;
+import static donnees.Dao.queryUpdate;
 
 /**
  *

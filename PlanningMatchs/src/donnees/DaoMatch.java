@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package modele.sgbd;
+package donnees;
 
 import static com.sun.corba.se.impl.util.Utility.printStackTrace;
 import java.sql.ResultSet;
@@ -31,7 +31,7 @@ import modele.personne.Joueur;
 import modele.personne.Ramasseur;
 import modele.personne.Sexe;
 import modele.personne.TypeVIP;
-import static modele.sgbd.Dao.queryUpdate;
+import static donnees.Dao.queryUpdate;
 
 /**
  *
@@ -74,7 +74,8 @@ public class DaoMatch extends Dao{
         
         HashMap<Integer, Arbitre> arbitres = DaoArbitre.getArbitres();
         List<Ramasseur> ramasseurs = DaoRamasseur.getRamasseurs();
-        List<Joueur> joueurs = DaoJoueur.getJoueurs();
+        List<EquipeJoueurs> equipes = DaoJoueur.getEquipes("simple");
+        HashMap<Integer, Joueur> joueurs = DaoJoueur.getJoueurs();
         //List<Creneau> creneaux = DaoCreneau.getCreneaux();
         HashMap<Integer, Court> courts = DaoCourt.getCourts();
         
@@ -114,26 +115,29 @@ public class DaoMatch extends Dao{
                 //  joueurs
                 
                 
-                int id_e1_jA = res.getInt("joueur_1_A");
-                int id_e1_jB = res.getInt("joueur_1_B");
-                int id_e2_jA = res.getInt("joueur_2_A");
-                int id_e2_jB = res.getInt("joueur_2_B");
+                int id_equipe1_joueurA = res.getInt("joueur_1_A");
+                int id_equipe1_joueurB = res.getInt("joueur_1_B");
+                int id_equipe2_joueurA = res.getInt("joueur_2_A");
+                int id_equipe2_joueurB = res.getInt("joueur_2_B");
                 
-                Joueur j_1_A = null;
-                Joueur j_1_B = null;
-                Joueur j_2_A = null;
-                Joueur j_2_B = null;
+                Joueur j_1_A = joueurs.get(id_equipe1_joueurA);
+                Joueur j_1_B = joueurs.get(id_equipe1_joueurB);
+                Joueur j_2_A = joueurs.get(id_equipe2_joueurA);
+                Joueur j_2_B = joueurs.get(id_equipe2_joueurB);
                 
-                for (Joueur j : joueurs) {
-                    if (j.getId() == id_e1_jA)
+                /*
+                for (Joueur k : ) {
+                    
+                    if (j.getId() == id_equipe1_joueurA)
                         j_1_A = j;
-                    if (j.getId() == id_e1_jB)
+                    if (j.getId() == id_equipe1_joueurB)
                         j_1_B = j;
-                    if (j.getId() == id_e2_jA)
+                    if (j.getId() == id_equipe2_joueurA)
                         j_2_A = j;
-                    if (j.getId() == id_e2_jB)
+                    if (j.getId() == id_equipe2_joueurB)
                         j_2_B = j;
                 }
+                */
                 
                 EquipeJoueurs equipe1 = new EquipeJoueurs(j_1_A, j_1_B);
                 EquipeJoueurs equipe2 = new EquipeJoueurs(j_2_A, j_2_B);

@@ -41,4 +41,10 @@ public class Set {
                 return 2;
             }
         }
+        
+        
+        @Override
+        public String toString() {
+            return m_pointsJoueur1 + " - " + m_pointsJoueur2;
+        }
 }

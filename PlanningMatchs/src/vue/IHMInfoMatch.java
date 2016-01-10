@@ -5,7 +5,10 @@
  */
 package vue;
 
+import java.awt.Font;
 import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
+import java.util.List;
 import java.util.Map.Entry;
 import modele.Match;
 import modele.arbitre.ArbitreLigne;
@@ -28,15 +31,35 @@ public class IHMInfoMatch extends javax.swing.JFrame {
         
         jLabel_Contre.setText("");
         
+        
+        
+        
+        
         jLabel_IdMatch.setText(Integer.toString(match.getId()));
         jLabel_Joueur1.setText(match.getEquipe1().toString() + " (" + match.getEquipe1().getNationalite() + ")");
         //jLabel_NationaliteJ1.setText(match.getJoueur1().getNationalite());
         jLabel_Joueur2.setText(match.getEquipe2().toString() + " (" + match.getEquipe2().getNationalite() + ")");
         //jLabel_NationaliteJ2.setText(match.getJoueur2().getNationalite());
         
+        if (match.estFini()) {
+            if (match.getGagnant() == 1) {
+                // équipe 1 a gagné
+                jLabel_Joueur1.setText(jLabel_Joueur1.getText() + " (Gagnant)");
+                Font font = jLabel_Joueur1.getFont();
+                jLabel_Joueur1.setFont(new Font(font.getName(), Font.BOLD, font.getSize()));
+                
+            }
+            else {  // equipe 2 a gagné
+                jLabel_Joueur2.setText(jLabel_Joueur2.getText() + " (Gagnant)");
+                Font font = jLabel_Joueur2.getFont();
+                jLabel_Joueur2.setFont(new Font(font.getName(), Font.BOLD, font.getSize()));
+            }
+        }
+        
+        jLabel_Court.setText("Lieu : " + match.getCourt().getNom());
         
         //  Date & heure
-        System.out.println("dateTime=" + match.getCreneau().getDateTime().getDayOfMonth());
+        //System.out.println("dateTime=" + match.getCreneau().getDateTime().getDayOfMonth());
         jLabel_Date.setText(match.getCreneau().getDateTime().toString("EEEE dd MMMM YYYY"));
         jLabel_Heure.setText(match.getCreneau().getDateTime().toString("HH:mm"));
         
@@ -60,13 +83,19 @@ public class IHMInfoMatch extends javax.swing.JFrame {
         // affichage des ramasseurs
         
         //String ramasseurs = "";
-        for (Ramasseur r : match.getEquipeRamasseurs().getRamasseurs()) {
-            jTextArea_Ramasseurs.append(r.toString() + " (" + r.getNationalite() + ")\n");
+        List<Ramasseur> listeRamasseurs = match.getEquipeRamasseurs().getRamasseurs();
+        //for (Ramasseur r : ) {
+        for (Ramasseur r : listeRamasseurs.subList(0, 5)) {
+            jTextArea_Ramasseurs1.append(r.toString() + " (" + r.getNationalite() + ")\n");
+        }
+        for (Ramasseur r : listeRamasseurs.subList(6, 11)) {
+            jTextArea_Ramasseurs2.append(r.toString() + " (" + r.getNationalite() + ")\n");
         }
         
         
-        
         setTitle("Détails du match n° " + match.getId());
+        
+        
         
     }
 
@@ -81,7 +110,7 @@ public class IHMInfoMatch extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel_IdMatch = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        jButton_Fermer = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel_Joueur1 = new javax.swing.JLabel();
         jLabel_Contre = new javax.swing.JLabel();
@@ -97,12 +126,17 @@ public class IHMInfoMatch extends javax.swing.JFrame {
         jTextArea_ArbitresLigne = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
+        jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea_Ramasseurs = new javax.swing.JTextArea();
+        jTextArea_Ramasseurs1 = new javax.swing.JTextArea();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea_Ramasseurs2 = new javax.swing.JTextArea();
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel_Date = new javax.swing.JLabel();
         jLabel_Heure = new javax.swing.JLabel();
+        jButton_InscrireResultatMatch = new javax.swing.JButton();
+        jLabel_Court = new javax.swing.JLabel();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
@@ -119,10 +153,10 @@ public class IHMInfoMatch extends javax.swing.JFrame {
 
         jLabel_IdMatch.setText("jLabel2");
 
-        jButton1.setText("Fermer la fenêtre");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButton_Fermer.setText("Fermer la fenêtre");
+        jButton_Fermer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButton_FermerActionPerformed(evt);
             }
         });
 
@@ -152,7 +186,7 @@ public class IHMInfoMatch extends javax.swing.JFrame {
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel_Contre)))
-                .addContainerGap(175, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -183,6 +217,7 @@ public class IHMInfoMatch extends javax.swing.JFrame {
 
         jLabel4.setText("Arbitre de filet :");
 
+        jTextArea_ArbitresLigne.setEditable(false);
         jTextArea_ArbitresLigne.setColumns(20);
         jTextArea_ArbitresLigne.setRows(5);
         jScrollPane1.setViewportView(jTextArea_ArbitresLigne);
@@ -199,7 +234,7 @@ public class IHMInfoMatch extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addComponent(jLabel_ArbitreChaise)
                     .addComponent(jLabel_ArbitreFilet))
                 .addGap(33, 33, 33))
@@ -228,9 +263,21 @@ public class IHMInfoMatch extends javax.swing.JFrame {
 
         jLabel5.setText("Ramasseurs de balle :");
 
-        jTextArea_Ramasseurs.setColumns(20);
-        jTextArea_Ramasseurs.setRows(5);
-        jScrollPane2.setViewportView(jTextArea_Ramasseurs);
+        jSplitPane1.setDividerLocation(250);
+        jSplitPane1.setDividerSize(15);
+
+        jTextArea_Ramasseurs1.setColumns(20);
+        jTextArea_Ramasseurs1.setRows(5);
+        jScrollPane2.setViewportView(jTextArea_Ramasseurs1);
+
+        jSplitPane1.setLeftComponent(jScrollPane2);
+
+        jTextArea_Ramasseurs2.setEditable(false);
+        jTextArea_Ramasseurs2.setColumns(20);
+        jTextArea_Ramasseurs2.setRows(5);
+        jScrollPane3.setViewportView(jTextArea_Ramasseurs2);
+
+        jSplitPane1.setRightComponent(jScrollPane3);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -238,20 +285,20 @@ public class IHMInfoMatch extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -263,43 +310,54 @@ public class IHMInfoMatch extends javax.swing.JFrame {
 
         jLabel_Heure.setText("0");
 
+        jButton_InscrireResultatMatch.setText("Inscrire le résultat du match");
+        jButton_InscrireResultatMatch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_InscrireResultatMatchActionPerformed(evt);
+            }
+        });
+
+        jLabel_Court.setText("jLabel7");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(77, 77, 77)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton_Fermer, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton_InscrireResultatMatch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(123, 123, 123)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel_IdMatch)
-                        .addGap(70, 70, 70)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel_Heure, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel_Date)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel_IdMatch))
+                                    .addComponent(jLabel_Court))
+                                .addGap(70, 70, 70)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel8)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel_Heure, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel_Date)))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
@@ -309,16 +367,19 @@ public class IHMInfoMatch extends javax.swing.JFrame {
                 .addGap(4, 4, 4)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(jLabel_Heure))
+                    .addComponent(jLabel_Heure)
+                    .addComponent(jLabel_Court))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton_InscrireResultatMatch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton_Fermer, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE))
+                .addGap(18, 18, 18))
         );
 
         pack();
@@ -328,9 +389,9 @@ public class IHMInfoMatch extends javax.swing.JFrame {
         
     }//GEN-LAST:event_formWindowClosed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton_FermerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_FermerActionPerformed
         setVisible(false);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButton_FermerActionPerformed
 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
@@ -338,10 +399,15 @@ public class IHMInfoMatch extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_formKeyPressed
 
+    private void jButton_InscrireResultatMatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_InscrireResultatMatchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton_InscrireResultatMatchActionPerformed
+
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton_Fermer;
+    private javax.swing.JButton jButton_InscrireResultatMatch;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -352,6 +418,7 @@ public class IHMInfoMatch extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel_ArbitreChaise;
     private javax.swing.JLabel jLabel_ArbitreFilet;
     private javax.swing.JLabel jLabel_Contre;
+    private javax.swing.JLabel jLabel_Court;
     private javax.swing.JLabel jLabel_Date;
     private javax.swing.JLabel jLabel_Heure;
     private javax.swing.JLabel jLabel_IdMatch;
@@ -362,8 +429,11 @@ public class IHMInfoMatch extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTextArea jTextArea_ArbitresLigne;
-    private javax.swing.JTextArea jTextArea_Ramasseurs;
+    private javax.swing.JTextArea jTextArea_Ramasseurs1;
+    private javax.swing.JTextArea jTextArea_Ramasseurs2;
     // End of variables declaration//GEN-END:variables
 }
