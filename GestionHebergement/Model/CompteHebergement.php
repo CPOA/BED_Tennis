@@ -118,14 +118,6 @@ class CompteHebergement extends Compte{
             while ($hotel=$bd->fetch()) {
                 echo($hotel['login']);
                 $compte=new CompteHebergement($hotel['login'], $hotel['mdp']);
-               /* $compte->setAdresseMail($hotel['adressemail']);
-                $compte->setNom($hotel['nom']);
-                $compte->setAdresse($hotel['adresse']);
-                $compte->setNbEtoile($hotel['nbetoile']);
-                $compte->setPlacesDispo($hotel['placesdispo']);
-                $compte->setTypeHebergement($hotel['typeHebergement']);
-                $compte->setTypeVIP($hotel['typevip']);
-                $compte->setType('h');*/
                 array_push($liste,$compte);
             }
             $bd->closeCursor();

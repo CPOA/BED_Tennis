@@ -17,43 +17,21 @@ class Connection {
     private $_user;
     private $_password;
     private $_dbname;
-    private $_bd;
+    private $_bdd;
     private static $_instance;
 
     private function __construct(){
         $this->_host="iutdoua-webetu.univ-lyon1.fr";
-        $this->_user="p1407734";
-        $this->_password="215859";
-        $this->_dbname="p1407734";
+        $this->_user="p1400169";
+        $this->_password="210868";
+        $this->_dbname="p1400169";
         try{
-            $this->_bd = new PDO('mysql:host='.$this->_host.';dbname='.$this->_dbname.';charset=utf8',$this->_user,$this->_password);
+        $this->_bdd = new PDO('mysql:host='.$this->_host.';dbname='.$this->_dbname.';charset=utf8',$this->_user,$this->_password);
         }catch(PDOException $e) {
-            echo 'ERROR: ' . $e->getMessage();
+                echo 'ERROR: ' . $e->getMessage();
         }
     }
 
-    public function prepare($query) {
-        $this->_query=$this->_bd->prepare($query);
-    }
-
-    public function execute(array $param=null) {
-        if ($param==null) {
-                $r=$this->_query->execute();
-        }
-        else {
-                $r=$this->_query->execute($param);
-        }
-        return $r;
-    }
-
-    public function fetch(){
-        return $this->_query->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function closeCursor(){
-            $this->_query->closeCursor();
-    }
-    
     public static function getInstance() {
             if (!isset(self::$_instance)) {
                     self::$_instance = new self;

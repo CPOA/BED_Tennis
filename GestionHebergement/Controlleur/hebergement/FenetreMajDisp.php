@@ -1,5 +1,8 @@
 <?php
-require_once '../../Model/CompteHebergement.php';
-$compte = unserialize(stripslashes(urldecode($_GET['compte'])));
-$compte->setPlacesDispos($nbr);
-$compte->update();
+
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
