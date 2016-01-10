@@ -2,6 +2,7 @@
 
 require_once 'Compte.php';
 require_once 'Service.php';
+require_once 'Connection.php';
 
 class CompteHebergement extends Compte{
     private $_nom;
@@ -30,8 +31,21 @@ class CompteHebergement extends Compte{
         }
         else {
             parent::__construct($login, $motDePasse);
+            $this->_adressemail=$c['adressemail'];
+            $this->_adresse=$c['adresse'];
+            $this->_nom=$c['nom'];
+            $this->_typeHebergement=$c['typeHebergement'];
+            $this->_adresse=$c['adresse'];
+            $this->_nbEtoile=$c['nbetoile'];
+            $this->_typeVIP=$c['typevip'];
+            $this->_placesDispo=$c['placesdispo'];
+            $this->_type='h';
+            $services=explode(",", $c['service']);
+            foreach($services as $idService) {
+                $service=new Service($idService);
+                array_push($this->_service, $service);
+            }
         }
-        $_type='h';
     }
     function getNom() {
         return $this->_nom;
@@ -85,7 +99,8 @@ class CompteHebergement extends Compte{
         return array($this->_nom,$this->_typeHebergement,$this->_adresse,$this->_nbEtoile,$this->_typeVIP,$this->_placesDispo);
     }
     
-    function getServices() {
+    function getService() {
+        
         return $this->_service;
     }
 
@@ -101,7 +116,17 @@ class CompteHebergement extends Compte{
             $bd->execute();
             $liste=array();
             while ($hotel=$bd->fetch()) {
-                array_push($liste,$hotel);
+                echo($hotel['login']);
+                $compte=new CompteHebergement($hotel['login'], $hotel['mdp']);
+               /* $compte->setAdresseMail($hotel['adressemail']);
+                $compte->setNom($hotel['nom']);
+                $compte->setAdresse($hotel['adresse']);
+                $compte->setNbEtoile($hotel['nbetoile']);
+                $compte->setPlacesDispo($hotel['placesdispo']);
+                $compte->setTypeHebergement($hotel['typeHebergement']);
+                $compte->setTypeVIP($hotel['typevip']);
+                $compte->setType('h');*/
+                array_push($liste,$compte);
             }
             $bd->closeCursor();
             return $liste;
@@ -114,8 +139,11 @@ class CompteHebergement extends Compte{
     function update() {
         try {
             $bd=Connection::getInstance();
-            $bd->prepare("Update CompteHebergement set nom=?,typehebergement=?,adresse=?,nbetoile=?,placesdispo=?) where login=?");
-            $bd->execute(array($this->_nom, $this->_typeHebergement, $this->_adresse, $this->_nbEtoile, $this->_placesDispo, $this->_login));
+            $bd->prepare("Update CompteHebergement set (nom=?,typehebergement=?,adresse=?,nbetoile=?,placesdispo=?, service=?) where login=?");
+            foreach($_service as $service) {
+                $serviceId=$serviceID.",".$service->getIdType();
+            }
+            $bd->execute(array($this->_nom, $this->_typeHebergement, $this->_adresse, $this->_nbEtoile, $this->_placesDispo, $this->_login ,$serviceID));
             $bd->closeCursor();
         }
         catch (PDOException $e) {

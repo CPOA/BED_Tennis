@@ -10,7 +10,7 @@
                         . "<h1> Effectuer Réservation </h1>"
                     . "</a></div>"
                     . "<br /><br />"
-                    . "<div id = \"bouton\"><a href = \"\">"
+                    . "<div id = \"bouton\"><a href = \"./FenetreConsulterHebergement.php\">"
                         . "<h1> Consulter liste hébergements </h1>"
                     . "</a></div>"
                     . "<br /><br />"

@@ -26,7 +26,7 @@
                 try {
                     $compte=new CompteStaff($_POST['login'], $_POST["password"]);
                     urlencode(serialize($compte));
-                    header("Location: ./staff/FenetreMenuCompteStaff.php?compte=".urlencode(serialize($compte)));
+                    header("Location: ./staff/FenetreMenuStaff.php?compte=".urlencode(serialize($compte)));
                 } catch (Exception $ex) {
                         $content = $content."<div>".$ex->getMessage()."</div>";  
                 }

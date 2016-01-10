@@ -15,7 +15,9 @@
                     . "</a></div>"
                     . "<br /><br />"
                 ;
+    require_once '../../Model/Connection.php';
     require_once '../../Model/CompteHebergement.php';
+    require_once '../../Model/Service.php';
+
     $compte = unserialize(stripslashes(urldecode($_GET['compte'])));
     require_once ("../../Vue/Layout.php");
-?>
