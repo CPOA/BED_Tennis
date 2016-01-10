@@ -1,18 +1,15 @@
 <?php
-    /*
-    include_once("../CompteHebergement.php");
-    include_once("../CompteStaff.php");
-    */
+    include_once("../Model/CompteHebergement.php");
+    include_once("../Model/CompteStaff.php");
+
     $title;
     $content;
     $compte;
     
-    $compte = -1;
-    $title = "Connexion à compte";
+    $title = "Connexion à votre session";
     
-    $content = "<h1>Connexion à votre session</h1>"
-            . "<div id = \"cadre\"> "
-                ."<form>"
+    $content = "<div id = \"cadre\"> "
+                ."<form action=\"FenetreConnexion.php?connexion=1\" method=\"post\">"
                     . "<h3> Identifiant : </h3>"
                     . "<input type = \"text\" name = \"login\" /><br />"
                     . "<h3> Mot de passe : </h3>"

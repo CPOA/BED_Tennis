@@ -12,13 +12,33 @@
  * @author Emile Bex
  */
 class Reservation {
+    private $_loginHebergement;
+    private $_idVIP;
     private $_dateDebut;
     private $_dateFin;
     private $_nbPersonnes;
-    function __construct($dateDebut, $dateFin, $nbPersonnes) {
-        $_dateDebut=$dateDebut;
-        $_dateFin=$dateFin;
-        $_nbPersonnes=$nbPersonnes;
+    function __construct($loginHebergement, $idVIP, $dateDebut, $dateFin, $nbPersonnes) {
+       
+        try {
+            $bd=Connection::getInstance();
+            $bd->prepare("Select * from VIP where id_vip=?");
+            $bd->execute(array($idVIP));
+            $c=$bd->fetch();
+            $bd->closeCursor();
+        }
+        catch (PDOException $e) {
+            echo($e->getMessage());
+        }
+        if (strcmp($c['id_vip'],'')==0) {
+            throw new Exception('VIP inexistant');
+        }
+
+        
+        $this->_loginHebergement=$loginHebergement;
+        $this->_idVIP=$idVIP;
+        $this->_dateDebut=$dateDebut;
+        $this->_dateFin=$dateFin;
+        $this->_nbPersonnes=$nbPersonnes;
     }
     function getDateDebut() {
         return $this->_dateDebut;

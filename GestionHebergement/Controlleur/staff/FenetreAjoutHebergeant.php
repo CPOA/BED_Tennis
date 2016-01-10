@@ -13,6 +13,8 @@
     }
     $title = "Création d'un Compte hebergement";
     
+    $compte->creerCompteHebergement($_POST("login"), $_POST("mdp"), $_POST("adressemail"));
+    
     require_once("../../Vue/Layout.php");
 
 ?>

@@ -18,6 +18,7 @@
                     . "<input type = \"text\" name = \"Nom\" id =\"Nom\" /><br />"
                 ."</form>";
     
+    
     require_once("../../Vue/Layout.php");
 ?>
 
