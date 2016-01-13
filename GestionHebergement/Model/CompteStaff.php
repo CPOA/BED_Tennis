@@ -29,11 +29,11 @@ class CompteStaff extends Compte{
         }
     }
     
-    public function creerCompteHebergement($login, $motDePasse, $adresseMail, $nom, $typeHebergement, $adresse, $nombrePlaces, $nbEtoiles) {
+    public function creerCompteHebergement($login, $motDePasse, $adresseMail, $nom, $typeHebergement, $adresse, $nbEtoiles, $nombrePlaces) {
         try {
             $bd=Connection::getInstance();
-            $bd->prepare("Insert into CompteHebergement values(?,?,?,?,?,?,?,?,?,?)");
-            echo($bd->execute(array($login,$motDePasse,$adresseMail, null, $nom, $typeHebergement, $adresse, $nbEtoiles, PlacesDispo, null)));
+            $bd->prepare("Insert into CompteHebergement(`login`, `mdp`, `adressemail`, `nom`, `typeHebergement`, `adresse`, `nbetoile`, `placesdispo`) values(?,?,?,?,?,?,?,?)");
+            $bd->execute(array($login,$motDePasse,$adresseMail, $nom, $typeHebergement, $adresse, $nbEtoiles, $nombrePlaces));
             $bd->closeCursor();
         }
         catch (PDOException $e) {
@@ -42,8 +42,33 @@ class CompteStaff extends Compte{
     }
     
     public function effectuerReservation($loginHebergement, $idVIP, $dateDebut, $dateFin, $nbPersonnes) {
-        $reservation = new Reservation($loginHebergement, $idVIP, $dateDebut, $dateFin, $nbPersonnes);
+        try {
+            $bd=Connection::getInstance();
+            $bd->prepare("Insert into reservation values(?,?,?,?,?)");
+            $bd->execute(array($loginHebergement, $idVIP, $dateDebut, $dateFin, $nbPersonnes));
+            $bd->closeCursor();
+        }
+        catch (PDOException $e) {
+            echo ($e->getMessage());
+        }
     }
     
+    static function getListComptes() {
+        try {
+            $bd=Connection::getInstance();
+            $bd->prepare("Select * from CompteStaff");
+            $bd->execute();
+            $liste=array();
+            $comptes=$bd->fetchAll();
+            foreach ($comptes as $compte){
+                array_push($liste,new CompteStaff($compte['login'], $compte['mdp']));
+            }
+            $bd->closeCursor();
+            return $liste;
+        }
+        catch (PDOException $e) {
+            echo ($e->getMessage());
+        }
+    }
 }
 

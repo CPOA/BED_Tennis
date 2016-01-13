@@ -118,8 +118,7 @@ class CompteHebergement extends Compte{
             $liste=array();
             $hotels=$bd->fetchAll();
             foreach ($hotels as $hotel){
-                $compte=new CompteHebergement($hotel['login'], $hotel['mdp']);
-                array_push($liste,$compte);
+                array_push($liste,new CompteHebergement($hotel['login'], $hotel['mdp']));
             }
             $bd->closeCursor();
             return $liste;

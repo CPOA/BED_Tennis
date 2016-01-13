@@ -14,7 +14,7 @@
     
     $title = "Création d'une réservation";
     
-    $content =  "<form action=\"FenetreReservation.php\" method=\"post\">"
+    $content =  "<form action=\"FenetreReservation.php?reservation=1\" method=\"post\">"
                     . "<label for = \"Nom\"> Nom </label>"
                     . "<input type = \"text\" name = \"Nom\" id =\"Nom\" /><br />";
 
@@ -44,7 +44,8 @@
         try {
             $vip=new VIP($_POST["nom"], $_POST ["prenom"]);
             if (CompteHebergement::cmpTypeVip($_POST["hotel"], $vip->getType())) {
-                $content=$content."Reservation effectuer";
+                $compte->effectuerReservation($_POST["hotel"],$vip->getId(), $_POST["dateDebut"],$_POST["dateDebut"],$_POST["nbPersonnes"]);
+                $content="Reservation effectuer";
             }
             else {
                 $content=$content."L'hebergement contient déjà un VIP du type opposé.";
