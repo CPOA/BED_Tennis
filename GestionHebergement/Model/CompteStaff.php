@@ -29,11 +29,11 @@ class CompteStaff extends Compte{
         }
     }
     
-    public function creerCompteHebergement($login, $motDePasse, $adresseMail) {
+    public function creerCompteHebergement($login, $motDePasse, $adresseMail, $nom, $typeHebergement, $adresse, $nombrePlaces, $nbEtoiles) {
         try {
             $bd=Connection::getInstance();
             $bd->prepare("Insert into CompteHebergement values(?,?,?,?,?,?,?,?,?,?)");
-            echo($bd->execute(array($login,$motDePasse,$adresseMail, null, null, null, null, null, null, null)));
+            echo($bd->execute(array($login,$motDePasse,$adresseMail, null, $nom, $typeHebergement, $adresse, $nbEtoiles, PlacesDispo, null)));
             $bd->closeCursor();
         }
         catch (PDOException $e) {
@@ -41,8 +41,8 @@ class CompteStaff extends Compte{
         }
     }
     
-    public function effectuerReservation($idVIP, $dateDebut, $dateFin, $nbPersonnes) {
-        new Reservation($this->_login, $idVIP, $dateDebut, $dateFin, $nbPersonnes);
+    public function effectuerReservation($loginHebergement, $idVIP, $dateDebut, $dateFin, $nbPersonnes) {
+        $reservation = new Reservation($loginHebergement, $idVIP, $dateDebut, $dateFin, $nbPersonnes);
     }
     
 }

@@ -129,12 +129,42 @@ class CompteHebergement extends Compte{
         }
     }
     
+    static function cmpTypeVip($login, $type){
+        try {
+            $bd=Connection::getInstance();
+            $bd->prepare("Select * from CompteHebergement where login=?");
+            $bd->execute(array($login));
+            $c=$bd->fetch();
+            $bd->closeCursor();
+        }
+        catch (PDOException $e) {
+            echo($e->getMessage());
+        }
+        if (strcmp($c["typevip"],$type)!=0 && (isset($c["typevip"]) || !empty($c["typevip"]))) {
+            $b=false;
+        }
+        else {
+            try {
+                $bd=Connection::getInstance();
+                $bd->prepare("Update CompteHebergement set typevip=? where login=?");
+                $bd->execute(array($type, $login));
+                $c=$bd->fetch();
+                $bd->closeCursor();
+            }
+            catch (PDOException $e) {
+                echo($e->getMessage());
+            }
+            $b=true;
+        }
+        return $b;
+    }
+    
     function update() {
         try {
             $bd=Connection::getInstance();
             $bd->prepare("Update CompteHebergement set (nom=?,typehebergement=?,adresse=?,nbetoile=?,placesdispo=?, service=?) where login=?");
             foreach($_service as $service) {
-                $serviceId=$serviceID.",".$service->getIdType();
+                $serviceID=$serviceID.",".$service->getIdType();
             }
             $bd->execute(array($this->_nom, $this->_typeHebergement, $this->_adresse, $this->_nbEtoile, $this->_placesDispo, $this->_login ,$serviceID));
             $bd->closeCursor();

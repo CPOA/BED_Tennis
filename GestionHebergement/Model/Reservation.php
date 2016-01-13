@@ -32,13 +32,13 @@ class Reservation {
         if (strcmp($c['id_vip'],'')==0) {
             throw new Exception('VIP inexistant');
         }
-
-        
-        $this->_loginHebergement=$loginHebergement;
-        $this->_idVIP=$idVIP;
-        $this->_dateDebut=$dateDebut;
-        $this->_dateFin=$dateFin;
-        $this->_nbPersonnes=$nbPersonnes;
+        else {
+            $this->_loginHebergement=$loginHebergement;
+            $this->_idVIP=$idVIP;
+            $this->_dateDebut=$dateDebut;
+            $this->_dateFin=$dateFin;
+            $this->_nbPersonnes=$nbPersonnes;
+        }
     }
     function getDateDebut() {
         return $this->_dateDebut;
@@ -63,7 +63,5 @@ class Reservation {
     function setNbPersonnes($nbPersonnes) {
         $this->_nbPersonnes = $nbPersonnes;
     }
-
-
            
 }

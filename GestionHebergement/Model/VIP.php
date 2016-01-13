@@ -12,9 +12,54 @@
  * @author Emile Bex
  */
 class VIP {
-    function __construct() {
-        
+    private $_nom;
+    private $_prenom;
+    private $_id;
+    private $_type;
+    function __construct($nom, $prenom) {
+        try {
+            $bd=Connection::getInstance();
+            $bd->prepare("Select * from CompteHebergement where nom=? AND prenom=?");
+            $bd->execute(array($nom, $prenom));
+            $c=$bd->fetch();
+            $bd->closeCursor();
+        }
+        catch (PDOException $e) {
+            echo($e->getMessage());
+        }
+        if (strcmp($c['nom'],'')==0 && strcmp($c['prenom'],'')==0) {
+            throw new Exception('VIP inexistant');
+        }
+        else {
+            $this->_nom=$c['nom'];
+            $this->_prenom=$c['prenom'];
+            $this->_id=$c['id'];
+            $this->_type=$c['type'];
+        }   
+    }
+    function getNom() {
+        return $this->_nom;
     }
 
-//put your code here
+    function getPrenom() {
+        return $this->_prenom;
+    }
+
+    function getId() {
+        return $this->_id;
+    }
+
+    function setNom($nom) {
+        $this->_nom = $nom;
+    }
+
+    function setPrenom($prenom) {
+        $this->_prenom = $prenom;
+    }
+
+    function setId($id) {
+        $this->_id = $id;
+    }
+
+
 }
