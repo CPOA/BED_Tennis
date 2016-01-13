@@ -36,10 +36,35 @@ body{
 
 #tableau{
     width: 700px;
+    font-size: 18px;
     text-align: center;
     padding:0px;
     border: 2px white solid;
     border-collapse: collapse;
+}
+
+/*#tableau2{
+    font-size: 18px;
+    text-align: left;
+    padding:0px;
+    border: 2px white solid;
+}*/
+
+#tableau2 tr td{
+    font-size: 18px;
+    margin: 0px;
+    padding: 20px;
+    text-align: center;
+    border-top: 2px white solid ;
+    border-left: 2px white solid ;
+}
+
+#tableau2 tr td:last-child{
+    border-right: 2px white solid ;
+}
+
+#tableau2 tr:last-child td{
+    border-bottom: 2px white solid ;
 }
 
 #tableau tr td{

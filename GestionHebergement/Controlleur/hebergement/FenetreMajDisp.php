@@ -1,4 +1,5 @@
 <?php
+
     require_once '../../Model/CompteHebergement.php';
     require_once '../../Model/Service.php';
     session_start();
@@ -11,6 +12,8 @@
       }
     }
 
+
+    
     $compte->setPlacesDispos($nbr);
     $compte->update();
     $_SESSION['compte']=$compte;
