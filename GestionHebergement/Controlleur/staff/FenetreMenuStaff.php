@@ -13,9 +13,7 @@
     }
 
     $title = "Menu du Staff";
-    $content =  
-            
-                     "<div id = \"bouton\"><a href = \"\">"
+    $content = "<div id = \"bouton\"><a href = \"../../Controlleur/staff/FenetreAjoutHebergeant.php\">"
                         . "<h1> Ajouter Hébergeant </h1>"
                     . "</a></div>"
                     . "<br /><br />"
@@ -24,9 +22,9 @@
                     . "</a></div>"
                     . "<br /><br />"
                     . "<div id = \"bouton\"><a href = \"./FenetreConsulterHebergement.php\">"
-                        . "<h1> Consulter liste hébergements </h1>"
-                    . "</a></div>"
-                    . "<br /><br />"
+                    . "<h1> Consulter liste hébergements </h1>"
+               . "</a></div>"
+               . "<br /><br />"
                 ;
     
 

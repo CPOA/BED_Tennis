@@ -33,6 +33,17 @@ body{
     color: #424242;
     
 }
+
+#formulaire label{
+    float: left;
+    font: 20px bold;
+}
+
+
+#formulaire input{
+    float: right;
+}
+
 #cadre{
    with: 10%;
    max-width: 750px;
