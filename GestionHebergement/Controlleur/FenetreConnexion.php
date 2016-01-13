@@ -13,7 +13,7 @@
                     . "<h3> Identifiant : </h3>"
                     . "<input type = \"text\" name = \"login\" /><br />"
                     . "<h3> Mot de passe : </h3>"
-                    . "<input type = \"text\" name = \"password\" /><br /><br />"
+                    . "<input type = \"password\" name = \"password\" /><br /><br />"
                     . "<input type = \"submit\" value = \"Connexion\" /><br />"
                 . "</form>";
     session_start();
