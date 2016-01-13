@@ -1,11 +1,11 @@
 <?php
-    $title = "Menu du Staff";
+    $title = "Menu Staff";
     $content = "<div id = \"bouton\"><a href = \"../../Controlleur/staff/FenetreAjoutHebergeant.php\">"
-                        . "<h1> Ajouter Hébergeant </h1>"
+                    . "<h1> Ajouter Hébergeant </h1>"
                     . "</a></div>"
                     . "<br /><br />"
-                    . "<div id = \"bouton\"><a href = \"\">"
-                        . "<h1> Effectuer Réservation </h1>"
+                    . "<div id = \"bouton\"><a href = \"../../Controlleur/staff/FenetreReservation\">"
+                    . "<h1> Effectuer Réservation </h1>"
                     . "</a></div>"
                     . "<br /><br />"
                     . "<div id = \"bouton\"><a href = \"./FenetreConsulterHebergement.php\">"
