@@ -23,15 +23,30 @@ body{
     margin: 0px;
 }
 
-#bouton:active{
+#bouton:active {
     border-style: inset;
     background-color: white;
     color: #424242;
 }
 
-#bouton a:active{
+#bouton:active a{
     color: #424242;
     
+}
+
+#tableau{
+    width: 700px;
+    text-align: center;
+    padding:0px;
+    border: 2px white solid;
+    border-collapse: collapse;
+}
+
+#tableau tr td{
+    margin: 0px;
+    padding: 5px;
+    text-align: center;
+    border-top: 2px white solid ;
 }
 
 #formulaire label{
@@ -42,6 +57,14 @@ body{
 
 #formulaire input{
     float: right;
+}
+#cadre2{
+   max-width: 1000px;
+   border: 2px solid white;
+   margin: 3%;
+   padding: 5%;
+   padding-top: 3%;
+   padding-bottom: 3%;
 }
 
 #cadre{

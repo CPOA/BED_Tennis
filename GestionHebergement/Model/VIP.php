@@ -27,7 +27,7 @@ class VIP {
         catch (PDOException $e) {
             echo($e->getMessage());
         }
-        if (strcmp($c['nom'],'')==0 && strcmp($c['prenom'],'')==0) {
+        if (strcmp($c['nom'],'')==0 || strcmp($c['prenom'],'')==0) {
             throw new Exception('VIP inexistant');
         }
         else {
