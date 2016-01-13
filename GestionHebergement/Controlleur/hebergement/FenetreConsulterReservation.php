@@ -10,6 +10,6 @@
         header("Location: ../staff/FenetreMenuStaff.php");
       }
     }
-
+    
     require_once ("../../Vue/Layout.php");
 ?>

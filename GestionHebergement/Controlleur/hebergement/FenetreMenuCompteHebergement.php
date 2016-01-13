@@ -2,7 +2,7 @@
     $title = "Menu hébergeant";
     $content =  
             
-                     "<div id = \"bouton\"><a href = \"\">"
+                     "<div id = \"bouton\"><a href = \"../../Controlleur/hebergement/FenetreMajInfo.php\">"
                         . "<h1> Mettre à jour informations </h1></a>"
                     . "</div>"
                     . "<br /><br />"
