@@ -48,15 +48,15 @@ class Reservation {
         $this->_nbPersonnes = $nbPersonnes;
     }
     
-    static function getListReservation($loginHebergement) {
+    static function getListReservations($loginHebergement) {
         try {
             $bd=Connection::getInstance();
-            $bd->prepare("Select * from reservation where loginhbergement=?");
+            $bd->prepare("Select * from reservation,vip where reservation.loginhebergement=? and reservation.idvip=vip.id_vip");
             $bd->execute(array($loginHebergement));
             $liste=array();
             $reservations=$bd->fetchAll();
             foreach ($reservations as $reservation) {
-                array_push($liste, new Reservation($reservation['loginhebergement'], $reservation["idvip"], $reservation["datedebut"], $reservation["datefin"],$reservation["nbpersonnes"]));
+                array_push($liste, array(new Reservation($reservation['loginhebergement'], $reservation["idvip"], $reservation["datedebut"], $reservation["datefin"],$reservation["nbpersonnes"]), new VIP($reservation["nom"], $reservation["prenom"])));
             }
             $bd->closeCursor();
             return $liste;

@@ -139,8 +139,23 @@ class CompteHebergement extends Compte{
         catch (PDOException $e) {
             echo($e->getMessage());
         }
-        if (strcmp($c["typevip"],$type)!=0 && (isset($c["typevip"]) || !empty($c["typevip"]))) {
-            $b=false;
+        if (isset($c["typevip"]) || !empty($c["typevip"])) {
+            if (strcmp($c["typevip"],"ARBITRE")==0) {
+                if (strcmp($type,"ARBITRE")==0) {
+                    $b=true;
+                }
+                else {
+                    $b=false;
+                }
+            }
+            else {
+                if (strcmp($type,"ARBITRE")==0) {
+                    $b=false;
+                }
+                else {
+                    $b=true;
+                }
+            }
         }
         else {
             try {

@@ -10,7 +10,7 @@
                         . "<h1> Mettre à jour disponibilité </h1>"
                     . "</a></div>"
                     . "<br /><br />"
-                    . "<div id = \"bouton\"><a href = \"\">"
+                    . "<div id = \"bouton\"><a href = \"./FenetreConsulterReservation.php\">"
                         . "<h1> Consulter la liste des réservations </h1>"
                     . "</a></div>"
                     . "<br /><br />"

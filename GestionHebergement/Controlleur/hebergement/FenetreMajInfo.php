@@ -15,7 +15,6 @@
     $content = "";
     
     require_once '../../Model/CompteHebergement.php';
-    $compte = unserialize(stripslashes(urldecode($_GET['compte'])));
     $compte->setNom($_POST['nom']);
     $compte->setTypeHebergement($_POST['typeHebergement']);
     $compte->setAdresse($_POST['adresse']);

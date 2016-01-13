@@ -1,6 +1,7 @@
 <?php
     require_once '../../Model/CompteStaff.php';
     require_once '../../Model/Service.php';
+    require_once '../../Model/VIP.php';
     session_start();
     
     //Vérification de la session
@@ -24,7 +25,7 @@
                     . "<input type = \"text\" name = \"surname\" id =\"surname\" /><br /><br />"
             
                     . "<label for = \"vipType\"> Type de VIP :</label>"
-                    . "<input type = \"text\" name = \"vipType\" id =\"vipType\" /><br /><br /><br /><br />"
+                    . "<select name = \"vipType\" id =\"vipType\"><option value=\"ARBITRE\">ARBITRE</option><option value=\"JOUEUR\">JOUEUR</option><option value=\"ACCOMPAGNANT_JOUEUR\">ACCOMPAGNANT JOUEUR</option></select><br /><br /><br /><br />"
             
                     . "<label for = \"name\"> Liste des Hébergement :</label><br /><br />";
     
@@ -44,7 +45,6 @@
         $content = $content."<td>".$hotel->getNom()."</td><td>".$hotel->getAdresse()."</td><td>".$hotel->getTypeHebergement()."</td><td>".$hotel->getNbEtoile()."</td><td>".$hotel->getTypeVIP()."</td><td>";
         $services=$hotel->getService();
         if(!empty($services)){
-            $content = $content."";
             foreach($services as $service) {
                 $content = $content."<p>".$service->getType()."</p>";
             }
@@ -60,24 +60,30 @@
                        ."<label for = \"dateDebut\"> Du :</label>"
                        ."<input type = \"date\" name = \"dateDebut\" id =\"dateDebut\" /><br /><br />"
                        ."<label for = \"datefin\"> Au :</label>"
-                       ."<input type = \"date\" name = \"datefin\" id =\"dateFin\" /><br />";
+                       ."<input type = \"date\" name = \"dateFin\" id =\"dateFin\" /><br />";
             
     $content = $content."</div><br /><input type=\"submit\" value=\" Réservation \"><br />";
     $content = $content."</form>";
-    if (isset($_POST["reservation"])) {
-        try {
-            $vip = new VIP($_POST["nom"], $_POST ["prenom"]);
-            if (CompteHebergement::cmpTypeVip($_POST["hotel"], $vip->getType())) {
-                $compte->effectuerReservation($_POST["hotel"],$vip->getId(), $_POST["dateDebut"],$_POST["dateFin"],$_POST["nbPersonnes"]);
-                $content="<div><p>Reservation effectuer</p>";
-            }
-            else {
-                $content = $content."L'hebergement contient déjà un VIP du type opposé.";
-            }
+    if (isset($_GET["reservation"])) {
+        if(empty($_POST["name"])||empty($_POST["surname"])||empty($_POST["vipType"])||empty($_POST["hotel"])||empty($_POST["nbPersonnes"])||empty($_POST["dateDebut"])||empty($_POST["dateFin"])) {
+            $content = $content."<p class=\"erreur\">Veuillez renseigner toutes les valeurs</p>";
         }
-        catch (Exception $ex) {
-            $content = $content.$ex->getMessage();
+        else {
+            try {
+                $vip = new VIP($_POST["name"], $_POST ["surname"]);
+                if (CompteHebergement::cmpTypeVip($_POST["hotel"], $vip->getType())) {
+                    $compte->effectuerReservation($_POST["hotel"],$vip->getId(), $_POST["dateDebut"],$_POST["dateFin"],$_POST["nbPersonnes"]);
+                    $content="<div><p>Réservation effectuer</p>";
+                }
+                else {
+                    $content = $content."<p class=\"erreur\">L'hébergement contient déjà un VIP du type opposé.</p>";
+                }
+            }
+            catch (Exception $ex) {
+                $content = $content.$ex->getMessage();
+            }   
         }
+        
     }
     $content=$content."</div>";
     require_once("../../Vue/Layout.php");

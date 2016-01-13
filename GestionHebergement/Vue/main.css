@@ -54,6 +54,9 @@ body{
     font: 20px bold;
 }
 
+#formulaire select{
+    float: right;
+}
 
 #formulaire input{
     float: right;

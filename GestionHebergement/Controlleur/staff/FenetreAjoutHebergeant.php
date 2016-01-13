@@ -42,16 +42,16 @@
 
     if (isset($_GET["creation"])) {
         if(empty($_POST["log"])) {
-            $content=$content."<p>Veuillez entrer un login</p>";
+            $content=$content."<p class=\"erreur\">Veuillez entrer un login</p>";
         }
         else if(empty($_POST["pwd"])) {
-            $content=$content."<p>Veuillez entrer un mot de passe</p>";
+            $content=$content."<p class=\"erreur\">Veuillez entrer un mot de passe</p>";
         }
         else if (strcmp($_POST["pwd"],$_POST["pwdVerif"])!=0) {
-            $content=$content."<p>Le mot de passe de vérification est différent de l'original</p>";
+            $content=$content."<p class=\"erreur\">Le mot de passe de vérification est différent de l'original</p>";
         }
         else if(empty($_POST["addrM"])) {
-            $content=$content."<p>Veuillez entrer une adresse mail</p>";
+            $content=$content."<p class=\"erreur\">Veuillez entrer une adresse mail</p>";
         }
         else {
             $b=false;
@@ -68,7 +68,7 @@
                 }
             }
             if($b) {
-                $content=$content."<p>Un compte possédant le même login existe déja</p>";
+                $content=$content."<p class=\"erreur\">Un compte possédant le même login existe déja</p>";
             }
             else {
                 $compte->creerCompteHebergement($_POST["log"],$_POST["pwd"],$_POST["addrM"],$_POST["name"],$_POST["type"],$_POST["addr"],$_POST["star"],$_POST["nbPlace"]);

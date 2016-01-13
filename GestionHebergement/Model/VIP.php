@@ -19,7 +19,7 @@ class VIP {
     function __construct($nom, $prenom) {
         try {
             $bd=Connection::getInstance();
-            $bd->prepare("Select * from CompteHebergement where nom=? AND prenom=?");
+            $bd->prepare("Select * from vip where nom=? AND prenom=?");
             $bd->execute(array($nom, $prenom));
             $c=$bd->fetch();
             $bd->closeCursor();
@@ -28,13 +28,13 @@ class VIP {
             echo($e->getMessage());
         }
         if (strcmp($c['nom'],'')==0 || strcmp($c['prenom'],'')==0) {
-            throw new Exception('VIP inexistant');
+            throw new Exception('VIP inexistant', 1);
         }
         else {
             $this->_nom=$c['nom'];
             $this->_prenom=$c['prenom'];
-            $this->_id=$c['id'];
-            $this->_type=$c['type'];
+            $this->_id=$c['id_vip'];
+            $this->_type=$c['typeVIP'];
         }   
     }
     function getNom() {
@@ -60,6 +60,14 @@ class VIP {
     function setId($id) {
         $this->_id = $id;
     }
+    function getType() {
+        return $this->_type;
+    }
+
+    function setType($type) {
+        $this->_type = $type;
+    }
+
 
 
 }
