@@ -44,5 +44,27 @@ class Service {
     function setType($type) {
         $this->_type = $type;
     }
+    
+    static function getListServices() {
+        try {
+            $bd=Connection::getInstance();
+            $bd->prepare("Select * from service");
+            $bd->execute();
+            $liste=array();
+            $services=$bd->fetchAll();
+            foreach ($services as $service){
+                array_push($liste,new Service($service['id']));
+            }
+            $bd->closeCursor();
+            return $liste;
+        }
+        catch (PDOException $e) {
+            echo ($e->getMessage());
+        }
+    }
+    
+    static function cmpServices($a, $b) {
+        return strcmp($a, $b);
+    }
 }
 

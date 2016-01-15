@@ -16,18 +16,18 @@ class VIP {
     private $_prenom;
     private $_id;
     private $_type;
-    function __construct($nom, $prenom) {
+    function __construct($id) {
         try {
             $bd=Connection::getInstance();
-            $bd->prepare("Select * from vip where nom=? AND prenom=?");
-            $bd->execute(array($nom, $prenom));
+            $bd->prepare("Select * from vip where id_vip=?");
+            $bd->execute(array($id));
             $c=$bd->fetch();
             $bd->closeCursor();
         }
         catch (PDOException $e) {
             echo($e->getMessage());
         }
-        if (strcmp($c['nom'],'')==0 || strcmp($c['prenom'],'')==0) {
+        if (strcmp($c['id_vip'],'')==0) {
             throw new Exception('VIP inexistant', 1);
         }
         else {
@@ -68,6 +68,22 @@ class VIP {
         $this->_type = $type;
     }
 
-
+    static function getListVip() {
+    try {
+        $bd=Connection::getInstance();
+        $bd->prepare("Select * from vip");
+        $bd->execute();
+        $liste=array();
+        $vips=$bd->fetchAll();
+        foreach ($vips as $vip){
+            array_push($liste,new VIP($vip['id_vip']));
+        }
+        $bd->closeCursor();
+        return $liste;
+    }
+    catch (PDOException $e) {
+        echo ($e->getMessage());
+    }
+}
 
 }

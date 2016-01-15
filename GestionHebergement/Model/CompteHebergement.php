@@ -31,11 +31,10 @@ class CompteHebergement extends Compte{
         }
         else {
             parent::__construct($login, $motDePasse);
-            $this->_adressemail=$c['adressemail'];
+            $this->setAdresseMail($c['adressemail']);
             $this->_adresse=$c['adresse'];
             $this->_nom=$c['nom'];
             $this->_typeHebergement=$c['typeHebergement'];
-            $this->_adresse=$c['adresse'];
             $this->_nbEtoile=$c['nbetoile'];
             $this->_typeVIP=$c['typevip'];
             $this->_placesDispo=$c['placesdispo'];
@@ -105,9 +104,12 @@ class CompteHebergement extends Compte{
         return $this->_service;
     }
 
-    function addService($id) {
-        $service= new Service($id);
-        array_push($this->_service, $service);
+    function setService($services) {
+        $this->_service=array();
+        foreach($services as $idService) {
+            $service= new Service($idService);
+            array_push($this->_service, $service);
+        }
     }
     
     static function getListHotels() {
@@ -174,13 +176,14 @@ class CompteHebergement extends Compte{
     }
     
     function update() {
+        $serviceID="";
         try {
             $bd=Connection::getInstance();
-            $bd->prepare("Update CompteHebergement set (nom=?,typehebergement=?,adresse=?,nbetoile=?,placesdispo=?, service=?) where login=?");
-            foreach($_service as $service) {
+            $bd->prepare("Update CompteHebergement set nom=?,typehebergement=?,adresse=?,nbetoile=?,placesdispo=?, service=? where login=?");
+            foreach($this->_service as $service) {
                 $serviceID=$serviceID.",".$service->getIdType();
             }
-            $bd->execute(array($this->_nom, $this->_typeHebergement, $this->_adresse, $this->_nbEtoile, $this->_placesDispo, $this->_login ,$serviceID));
+            $bd->execute(array($this->_nom, $this->_typeHebergement, $this->_adresse, $this->_nbEtoile, $this->_placesDispo,$serviceID, $this->getLogin()));
             $bd->closeCursor();
         }
         catch (PDOException $e) {

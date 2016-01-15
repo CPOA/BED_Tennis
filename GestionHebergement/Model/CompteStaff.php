@@ -32,8 +32,8 @@ class CompteStaff extends Compte{
     public function creerCompteHebergement($login, $motDePasse, $adresseMail, $nom, $typeHebergement, $adresse, $nbEtoiles, $nombrePlaces) {
         try {
             $bd=Connection::getInstance();
-            $bd->prepare("Insert into CompteHebergement(`login`, `mdp`, `adressemail`, `nom`, `typeHebergement`, `adresse`, `nbetoile`, `placesdispo`) values(?,?,?,?,?,?,?,?)");
-            $bd->execute(array($login,$motDePasse,$adresseMail, $nom, $typeHebergement, $adresse, $nbEtoiles, $nombrePlaces));
+            $bd->prepare("Insert into CompteHebergement(`login`, `mdp`,'type', `adressemail`, `nom`, `typeHebergement`, `adresse`, `nbetoile`, `placesdispo`) values(?,?,?,?,?,?,?,?,?)");
+            $bd->execute(array($login,$motDePasse,$adresseMail, 'h', $nom, $typeHebergement, $adresse, $nbEtoiles, $nombrePlaces));
             $bd->closeCursor();
         }
         catch (PDOException $e) {
