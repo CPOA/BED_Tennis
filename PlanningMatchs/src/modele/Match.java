@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import modele.arbitre.Arbitre;
-import modele.arbitre.ArbitreChaise;
-import modele.arbitre.ArbitreFilet;
-import modele.arbitre.ArbitreLigne;
+import modele.personne.arbitre.Arbitre;
+import modele.personne.arbitre.ArbitreChaise;
+import modele.personne.arbitre.ArbitreFilet;
+import modele.personne.arbitre.ArbitreLigne;
 import modele.court.Court;
 import modele.personne.Sexe;
 import donnees.Dao;
@@ -30,6 +30,8 @@ public class Match implements Comparable<Match>{
         
 	private String m_type;
         private Sexe m_genre;
+        
+        private int m_rangTournoi;
         
 	private EquipeJoueurs m_equipeGagnante;
 	private EquipeJoueurs m_equipePerdante;
@@ -72,6 +74,9 @@ public class Match implements Comparable<Match>{
         m_arbitresLigne = new HashMap<>();
         
         m_equipeRamasseurs = new EquipeRamasseurs();
+        
+        m_rangTournoi = 0;
+        
     }
     
     
@@ -87,7 +92,7 @@ public class Match implements Comparable<Match>{
      */
     
     
-    public Match(Creneau creneau, String type, Sexe sexe, Joueur joueur1, Joueur joueur2) {
+    public Match(Creneau creneau, String type, Sexe sexe, EquipeJoueurs equipe1, EquipeJoueurs equipe2, int rangTournoi) {
         this();
         // on met l'id à zéro, et un id valide sera attribué lors de l'ajout dans la base de données
         //      voir DaoMatch.insertMatch()
@@ -96,10 +101,18 @@ public class Match implements Comparable<Match>{
         this.m_creneau = creneau;
         this.m_type = type;
         this.m_genre = sexe;
-        //this.m_joueur1 = joueur1;
-        //this.m_joueur2 = joueur2;
-        this.m_equipe1 = new EquipeJoueurs(joueur1);
-        this.m_equipe2 = new EquipeJoueurs(joueur2);
+        this.m_equipe1 = equipe1;
+        this.m_equipe2 = equipe2;
+        this.m_rangTournoi = rangTournoi;
+    }
+    
+    /**
+     * Constructeur pour un nouveau Match en passant deux joueurs en paramètre au lieu de deux équipes.
+     * Les deux équipes de un sont créées en interne avec ces deux joueurs.
+     * 
+     */
+    public Match(Creneau creneau, String type, Sexe sexe, Joueur joueur1, Joueur joueur2, int rangTournoi) {
+        this(creneau, type, sexe, new EquipeJoueurs(joueur1), new EquipeJoueurs(joueur2), rangTournoi);
         //System.out.println(m_equipe1.toString() + m_equipe2.toString());
     }
 
@@ -121,7 +134,7 @@ public class Match implements Comparable<Match>{
      * @param m_arbitresLigne
      * @param m_equipeRamasseurs 
      */
-    public Match(int idMatch, List<Set> sets, Creneau creneau, String type, Sexe genre, boolean fini, EquipeJoueurs equipe1, EquipeJoueurs equipe2, ArbitreChaise arbitreChaise, ArbitreFilet arbitreFilet, Map<Integer, ArbitreLigne> arbitresLigne, EquipeRamasseurs equipeRamasseurs) {
+    public Match(int idMatch, List<Set> sets, Creneau creneau, String type, Sexe genre, boolean fini, EquipeJoueurs equipe1, EquipeJoueurs equipe2, ArbitreChaise arbitreChaise, ArbitreFilet arbitreFilet, Map<Integer, ArbitreLigne> arbitresLigne, EquipeRamasseurs equipeRamasseurs, int rangTournoi) {
         this();
         this.m_idMatch = idMatch;
         this.m_sets = sets;
@@ -129,10 +142,9 @@ public class Match implements Comparable<Match>{
         this.m_type = type;
         this.m_genre = genre;
         this.m_fini = fini;
-        //this.m_joueur1 = m_joueur1;
-        //this.m_joueur2 = m_joueur2;
-        //this.m_equipe1 = new EquipeJoueurs(joueur1);
-        //this.m_equipe2 = new EquipeJoueurs(joueur2);
+        
+        this.m_rangTournoi = rangTournoi;
+        
         this.m_equipe1 = equipe1;
         this.m_equipe2 = equipe2;
         
@@ -288,6 +300,40 @@ public class Match implements Comparable<Match>{
             return m_genre;
         }
         
+        public void setRangTournoi(int rangTournoi) throws Error {
+            if (rangTournoi == 1 || rangTournoi == 2 || rangTournoi == 4 || rangTournoi == 8 || rangTournoi == 16) {
+                m_rangTournoi = rangTournoi;
+            }
+            else {
+                throw new Error("Rang tournoi invalide : " + rangTournoi);
+            }
+        }
+        public int getRangTournoi() {
+            return m_rangTournoi;
+        }
+        
+        public String getStrRangTournoi() {
+            String strRangTournoi = "";
+            switch (m_rangTournoi) {
+                case 16:
+                    strRangTournoi = "16e de finale";
+                    break;
+                case 8:
+                    strRangTournoi = "8e de finale";
+                    break;
+                case 4:
+                    strRangTournoi = "Quart de Finale";
+                    break;
+                case 2:
+                    strRangTournoi = "Demi-Finale";
+                    break;
+                case 1:
+                    strRangTournoi = "Finale";
+                    break;
+            }
+            return strRangTournoi;
+        }
+        
         private void calculerResultat() {
             if (estFini()) {
                 int sets_e1 = 0;
@@ -368,5 +414,7 @@ public class Match implements Comparable<Match>{
         public int compareTo(Match other) {
             return this.m_creneau.compareTo(other.getCreneau());
         }
+        
+        
 
 }

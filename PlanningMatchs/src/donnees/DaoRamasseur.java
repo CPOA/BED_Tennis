@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 import modele.Match;
 import modele.personne.Ramasseur;
 import modele.personne.Sexe;
-import modele.arbitre.Arbitre;
+import modele.personne.arbitre.Arbitre;
 import modele.personne.Joueur;
 import modele.personne.TypeVIP;
 import static donnees.Dao.queryUpdate;

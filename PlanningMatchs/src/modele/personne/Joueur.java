@@ -1,5 +1,7 @@
 package modele.personne;
 
+import donnees.DaoJoueur;
+
 public class Joueur extends Personne {
 
 	private String m_login;
@@ -42,6 +44,28 @@ public class Joueur extends Personne {
         
         public int getRangTournoi() {
             return m_rangTournoi;
+        }
+        
+        public String getStrRangTournoi() {
+            String strRangTournoi = "";
+            switch (m_rangTournoi) {
+                case 16:
+                    strRangTournoi = "16e de finale";
+                    break;
+                case 8:
+                    strRangTournoi = "8e de finale";
+                    break;
+                case 4:
+                    strRangTournoi = "Quart de Finale";
+                    break;
+                case 2:
+                    strRangTournoi = "Demi-Finale";
+                    break;
+                case 1:
+                    strRangTournoi = "Finale";
+                    break;
+            }
+            return strRangTournoi;
         }
         
         public void setRangTournoi(int rangTournoi) {

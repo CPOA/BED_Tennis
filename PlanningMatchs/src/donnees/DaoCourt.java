@@ -31,7 +31,7 @@ public class DaoCourt extends Dao{
         HashMap<Integer, Court> courts = new HashMap<>();
         //List<Court> courts = new ArrayList<>();
         
-        // courts connus
+        // courts spéciaux
         courts.put(1, CourtCentral.getInstance());
         courts.put(2, CourtAnnexe.getInstance());
         //courts.add(CourtCentral.getInstance());
@@ -41,9 +41,10 @@ public class DaoCourt extends Dao{
         
         connect();
         
-        ResultSet res = query("Select id_court, nom, adresse, capacite from court");
-        
+        ResultSet res = query("Select id_court, nom, adresse, capacite from `court`");
+       
         try {
+            System.out.println("res.isLast()=" + res.isLast());
             while (res.next()) {
                 
                 Court court = new CourtEntrainement(res.getInt("id_court"),
@@ -52,6 +53,7 @@ public class DaoCourt extends Dao{
                                                     res.getInt("capacite"));
                     
                 courts.put(res.getInt("id_court"), court);
+                System.out.println("court récupéré :" + res.getInt("id_court"));
                 //courts.add(court);
             }
         } catch (SQLException ex) {

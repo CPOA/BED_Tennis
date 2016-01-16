@@ -1,4 +1,4 @@
-package modele.arbitre;
+package modele.personne.arbitre;
 
 public class AssociationArbitrageLigne {
     

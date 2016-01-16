@@ -1,8 +1,8 @@
-package modele.arbitre;
+package modele.personne.arbitre;
 
 
 import modele.personne.Sexe;
-import modele.arbitre.Arbitre;
+import modele.personne.arbitre.Arbitre;
 
 public class ArbitreLigne extends Arbitre {
 

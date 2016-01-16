@@ -15,11 +15,11 @@ import java.util.logging.Logger;
 import modele.personne.Joueur;
 import modele.Match;
 import modele.personne.Sexe;
-import modele.arbitre.Arbitre;
-import modele.arbitre.ArbitreChaise;
-import modele.arbitre.ArbitreFilet;
-import modele.arbitre.ArbitreLigne;
-import modele.arbitre.TypeArbitre;
+import modele.personne.arbitre.Arbitre;
+import modele.personne.arbitre.ArbitreChaise;
+import modele.personne.arbitre.ArbitreFilet;
+import modele.personne.arbitre.ArbitreLigne;
+import modele.personne.arbitre.TypeArbitre;
 import modele.personne.TypeVIP;
 import static donnees.Dao.queryUpdate;
 

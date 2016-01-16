@@ -1,5 +1,5 @@
 
-package modele.arbitre;
+package modele.personne.arbitre;
 
 import modele.Match;
 import modele.personne.Sexe;

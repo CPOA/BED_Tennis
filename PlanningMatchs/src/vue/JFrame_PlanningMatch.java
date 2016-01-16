@@ -18,11 +18,15 @@ import donnees.Dao;
 import donnees.DaoMatch;
 
 
-public class IHMPlanningMatch extends javax.swing.JFrame {
+public class JFrame_PlanningMatch extends javax.swing.JFrame {
 
     private TablePlanningModel tablePlanningModel;
     
-    public IHMPlanningMatch() {
+    static {
+        //PlanningMatchs planningMatchs = new PlanningMatchs();
+    }
+    
+    public JFrame_PlanningMatch() {
         initComponents();
         
         
@@ -61,7 +65,8 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
                 .addContainerGap())
         );
         
-        //actualiserPlanning();
+        
+        afficherMatchs();
         
         
             
@@ -156,6 +161,7 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
 
         buttonGroupTypeTournoi.add(jRadioButtonDouble);
         jRadioButtonDouble.setText("Double Messieurs");
+        jRadioButtonDouble.setEnabled(false);
         jRadioButtonDouble.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButtonDoubleActionPerformed(evt);
@@ -342,8 +348,12 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
     private void jRadioButtonDoubleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonDoubleActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jRadioButtonDoubleActionPerformed
-
+    
+    
+    
     private void jButton_PlanifierMatchsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_PlanifierMatchsActionPerformed
+        
+        
         
         String type = "";
         if (jRadioButtonSimple.isSelected())
@@ -368,7 +378,7 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
         try {
             PlanningMatchs.planifierMatchs(type, HOMME);
         } catch (Error ex) {
-            Logger.getLogger(IHMPlanningMatch.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(JFrame_PlanningMatch.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         afficherMatchs();
@@ -376,8 +386,10 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton_PlanifierMatchsActionPerformed
 
     private void jButton_RecupererMatchsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_RecupererMatchsActionPerformed
+        verrouillerIHM();
         PlanningMatchs.recupererMatchs();
         afficherMatchs();
+        deverrouillerIHM();
     }//GEN-LAST:event_jButton_RecupererMatchsActionPerformed
 
     
@@ -393,15 +405,24 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
 
     private void jButton_RemplirTablesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_RemplirTablesActionPerformed
         verrouillerIHM();
-        PlanningMatchs.creerRemplirTables();
+        PlanningMatchs.remplirTables();
         deverrouillerIHM();
     }//GEN-LAST:event_jButton_RemplirTablesActionPerformed
 
     private void jButton_ViderTablesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_ViderTablesActionPerformed
-        verrouillerIHM();
-        PlanningMatchs.viderTables();
-        deverrouillerIHM();
-        JOptionPane.showMessageDialog(this, "Tables vidées - " + Dao.getIdMax());
+        int res = JOptionPane.showConfirmDialog(this, "Cela effacera les données des joueurs, arbitres, ramasseurs, courts, créneaux. Continuer ?", "Êtes-vous sûr ?",  JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        //JOptionPane.showMessageDialog(this, JOptionPane.WARNING_MESSAGE, "Cela supprimera tous les matchs planifiés. Continuer ?", 0);
+        JOptionPane.showMessageDialog(this, "res = " + res);
+        if (res == 0) { // yes
+            verrouillerIHM();
+            PlanningMatchs.viderTables();
+            deverrouillerIHM();
+            JOptionPane.showMessageDialog(this, "Tables vidées - ");// + Dao.getIdMax());
+        }
+        else {    // no
+            return;
+        }
+        
     }//GEN-LAST:event_jButton_ViderTablesActionPerformed
 
     private void jButton_detailsMatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_detailsMatchActionPerformed
@@ -418,11 +439,13 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "res = " + res);
         if (res == 0) { // yes
             DaoMatch.viderMatchs();
-            afficherMatchs();
+            
         }
         else {    // no
             return;
         }
+        PlanningMatchs.recupererMatchs();
+        afficherMatchs();
     }//GEN-LAST:event_jButton_ViderMatchsActionPerformed
 
     private void jButton_resultatMatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_resultatMatchActionPerformed
@@ -437,11 +460,12 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
         //ihm_resultatMatch.setVisible(true);
         
         if (match.estFini()) {
-            Object[] options = {"Retour - Ne rien modifier", "Modifier le score existant", "Effacer le score et marquer ce match comme non joué", "Effacer le score existant et le rentrer à nouveau"};
-            int res = (JOptionPane.showOptionDialog(this, "Les informations du score ont ", "Match déjà joué", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]));
+            /*
+            Object[] options = {"Retour - Ne rien modifier", "Modifier le score existant", "Effacer le score et marquer ce match comme non joué"};
+            int res = (JOptionPane.showOptionDialog(this, "Les informations du score ont déjà été enregistrées.", "Match déjà joué", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]));
             JOptionPane.showMessageDialog(this, "res = " + res);
-            if (res == 0) { // yes
-                
+            if (res == 0) {  // retour
+                return;
             }
             else if (res == 1) {
                 
@@ -451,18 +475,17 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
             }
             else if (res == 3) {
                 
-            }
+            }*/
+            JOptionPane.showMessageDialog(this, "Ce match a déjà été joué ! ");
+            return;
+
         }
         
         JDialog_ResultatMatch resultatMatch = new JDialog_ResultatMatch(this, true, match);
         
         resultatMatch.setVisible(true);
         
-        
-        
-        //while (!match.estFini()) {
-            
-        //}
+        afficherMatchs();
         
         System.out.println("result - " + match.getScoreFinal().toString());
     }//GEN-LAST:event_jButton_resultatMatchActionPerformed
@@ -484,11 +507,11 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
         jDialog_DeplacerMatch.setVisible(true);
         
         afficherMatchs();
-        
+            
     }//GEN-LAST:event_jButton_deplacerMatchActionPerformed
     
     
-    private void afficherMatchs() {
+    protected void afficherMatchs() {
         
         int n = PlanningMatchs.nbMatchs();
         System.out.println(n + " matchs à afficher.");
@@ -498,23 +521,27 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
             tablePlanningModel = new TablePlanningModel(new ArrayList<>(PlanningMatchs.getMatchs().values()));
         
         tableAffichagePlanning.setModel(tablePlanningModel);
-        tableAffichagePlanning.getColumnModel().getColumn(0).setMaxWidth(60);
-        tableAffichagePlanning.getColumnModel().getColumn(0).setMinWidth(60);
+        tableAffichagePlanning.getColumnModel().getColumn(0).setMaxWidth(40);
+        tableAffichagePlanning.getColumnModel().getColumn(0).setMinWidth(40);
         
         tableAffichagePlanning.getColumnModel().getColumn(1).setMaxWidth(130);
         tableAffichagePlanning.getColumnModel().getColumn(1).setMinWidth(130);
         
-        tableAffichagePlanning.getColumnModel().getColumn(2).setMaxWidth(160);
-        tableAffichagePlanning.getColumnModel().getColumn(2).setMinWidth(160);
+        tableAffichagePlanning.getColumnModel().getColumn(2).setMaxWidth(120);
+        tableAffichagePlanning.getColumnModel().getColumn(2).setMinWidth(120);
         
-        tableAffichagePlanning.getColumnModel().getColumn(3).setMaxWidth(110);
-        tableAffichagePlanning.getColumnModel().getColumn(3).setMinWidth(110);
+        tableAffichagePlanning.getColumnModel().getColumn(3).setMaxWidth(200);
+        tableAffichagePlanning.getColumnModel().getColumn(3).setMinWidth(200);
         
         tableAffichagePlanning.getColumnModel().getColumn(4).setMaxWidth(200);
         tableAffichagePlanning.getColumnModel().getColumn(4).setMinWidth(200);
         
         tableAffichagePlanning.getColumnModel().getColumn(5).setMaxWidth(200);
         tableAffichagePlanning.getColumnModel().getColumn(5).setMinWidth(200);
+                
+        tableAffichagePlanning.getColumnModel().getColumn(6).setMaxWidth(40);
+        tableAffichagePlanning.getColumnModel().getColumn(6).setMinWidth(40);
+
     }
     
     private void afficherDetailsMatchSelectionne(int row) {
@@ -523,7 +550,7 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
         if (row < 0)
             return;
         Match match = PlanningMatchs.getMatch((int)tableAffichagePlanning.getValueAt(row, 0));
-        IHMInfoMatch infoMatch = new IHMInfoMatch(match);
+        JFrame_InfoMatch infoMatch = new JFrame_InfoMatch(match);
         infoMatch.setVisible(true);
         infoMatch = null;
         
@@ -571,20 +598,21 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(IHMPlanningMatch.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JFrame_PlanningMatch.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(IHMPlanningMatch.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JFrame_PlanningMatch.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(IHMPlanningMatch.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JFrame_PlanningMatch.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(IHMPlanningMatch.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JFrame_PlanningMatch.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new IHMPlanningMatch().setVisible(true);
+                new JFrame_PlanningMatch().setVisible(true);
             }
         });
         
@@ -596,11 +624,11 @@ public class IHMPlanningMatch extends javax.swing.JFrame {
     
     public void actualiserPlanning() {
         
-        //PlanningMatchs.creerRemplirTables();
+        //PlanningMatchs.remplirTables();
         try {
             PlanningMatchs.planifierMatchs("simple", HOMME);
         } catch (Error ex) {
-            Logger.getLogger(IHMPlanningMatch.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(JFrame_PlanningMatch.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         

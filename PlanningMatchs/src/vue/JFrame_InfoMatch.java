@@ -10,22 +10,25 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.util.List;
 import java.util.Map.Entry;
+import javax.swing.JOptionPane;
 import modele.Match;
-import modele.arbitre.ArbitreLigne;
+import modele.personne.arbitre.ArbitreLigne;
 import modele.personne.Ramasseur;
 
 /**
  *
  * @author dave
  */
-public class IHMInfoMatch extends javax.swing.JFrame {
+public class JFrame_InfoMatch extends javax.swing.JFrame {
 
+    private Match m_match;
+    
     /**
      * Creates new form IHMInfoMatch
      */
-    public IHMInfoMatch(Match match) {
+    public JFrame_InfoMatch(Match match) {
         initComponents();
-        
+        m_match = match;
         if (match == null)
             return;
         
@@ -33,9 +36,11 @@ public class IHMInfoMatch extends javax.swing.JFrame {
         
         
         
+        String strRangTournoi = match.getEquipe1().getJoueurA().getStrRangTournoi();
+        
+        jLabel_IdMatch.setText(Integer.toString(match.getId()) + " - " + strRangTournoi);
         
         
-        jLabel_IdMatch.setText(Integer.toString(match.getId()));
         jLabel_Joueur1.setText(match.getEquipe1().toString() + " (" + match.getEquipe1().getNationalite() + ")");
         //jLabel_NationaliteJ1.setText(match.getJoueur1().getNationalite());
         jLabel_Joueur2.setText(match.getEquipe2().toString() + " (" + match.getEquipe2().getNationalite() + ")");
@@ -85,13 +90,25 @@ public class IHMInfoMatch extends javax.swing.JFrame {
         //String ramasseurs = "";
         List<Ramasseur> listeRamasseurs = match.getEquipeRamasseurs().getRamasseurs();
         //for (Ramasseur r : ) {
-        for (Ramasseur r : listeRamasseurs.subList(0, 5)) {
+        for (Ramasseur r : listeRamasseurs.subList(0, 6)) {
             jTextArea_Ramasseurs1.append(r.toString() + " (" + r.getNationalite() + ")\n");
         }
-        for (Ramasseur r : listeRamasseurs.subList(6, 11)) {
+        for (Ramasseur r : listeRamasseurs.subList(6, 12)) {
             jTextArea_Ramasseurs2.append(r.toString() + " (" + r.getNationalite() + ")\n");
         }
         
+        
+        
+        String sets1 = "", sets2 = "";
+        
+        if (match.estFini()) {
+            for (modele.Set set : match.getScoreFinal()) {
+                sets1 += set.getPointsJoueur1() + "  ";
+                sets2 += set.getPointsJoueur2() + "  ";
+            }
+        }
+        jLabel_Sets_1.setText(sets1);
+        jLabel_Sets_2.setText(sets2);
         
         setTitle("Détails du match n° " + match.getId());
         
@@ -116,6 +133,8 @@ public class IHMInfoMatch extends javax.swing.JFrame {
         jLabel_Contre = new javax.swing.JLabel();
         jLabel_Joueur2 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
+        jLabel_Sets_1 = new javax.swing.JLabel();
+        jLabel_Sets_2 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel_ArbitreFilet = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -170,6 +189,10 @@ public class IHMInfoMatch extends javax.swing.JFrame {
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
+        jLabel_Sets_1.setText("jLabel7");
+
+        jLabel_Sets_2.setText("jLabel9");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -180,7 +203,11 @@ public class IHMInfoMatch extends javax.swing.JFrame {
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel_Joueur1)
-                            .addComponent(jLabel_Joueur2)))
+                            .addComponent(jLabel_Joueur2))
+                        .addGap(145, 145, 145)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel_Sets_1)
+                            .addComponent(jLabel_Sets_2)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(42, 42, 42)
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -192,7 +219,9 @@ public class IHMInfoMatch extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel_Joueur1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel_Joueur1)
+                    .addComponent(jLabel_Sets_1))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
@@ -201,7 +230,9 @@ public class IHMInfoMatch extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel_Joueur2)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel_Joueur2)
+                    .addComponent(jLabel_Sets_2))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -286,11 +317,9 @@ public class IHMInfoMatch extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jLabel5)
                     .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -298,7 +327,7 @@ public class IHMInfoMatch extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -374,8 +403,8 @@ public class IHMInfoMatch extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton_InscrireResultatMatch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton_Fermer, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE))
@@ -400,7 +429,17 @@ public class IHMInfoMatch extends javax.swing.JFrame {
     }//GEN-LAST:event_formKeyPressed
 
     private void jButton_InscrireResultatMatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_InscrireResultatMatchActionPerformed
-        // TODO add your handling code here:
+        
+        if (m_match.estFini()) {
+            JOptionPane.showMessageDialog(this, "Ce match a déjà été joué ! ");
+            return;
+        }
+        
+        JDialog_ResultatMatch resultatMatch = new JDialog_ResultatMatch(this, true, m_match);
+        
+        resultatMatch.setVisible(true);
+        
+        dispose();
     }//GEN-LAST:event_jButton_InscrireResultatMatchActionPerformed
 
     
@@ -424,6 +463,8 @@ public class IHMInfoMatch extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel_IdMatch;
     private javax.swing.JLabel jLabel_Joueur1;
     private javax.swing.JLabel jLabel_Joueur2;
+    private javax.swing.JLabel jLabel_Sets_1;
+    private javax.swing.JLabel jLabel_Sets_2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

@@ -41,7 +41,7 @@ public class JDialog_DeplacerMatch extends javax.swing.JDialog {
         jTable_CrenauxDispo.setModel(new TableCreneauxDispoModel(m_creneaux));
         m_match = matchADeplacer;
         
-        jLabel_Match.setText(matchADeplacer.toString());
+        jLabel_Match.setText(matchADeplacer.getEquipe1() + " contre " + matchADeplacer.getEquipe2());
         
         
         jTable_CrenauxDispo.getColumnModel().getColumn(0).setMinWidth(120);
@@ -105,15 +105,17 @@ public class JDialog_DeplacerMatch extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jLabel_Match))
-                    .addComponent(jButton_Confirmer, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)))
-                .addContainerGap(256, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addComponent(jLabel_Match)))
+                        .addGap(0, 54, Short.MAX_VALUE))
+                    .addComponent(jButton_Confirmer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -140,14 +142,20 @@ public class JDialog_DeplacerMatch extends javax.swing.JDialog {
         
         Creneau creneau = m_creneaux.get(row);
         
-        String txt = "Confirmer le déplacement :\n";
-        txt += "\n  Match " + m_match.getId() + "";
+        String txt = "<html>Confirmer le déplacement :\n";
+        txt += "\n  Match " + m_match.getId();
+        txt += "\n  opposant " + m_match.getEquipe1().toString() + " et " + m_match.getEquipe2();
+        
+        txt += "\n\ncréneau actuel : ";
+        txt += m_match.getCreneau().toString();
+        
+        txt += "\nDéplacer à : ";
         txt += creneau.toString();
         
         //finale JOptionPane jOptionPane = new JOptionPane(txt, JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
         Object[] options = {"Yes", "No"};
         int res = (JOptionPane.showOptionDialog(this, txt, "Confirmer le déplacement du match", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]));
-        JOptionPane.showMessageDialog(this, "res = " + res);
+        //JOptionPane.showMessageDialog(this, "res = " + res);
         if (res == 0) { // yes
             try {
                 PlanningMatchs.deplacerMatch(m_match, creneau);

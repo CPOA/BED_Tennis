@@ -60,4 +60,10 @@ public class TableCreneauxDispoModel extends AbstractTableModel {
         }
     }
     
+    
+    public String getColumnName(int col) {
+        return m_titreColonnes.get(col);
+    }
+    
+    
 }

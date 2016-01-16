@@ -35,6 +35,7 @@ public class TablePlanningModel extends AbstractTableModel {
         titreColonnes.add("Type de tournoi");
         titreColonnes.add("Equipe 1");
         titreColonnes.add("Equipe 2");
+        titreColonnes.add("Joué");
     }
     
     public TablePlanningModel(List<Match> matchs) {
@@ -88,18 +89,24 @@ public class TablePlanningModel extends AbstractTableModel {
             case 2:
                 return match.getCourt().getNom();
             case 3:
-                return match.getType();
+                return match.getType() + " - " + match.getRangTournoi();
             case 4:
                 //return match.getJoueur1().toString();
                 String txt = "";
                 if (match.estFini()) {
                     if (match.getGagnant() == 1) {
-                        txt = "";
+                        //txt = "<html><strong>STRONG</strong></html>";
                     }
                 }
                 return match.getEquipe1().toString();
+                //return txt;
             case 5: 
                 return match.getJoueur2().toString();
+            case 6:
+                if (match.estFini())
+                    return "oui";
+                else
+                    return "non";
             default:
                 return 0;
         }

@@ -114,6 +114,40 @@ public class DaoCreneau extends Dao {
         return creneaux;
     }
     
+     public static Creneau getPremierCreneauLibre() {
+        Creneau creneau = null;
+        
+        connect();
+        
+        HashMap<Integer, Court> courts = DaoCourt.getCourts();
+
+        
+        ResultSet res = query("Select id_creneau, id_court, annee, mois, jour, tranchehoraire, libre, id_match from creneau WHERE libre='true' ORDER BY annee, mois, jour");
+        
+        try {
+            if (res.next()) {
+                
+                int idMatch = res.getInt("id_match");
+                Match match = null;
+                if (idMatch != 0)
+                    match = DaoMatch.getMatchs().get(idMatch);
+                creneau = new Creneau(res.getInt("id_creneau"),
+                                        courts.get(res.getInt("id_court")),
+                                        res.getInt("annee"),
+                                        res.getInt("mois"),
+                                        res.getInt("jour"),
+                                        TrancheHoraire.valueOf(res.getString("tranchehoraire")),
+                                        res.getBoolean("libre"),
+                                        match);
+                System.out.println("Créneau récupéré : " + creneau.toString() + ", " + creneau.estLibre());
+            }
+        } catch (SQLException | Error ex) {
+            Logger.getLogger(DaoCreneau.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return creneau;
+    }
+    
     
     public static void insertCreneau(Creneau creneau) {
        

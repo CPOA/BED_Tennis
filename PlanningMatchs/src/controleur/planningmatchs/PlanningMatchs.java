@@ -30,14 +30,14 @@ import modele.personne.Ramasseur;
 import modele.personne.Sexe;
 import static modele.personne.Sexe.HOMME;
 import modele.TrancheHoraire;
-import modele.arbitre.Arbitre;
-import modele.arbitre.ArbitreChaise;
-import modele.arbitre.ArbitreFilet;
-import modele.arbitre.ArbitreLigne;
-import modele.arbitre.TypeArbitre;
-import static modele.arbitre.TypeArbitre.ARBITRE_CHAISE;
-import static modele.arbitre.TypeArbitre.ARBITRE_FILET;
-import static modele.arbitre.TypeArbitre.ARBITRE_LIGNE;
+import modele.personne.arbitre.Arbitre;
+import modele.personne.arbitre.ArbitreChaise;
+import modele.personne.arbitre.ArbitreFilet;
+import modele.personne.arbitre.ArbitreLigne;
+import modele.personne.arbitre.TypeArbitre;
+import static modele.personne.arbitre.TypeArbitre.ARBITRE_CHAISE;
+import static modele.personne.arbitre.TypeArbitre.ARBITRE_FILET;
+import static modele.personne.arbitre.TypeArbitre.ARBITRE_LIGNE;
 import modele.court.Court;
 import modele.court.CourtAnnexe;
 import modele.court.CourtCentral;
@@ -50,6 +50,7 @@ import donnees.DaoCreneau;
 import donnees.DaoJoueur;
 import donnees.DaoMatch;
 import donnees.DaoRamasseur;
+import javax.swing.JOptionPane;
 import org.joda.time.DateTime;
 
 /**
@@ -181,7 +182,7 @@ public class PlanningMatchs {
         
     }
     
-    public static void creerRemplirTables() {
+    public static void remplirTables() {
         System.out.println(DaoJoueur.getNbJoueurs() + " joueurs avant vidage");
         
         viderTables();
@@ -213,8 +214,8 @@ public class PlanningMatchs {
         DaoJoueur.insertJoueur("Kelle", "Willy", "fucj@example.com",HOMME , "RUSSIE", "mother", "russia", 14, 16);
         DaoJoueur.insertJoueur("Monkey", "Luffy", "onepiece@example.com",HOMME , "JAPON", "Ace", "rip2012", 15, 16);
         DaoJoueur.insertJoueur("Rocky", "Bannane", "rockycky@example.com",HOMME , "FRANCE", "dur", "acuire", 16, 16);
-        DaoJoueur.insertJoueur("Deep", "Blue", "echecs@example.com",HOMME , "AMERIQUE", "Ima", "winner1997", 17, 16);
-        DaoJoueur.insertJoueur("Garry", "Kasp", "echecs2@example.com",HOMME , "RUSSIE", "Ima", "looser1997", 18, 16);
+        DaoJoueur.insertJoueur("Blue", "Deep", "echecs@example.com",HOMME , "AMERIQUE", "Ima", "winner1997", 17, 16);
+        DaoJoueur.insertJoueur("Kasparov", "Gary", "echecs2@example.com",HOMME , "RUSSIE", "Ima", "looser1997", 18, 16);
         DaoJoueur.insertJoueur("Sky", "Luck", "star@example.com",HOMME , "AMERIQUE", "jesuis", "tonfils", 19, 16);
         DaoJoueur.insertJoueur("Dark", "Vadrouille", "wars@example.com",HOMME , "AMERIQUE", "nooooo", "ooooo", 20, 16);
         DaoJoueur.insertJoueur("Jffff", "Sian", "hello@example.com",HOMME , "FRANCE", "word", "php5", 21, 16);
@@ -329,7 +330,7 @@ public class PlanningMatchs {
         DaoArbitre.insertArbitre("Andorre", "Pasdelacase", "entrelespagneetlariege@example.com", HOMME, "Allemagne", ARBITRE_FILET, 0, 0);
         DaoArbitre.insertArbitre("Fff", "Ttt", "FrFrf@example.com", HOMME, "Pologne", ARBITRE_FILET, 0, 0);
         DaoArbitre.insertArbitre("Calamity", "Camille", "blazblue@example.com", FEMME, "Pologne", ARBITRE_FILET, 0, 0);
-        DaoArbitre.insertArbitre("Mieux", "Vaut", "tardquejamais@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
+        DaoArbitre.insertArbitre("Vaut", "Mieux", "tardquejamais@example.com", HOMME, "France", ARBITRE_FILET, 0, 0);
         DaoArbitre.insertArbitre("Castafolte", "Henry", "aboutrobot@example.com", HOMME, "Pologne", ARBITRE_LIGNE, 0, 0);
         
         
@@ -611,65 +612,63 @@ public class PlanningMatchs {
         DaoRamasseur.insertRamasseur("U2", "Bono", "u2@example.com", HOMME, "Irlande");
         DaoRamasseur.insertRamasseur("Zephyrr", "Minecraft", "peaceandredstone@example.com", HOMME, "Québec");
         
-        DaoRamasseur.insertRamasseur("Pedro", "Henry", "porto@example.com",HOMME , "Espagne");
-        DaoRamasseur.insertRamasseur("Guzz", "Prod", "youtube@example.com",HOMME , "Japon");
-        DaoRamasseur.insertRamasseur("Shia", "Labeouf", "justedoit@example.com",HOMME , "Corée");
-        DaoRamasseur.insertRamasseur("Dream", "Come", "Trueornot@example.com",HOMME , "Allemagne");
-        DaoRamasseur.insertRamasseur("Tsar", "Jasmine", "Aladin@example.com",FEMME , "France");
-        DaoRamasseur.insertRamasseur("Super", "Nes", "retro@example.com",FEMME , "France");
-        DaoRamasseur.insertRamasseur("Heartfilia", "Lucy", "fairytail@example.com",FEMME , "Japon");
-        DaoRamasseur.insertRamasseur("Belle", "Mere", "blancheneige@example.com",FEMME , "Chine");
-        DaoRamasseur.insertRamasseur("Ledernier", "Ramaseur", "estunefemme@example.com",FEMME , "Espagne");
-        DaoRamasseur.insertRamasseur("truc", "machin", "truc@example.com", HOMME, "France");
-        DaoRamasseur.insertRamasseur("Daniel", "Antoine", "wtc@example.com", HOMME, "Internet");
-        DaoRamasseur.insertRamasseur("Melenchon", "Jean-Luc", "jlm@example.com", HOMME, "URSS");
-        DaoRamasseur.insertRamasseur("Moulin", "Jean", "max@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("Mason", "Nick", "qzelf@example.com", FEMME, "Angleterre");
-        DaoRamasseur.insertRamasseur("3003", "Pacificsound", "qzelf@example.com", FEMME, "Internet");
-        DaoRamasseur.insertRamasseur("Crying", "Johnny", "drogue@example.com", HOMME, "Internet");
-        DaoRamasseur.insertRamasseur("U2", "Bono", "u2@example.com", HOMME, "Irlande");
-        DaoRamasseur.insertRamasseur("Zephyrr", "Minecraft", "peaceandredstone@example.com", HOMME, "Québec");
+        
+        
+        DaoRamasseur.insertRamasseur("Idea", "No", "porto@example.com",HOMME , "Espagne");
+        DaoRamasseur.insertRamasseur("Grime", "James", "youtube@example.com",HOMME , "USA");
+        DaoRamasseur.insertRamasseur("Vsauce", "Mickael", "vsauce1@example.com",HOMME , "Angleterre");
+        DaoRamasseur.insertRamasseur("Vsauce", "Jake", "vsauce3@example.com",HOMME , "Angleterre");
+        DaoRamasseur.insertRamasseur("Vsauce", "Kevin", "vsauce2@example.com",HOMME , "Angleterre");
+        DaoRamasseur.insertRamasseur("Benamran", "Bruce", "epenser@example.com",HOMME , "France");
+        DaoRamasseur.insertRamasseur("Papillon", "Minute", "kriss@example.com",HOMME , "Internet");
+        DaoRamasseur.insertRamasseur("Pratt", "Guy", "youbetterrun@example.com", HOMME , "Angleterre");
+        DaoRamasseur.insertRamasseur("Galilei", "Galileo", "etpourtantelletourne@example.com",HOMME , "Italie");
+        DaoRamasseur.insertRamasseur("Malou", "Eddy", "congolexicomatisation@example.com", HOMME, "République Démocratique du Congo");
+        DaoRamasseur.insertRamasseur("Crapaud", "Jean-Michel", "jmc@example.com", HOMME, "France");
+        DaoRamasseur.insertRamasseur("Strauss-Kahn", "Dominique", "excusez-la-tenue-je-sors-de-la-douche@example.com", HOMME, "France");
+        DaoRamasseur.insertRamasseur("Diallo", "Nafissatou", "max@example.com", FEMME, "USA");
+        DaoRamasseur.insertRamasseur("Gaillard", "Rémi", "qzelf@example.com", FEMME, "France");
+        DaoRamasseur.insertRamasseur("Campan", "Bernard", "1connu@example.com", FEMME, "Inconnu");
+        DaoRamasseur.insertRamasseur("Legitimus", "Pascal", "1connu@example.com", HOMME, "Inconnu");
+        DaoRamasseur.insertRamasseur("Bourdon", "Didier", "1connu@example.com", HOMME, "Inconnu");
+        DaoRamasseur.insertRamasseur("Jarre", "Jean-Michel", "oxygene@example.com", HOMME, "France");
         
         
         
-        DaoRamasseur.insertRamasseur("Pedro", "Henry", "porto@example.com",HOMME , "Espagne");
-        DaoRamasseur.insertRamasseur("Guzz", "Prod", "youtube@example.com",HOMME , "Japon");
-        DaoRamasseur.insertRamasseur("Shia", "Labeouf", "justedoit@example.com",HOMME , "Corée");
-        DaoRamasseur.insertRamasseur("Dream", "Come", "Trueornot@example.com",HOMME , "Allemagne");
-        DaoRamasseur.insertRamasseur("Tsar", "Jasmine", "Aladin@example.com",FEMME , "France");
-        DaoRamasseur.insertRamasseur("Super", "Nes", "retro@example.com",FEMME , "France");
-        DaoRamasseur.insertRamasseur("Heartfilia", "Lucy", "fairytail@example.com",FEMME , "Japon");
-        DaoRamasseur.insertRamasseur("Belle", "Mere", "blancheneige@example.com",FEMME , "Chine");
-        DaoRamasseur.insertRamasseur("Ledernier", "Ramaseur", "estunefemme@example.com",FEMME , "Espagne");
-        DaoRamasseur.insertRamasseur("truc", "machin", "truc@example.com", HOMME, "France");
-        DaoRamasseur.insertRamasseur("Daniel", "Antoine", "wtc@example.com", HOMME, "Internet");
-        DaoRamasseur.insertRamasseur("Melenchon", "Jean-Luc", "jlm@example.com", HOMME, "URSS");
-        DaoRamasseur.insertRamasseur("Moulin", "Jean", "max@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("Mason", "Nick", "qzelf@example.com", FEMME, "Angleterre");
-        DaoRamasseur.insertRamasseur("3003", "Pacificsound", "qzelf@example.com", FEMME, "Internet");
-        DaoRamasseur.insertRamasseur("Crying", "Johnny", "drogue@example.com", HOMME, "Internet");
-        DaoRamasseur.insertRamasseur("U2", "Bono", "u2@example.com", HOMME, "Irlande");
-        DaoRamasseur.insertRamasseur("Zephyrr", "Minecraft", "peaceandredstone@example.com", HOMME, "Québec");
+        DaoRamasseur.insertRamasseur("Who", "Docteur", "who@example.com",HOMME , "Espagne");
+        DaoRamasseur.insertRamasseur("Sidious", "Dark", "cookies@example.com",HOMME , "Japon");
+        DaoRamasseur.insertRamasseur("Snow", "Jon", "isnotdead@example.com",HOMME , "Corée");
+        DaoRamasseur.insertRamasseur("Cesar", "Jules", "ave@example.com",HOMME , "Allemagne");
+        DaoRamasseur.insertRamasseur("Kenobi", "Obi Wan", "utiliselaforce@example.com",HOMME , "France");
+        DaoRamasseur.insertRamasseur("Colucci", "Michel", "tchaopantin@example.com",HOMME , "France");
+        DaoRamasseur.insertRamasseur("Pantin", "Tchao", "coluche@example.com",HOMME , "Japon");
+        DaoRamasseur.insertRamasseur("Lewinski", "Monica", "stagiairesouslebureau@example.com",FEMME , "USA");
+        DaoRamasseur.insertRamasseur("Clinton", "Bill", "surlebureau@example.com",FEMME , "USA");
+        DaoRamasseur.insertRamasseur("Gates", "Bill", "microsoft@example.com", HOMME, "USA");
+        DaoRamasseur.insertRamasseur("Page", "Larry", "google@google.com", HOMME, "Internet");
+        DaoRamasseur.insertRamasseur("Self", "Don", "prisonbreak@example.com", HOMME, "USA");
+        DaoRamasseur.insertRamasseur("Carter", "Maddy", "timeriders@example.com", FEMME, "Angleterre");
+        DaoRamasseur.insertRamasseur("Eppes", "Don", "numb3rs@example.com", FEMME, "USA");
+        DaoRamasseur.insertRamasseur("Eppes", "Charlie", "numb3rs@example.com", HOMME, "USA");
+        DaoRamasseur.insertRamasseur("Edge", "The", "u2@example.com", HOMME, "Irlande");
+        DaoRamasseur.insertRamasseur("Clayton", "Adam", "u2@example.com", HOMME, "Irlande");
+        DaoRamasseur.insertRamasseur("Mullen Jr.", "Larry", "u2@example.com",HOMME , "Irlande");
+        DaoRamasseur.insertRamasseur("Harp", "Neku", "tristan@example.com",HOMME , "Japon");
+        DaoRamasseur.insertRamasseur("Gadegbeku", "Tristan", "?@example.com",HOMME , "France");
+        DaoRamasseur.insertRamasseur("Eng", "Charles", "facheaveclagache@example.com",HOMME , "France");
+        DaoRamasseur.insertRamasseur("Ndioh", "Samba", "canexistepas@example.com",HOMME , "France");
+        DaoRamasseur.insertRamasseur("Flam", "Capitaine", "tunestpasdenotre@galaxie.com",HOMME , "Autre Galaxie");
+        DaoRamasseur.insertRamasseur("2000", "K", "2000@example.com",HOMME , "France");
+
+        DaoRamasseur.insertRamasseur("Smith", "Matt", "doctor@who.com",HOMME , "France");
+
         
-        
-        DaoRamasseur.insertRamasseur("Pedro", "Henry", "porto@example.com",HOMME , "Espagne");
-        DaoRamasseur.insertRamasseur("Guzz", "Prod", "youtube@example.com",HOMME , "Japon");
-        DaoRamasseur.insertRamasseur("Shia", "Labeouf", "justedoit@example.com",HOMME , "Corée");
-        DaoRamasseur.insertRamasseur("Dream", "Come", "Trueornot@example.com",HOMME , "Allemagne");
-        DaoRamasseur.insertRamasseur("Tsar", "Jasmine", "Aladin@example.com",FEMME , "France");
-        DaoRamasseur.insertRamasseur("Super", "Nes", "retro@example.com",FEMME , "France");
-        DaoRamasseur.insertRamasseur("Heartfilia", "Lucy", "fairytail@example.com",FEMME , "Japon");
-        DaoRamasseur.insertRamasseur("Belle", "Mere", "blancheneige@example.com",FEMME , "Chine");
-        DaoRamasseur.insertRamasseur("Ledernier", "Ramaseur", "estunefemme@example.com",FEMME , "Espagne");
-        DaoRamasseur.insertRamasseur("truc", "machin", "truc@example.com", HOMME, "France");
-        DaoRamasseur.insertRamasseur("Daniel", "Antoine", "wtc@example.com", HOMME, "Internet");
-        DaoRamasseur.insertRamasseur("Melenchon", "Jean-Luc", "jlm@example.com", HOMME, "URSS");
-        DaoRamasseur.insertRamasseur("Moulin", "Jean", "max@example.com", FEMME, "Roumanie");
-        DaoRamasseur.insertRamasseur("Mason", "Nick", "qzelf@example.com", FEMME, "Angleterre");
-        DaoRamasseur.insertRamasseur("3003", "Pacificsound", "qzelf@example.com", FEMME, "Internet");
-        DaoRamasseur.insertRamasseur("Crying", "Johnny", "drogue@example.com", HOMME, "Internet");
-        DaoRamasseur.insertRamasseur("U2", "Bono", "u2@example.com", HOMME, "Irlande");
-        DaoRamasseur.insertRamasseur("Zephyrr", "Minecraft", "peaceandredstone@example.com", HOMME, "Québec");
+        DaoRamasseur.insertRamasseur("Wyatt", "Robert", "dg@example.com",HOMME , "Angleterre");
+        DaoRamasseur.insertRamasseur("Waters", "Roger", "pf@example.com",HOMME , "Angleterre");
+        DaoRamasseur.insertRamasseur("Gourmaud", "Jamy", "etouifred@example.com",HOMME , "France");
+        DaoRamasseur.insertRamasseur("Courant", "Frédéric", "cestpassorcier@example.com",HOMME , "France");
+        DaoRamasseur.insertRamasseur("Bowie", "David", "spaceoddity@example.com",HOMME , "Angleterre");
+        DaoRamasseur.insertRamasseur("Carin", "John", "johncarin@example.com",HOMME , "Angleterre");
         
         DaoCourt.insertCourt(new CourtEntrainement(0, "Court entrainement 1", "adresse1", 2000));
         DaoCourt.insertCourt(new CourtEntrainement(0, "Court entrainement 2", "adresse2", 2000));
@@ -709,10 +708,19 @@ public class PlanningMatchs {
     
     public static void planifierMatchs(String typeTournoi, Sexe genre) throws Error {
         
+        
+        // La fonction principale de l'application
+        
+        
         if (matchs == null)
             matchs = new HashMap<>();
         
+        
+        // On récupère les creneaux existants
+        
         creneaux = DaoCreneau.getCreneaux();
+        
+        // on récupère les joueurs
         
         //List<Joueur> joueursRestants = joueurs;
         //DaoJoueur daoJoueur = new DaoJoueur();
@@ -723,54 +731,49 @@ public class PlanningMatchs {
         System.out.println(i + " joueurs recupérés (" + genre.toString() + ").");
         
         
+        // puis les arbitres
+       
         arbitres = DaoArbitre.getArbitres();
         System.out.println(arbitres.size() + " arbitres récupérés");
         
+        // et enfin les ramasseurs.
         
         ramasseurs = DaoRamasseur.getRamasseurs();
         System.out.println(ramasseurs.size() + " ramasseurs récupérés.");
         //System.out.println("Ramasseurs : " + ramasseurs);
         
-        /*
-        while (!(joueursRestants.size() > 2)) {
-
-            
-            
-            
-            Match match = new Match();
-            //match = new Match(court, creneau, type, joueur1, joueur2, m_arbitreChaise, arbitreFilet, arbitresLigne, equipeRamasseurs);
-            
-            
-        }*/
         
+        // on boucle sur chaque créneau
         
         for (Creneau creneau : creneaux) {
             System.out.println("créneau " + creneau + " " + creneau.getCourt().getType() + " day = " + creneau.getDateTime().getDayOfMonth());
+            
             if (creneau.getCourt() instanceof CourtEntrainement) {
-                if (creneau.getDateTime().getDayOfMonth() == jourTournoi) {
+                if (creneau.getDateTime().getYear() == anneeTournoi && creneau.getDateTime().getMonthOfYear() == moisTournoi && creneau.getDateTime().getDayOfMonth() == jourTournoi) {
                     // Le premier jour du tournoi : on utilise aussi les courts d'entrainement
-                    
                 }
                 else {
+                    // on n'est pas le premier jour du tournoi,
+                    //  donc on n'utilise pas ce court d'entrainement
+                    //  donc on arrête de traiter ce créneau
                     continue; // on n'utilise pas ce court d'entrainement
                 }
             }
-            
-            
-            System.out.println("Attribution pour créneau : " + creneau + ", " + creneau.getCourt() + " libre=" + creneau.estLibre());
+
             if (!creneau.estLibre())
                 continue;
+                        
             
-            //System.out.println("1");
+            // le créneau est valide, on commence à définir le match.
             
-            //if (joueursRestants.size() < 2)
-            //    break;
+            System.out.println("Attribution pour créneau : " + creneau + ", " + creneau.getCourt() + " libre=" + creneau.estLibre());
+
             
-            //System.out.println("2");
-            
+            // on va chercher des joueurs
             
             joueur1 = getJoueurLibre(joueursRestants, creneau);
             if (joueur1 == null) {
+                // on a distribué tous les joueurs
                 System.out.println("fin de la liste de joueurs.");
                 break;
             }
@@ -778,18 +781,255 @@ public class PlanningMatchs {
             
             joueur2 = getJoueurLibre(joueursRestants, creneau);
             if (joueur2 == null) {
+                // on a distribué tous les joueurs
                 System.out.println("fin de la liste de joueurs.");
                 break;
             }
             
+            
+            // les joueurs sont enlevés de la liste des joueurs restant à attribuer
             joueursRestants.remove(joueur1);
             joueursRestants.remove(joueur2);
             
-            Match nouveauMatch = new Match(creneau, typeTournoi, genre, joueur1, joueur2);
+            // on crée un nouveau match avec le constructeur minimal de la classe Match
+            //  le match n'a pas encore d'id, on lui en donnera un plus tard.
+            //  on lui donne des objets joueurs mais en interne il gère par équipe.
+            Match nouveauMatch = new Match(creneau, typeTournoi, genre, joueur1, joueur2, 16);
             System.out.println("nouveauMatch : " + nouveauMatch);
             
-
+            
+            parametrerMatch(nouveauMatch, creneau);
+            
+//            
+//            // assignation des arbitres
+//            
+//            ArbitreChaise arbitreChaise = null;
+//            boolean arbitreValide = true;
+//            
+//            for (Arbitre a : arbitres.values()) {
+//                if (a instanceof ArbitreChaise) {
+//                    arbitreValide = true;
+//                    System.out.print("ArbitreChaise " + a.getId() + " : ");
+//                    
+//                    for (Creneau c : creneaux) {
+//                        if (c.conflitCreneau(creneau) && !c.estLibre()) { 
+//                            if (c.getMatch().getArbitreChaise().getId() == a.getId()) {
+//                                System.out.println(" cet arbitre est déjà occupé.");
+//                                arbitreValide = false;
+//                                break;
+//                            }
+//                        }
+//                    }
+//                    if (!arbitreValide)
+//                        continue;
+//                    
+//                    if (a.peutArbitrer(nouveauMatch)) {
+//                        System.out.println("oui.");
+//                        arbitreChaise = (ArbitreChaise) a;
+//                        nouveauMatch.ajouterArbitre(arbitreChaise);
+//                        a.assigneMatchSimple();
+//                        break;
+//                    }
+//                    else {
+//                        System.out.println("non.");
+//                    }
+//                }
+//            }
+//            if (arbitreChaise == null) {
+//                //throw new Error("Pas assez d'arbitres de chaise disponibles.");
+//                System.out.println("Pas assez d'arbitres de chaise disponibles.");
+//                nouveauMatch = null;
+//
+//                continue;
+//            }
+//            
+//            
+//            // arbitre de filet
+//            
+//            ArbitreFilet arbitreFilet = null;
+//            for (Arbitre af : arbitres.values()) {
+//                if (af instanceof ArbitreFilet) {
+//                    arbitreValide = true;
+//                    System.out.print("ArbitreFilet " + af.getId() + " : ");
+//                    //if (a.peutArbitrer(nouveauMatch)) {
+//                    
+//                    for (Creneau c : creneaux) {
+//                        if (c.conflitCreneau(creneau) && !c.estLibre()) { 
+//                            System.out.print(" compare avec " + c.description());
+//                            if (c.getMatch().getArbitreFilet().getId() == af.getId()) {
+//                                System.out.println(" cet arbitre est déjà occupé.");
+//                                arbitreValide = false;
+//                                break;
+//                            }
+//                        }
+//                    }
+//                    
+//                    if (!arbitreValide)
+//                        continue;
+//                    
+//                    System.out.println(" oui.");
+//                    arbitreFilet = (ArbitreFilet) af;
+//                    //a.assigneMatchSimple();
+//                    nouveauMatch.ajouterArbitre(arbitreFilet);
+//                    break;
+//                    //}
+//                    //else 
+//                    //    System.out.println("non.");
+//                }
+//            }
+//            if (arbitreFilet == null) {
+//                //throw new Error("Pas assez d'arbitres de filet disponibles.");
+//                System.out.println("Pas assez d'arbitres de filet disponibles.");
+//
+//                nouveauMatch = null;
+//                continue;
+//            }
+//            
+//            
+//            
+//            // 8 arbitres de ligne
+//            Map<Integer, ArbitreLigne> arbitresLignes = new HashMap<>();
+//            int nbArbitresLigne = 0;
+//            for (Arbitre arbitre : arbitres.values()) {
+//                if (arbitre instanceof ArbitreLigne) {
+//                    arbitreValide = true;
+//                    System.out.print("ArbitreLigne " + arbitre.getId() + " : ");
+//                        for (Creneau c : creneaux) {
+//                            if (c.conflitCreneau(creneau) && !c.estLibre()) { 
+//                                if (c.getMatch().contient((ArbitreLigne) arbitre)) {
+//                                    System.out.println(" cet arbitre est déjà occupé.");
+//                                    arbitreValide = false;
+//                                    break;
+//                                }
+//                            }
+//                        }
+//                    
+//                        if (!arbitreValide)
+//                            continue;
+//                    
+//                        System.out.println(" oui.");
+//                        arbitresLignes.put(nbArbitresLigne, (ArbitreLigne) arbitre);
+//                        //arbitre.assigneMatchSimple();
+//                        //System.out.println("arbitre ajouté : " + arbitre.getId() + " - " + arbitresLignes.size() + " arbitres de ligne");
+//                        nbArbitresLigne++;
+//                        //System.out.println(nbArbitresLigne);
+//                        if (nbArbitresLigne == 8) 
+//                            break;
+//                }
+//                
+//            }
+//            if (nbArbitresLigne < 8) {
+//                //System.out.println("Pas assez d'arbitres de ligne disponibles (" + nbArbitresLigne + "/8 arbitres disponibles)");
+//                //throw new Error("Pas assez d'arbitres de ligne disponibles.");
+//                System.out.println("Pas assez d'arbitres de ligne disponibles.");
+//
+//                nouveauMatch = null;
+//                continue;
+//            }
+//
+//            nouveauMatch.setArbitresLigne(arbitresLignes);
+//            
+//            
+//            // Attribution des ramasseurs de balle  -  12 ramasseurs (2 equipes de 6)
+//            //  on les distribue au hasard pour éviter que ce soient toujours les mêmes
+//            
+//            EquipeRamasseurs equipeRamasseurs = new EquipeRamasseurs();
+//            Random rand = new Random();
+//            int n = ramasseurs.size();
+//            
+//            //HashMap<Integer, Ramasseur> ramasseursRestants = (HashMap<Integer, Ramasseur>) ramasseurs.clone();
+//            //List<Ramasseur> ramasseursRestants = DaoRamasseur.getRamasseurs();
+//            List<Ramasseur> ramasseursRestants = new ArrayList<>(ramasseurs);
+//            
+//            while (!equipeRamasseurs.estComplete()) {
+//                System.out.println("nbRamasseurs = " + equipeRamasseurs.getNbRamasseurs() + " Ramasseurs restants : " + ramasseursRestants.size());
+//                Ramasseur ramasseur = null;
+//                boolean ramasseurValide = false;
+//                int index = 0;
+//                while (!ramasseurValide && !ramasseursRestants.isEmpty()) {
+//                    index = rand.nextInt(ramasseursRestants.size());
+//                
+//                    ramasseur = ramasseurs.get(index);
+//                    ramasseurValide = true;
+//                    for (Creneau c : creneaux) {
+//                        if (c.conflitCreneau(creneau) && !c.estLibre()) {
+//                            // autre créneau au même moment
+//                            if (c.getMatch().getEquipeRamasseurs().contient(ramasseur)) {
+//                                // ce ramasseur participe à un autre match au même moment et donc n'est pas disponible.
+//                                System.out.println("Ramasseur " + ramasseur.getId() + " déjà sur match " + c.getMatch().getId() + " (" + c.getMatch().getEquipe1().toString() + "/" + c.getMatch().getEquipe2() + ")" );
+//                                ramasseurValide = false;
+//                                ramasseursRestants.remove(index);
+//                                break;
+//                            }
+//                        }
+//                    }
+//                    
+//                }
+//                if (ramasseursRestants.isEmpty()) {
+//                    // tous les ramasseurs ont été enlevés car non disponibles
+//                    //throw new Error("Pas assez de ramasseurs.");
+//                    
+//                    break;
+//                }
+//                
+//                System.out.println("Ramasseur " + ramasseur.getId() + " ok. (" + ramasseur.toString() + ")");
+//                
+//                ramasseursRestants.remove(index);  // on l'enlève pour qu'il ne soit pas repris ensuite
+// 
+//                //System.out.println("Ramasseur : " + ramasseur.getId());
+//                try {
+//                    equipeRamasseurs.ajouterRamasseur(ramasseur);
+//                }
+//                catch (Error e) {
+//                    // ramasseur est déjà présent
+//                    //System.out.println("err : " + e.getMessage());
+//                }
+//                
+//            }
+//            if (ramasseursRestants.isEmpty()) {
+//                System.out.println("Pas assez de ramasseurs disponibles.");
+//                nouveauMatch = null;
+//
+//                continue;
+//            }
+//            
+//            
+//            nouveauMatch.affecterEquipeRamasseurs(equipeRamasseurs);
+            creneau.assigne(nouveauMatch);
+            //matchs.put(nouveauMatch.getId(), nouveauMatch);
+            
+            DaoMatch.insertMatch(nouveauMatch);
+            int id = nouveauMatch.getId();
+            System.out.println("nouveauMatch (" + id + ") : " + nouveauMatch);
+            matchs.put(id, nouveauMatch);
+            //matchs.add(nouveauMatch);
+            
+            //nouveau Match : " + nouveauMatch
+            
+        } // creneaux
+        
+        System.out.println("Planification terminée.");
+        
+    }
+    
+    
+    /**
+     * On sépare l'assignation des arbitres/ramasseurs dans une méthode à part 
+     *      car elle est utilisée à plusieurs endroits 
+     * @param match
+     * @param creneau
+     * @throws Error 
+     */
+    public static void parametrerMatch(Match match, Creneau creneau) throws Error {
+        
+        
             // assignation des arbitres
+            
+            arbitres = DaoArbitre.getArbitres();
+            ramasseurs = DaoRamasseur.getRamasseurs();
+            creneaux = DaoCreneau.getCreneaux();
+            
+            
             
             ArbitreChaise arbitreChaise = null;
             boolean arbitreValide = true;
@@ -799,6 +1039,7 @@ public class PlanningMatchs {
                     arbitreValide = true;
                     System.out.print("ArbitreChaise " + a.getId() + " : ");
                     
+                    // on parcourt les créneaux pour voir si l'arbitre est à un autre endroit au même moment
                     for (Creneau c : creneaux) {
                         if (c.conflitCreneau(creneau) && !c.estLibre()) { 
                             if (c.getMatch().getArbitreChaise().getId() == a.getId()) {
@@ -811,10 +1052,11 @@ public class PlanningMatchs {
                     if (!arbitreValide)
                         continue;
                     
-                    if (a.peutArbitrer(nouveauMatch)) {
+                    
+                    if (a.peutArbitrer(match)) {
                         System.out.println("oui.");
                         arbitreChaise = (ArbitreChaise) a;
-                        nouveauMatch.ajouterArbitre(arbitreChaise);
+                        match.ajouterArbitre(arbitreChaise);
                         a.assigneMatchSimple();
                         break;
                     }
@@ -826,9 +1068,9 @@ public class PlanningMatchs {
             if (arbitreChaise == null) {
                 //throw new Error("Pas assez d'arbitres de chaise disponibles.");
                 System.out.println("Pas assez d'arbitres de chaise disponibles.");
-                nouveauMatch = null;
+                match = null;
 
-                continue;
+                throw new Error("Pas assez d'arbitres de chaise disponibles");
             }
             
             
@@ -858,7 +1100,7 @@ public class PlanningMatchs {
                     System.out.println(" oui.");
                     arbitreFilet = (ArbitreFilet) af;
                     //a.assigneMatchSimple();
-                    nouveauMatch.ajouterArbitre(arbitreFilet);
+                    match.ajouterArbitre(arbitreFilet);
                     break;
                     //}
                     //else 
@@ -869,8 +1111,8 @@ public class PlanningMatchs {
                 //throw new Error("Pas assez d'arbitres de filet disponibles.");
                 System.out.println("Pas assez d'arbitres de filet disponibles.");
 
-                nouveauMatch = null;
-                continue;
+                match = null;
+                throw new Error("Pas assez d'arbitres de filet disponibles.");
             }
             
             
@@ -911,11 +1153,12 @@ public class PlanningMatchs {
                 //throw new Error("Pas assez d'arbitres de ligne disponibles.");
                 System.out.println("Pas assez d'arbitres de ligne disponibles.");
 
-                nouveauMatch = null;
-                continue;
+                match = null;
+                throw new Error("Pas assez d'arbitres de ligne disponibles.");
+                
             }
 
-            nouveauMatch.setArbitresLigne(arbitresLignes);
+            match.setArbitresLigne(arbitresLignes);
             
             
             // Attribution des ramasseurs de balle  -  12 ramasseurs (2 equipes de 6)
@@ -976,28 +1219,13 @@ public class PlanningMatchs {
             }
             if (ramasseursRestants.isEmpty()) {
                 System.out.println("Pas assez de ramasseurs disponibles.");
-                nouveauMatch = null;
+                match = null;
 
-                continue;
+                throw new Error("Pas assez de ramasseurs disponibles.");
             }
             
             
-            nouveauMatch.affecterEquipeRamasseurs(equipeRamasseurs);
-            creneau.assigne(nouveauMatch);
-            //matchs.put(nouveauMatch.getId(), nouveauMatch);
-            
-            DaoMatch.insertMatch(nouveauMatch);
-            int id = nouveauMatch.getId();
-            System.out.println("nouveauMatch (" + id + ") : " + nouveauMatch);
-            matchs.put(id, nouveauMatch);
-            //matchs.add(nouveauMatch);
-            
-            //nouveau Match : " + nouveauMatch
-            
-        } // creneaux
-        
-        System.out.println("Planification terminée.");
-        
+            match.affecterEquipeRamasseurs(equipeRamasseurs);
     }
     
     //public static Joueur getJoueurLibre(List<Joueur> joueursRestants, Creneau creneau) {
@@ -1048,35 +1276,117 @@ public class PlanningMatchs {
         }
     }
     
+    /**
+     * Quand un match est joué, on appelle cette fonction pour qu'elle continue la planification
+     * @param match
+     * @param sets
+     * @throws Error 
+     */
     public static void ajouterResultatMatch(Match match, List<modele.Set> sets) throws Error {
         
+        // on enregistre le score pour le match et on récupère le résultat
         match.setScore(sets);
         
-        EquipeJoueurs gagnant = match.getEquipeGagnante();
+        EquipeJoueurs equipeGagnante = match.getEquipeGagnante();
         
-        int rangTournoi = gagnant.getJoueurA().getRangTournoi();
+        int rangTournoi = equipeGagnante.getJoueurA().getRangTournoi();
+        
+        String nomRangNouveauTournoi = "";
+        int nouveauRangTournoi = 0;
+        List<EquipeJoueurs> joueursEnAttente = null;
+        
         
         switch (rangTournoi) {
             case 16:
-                
-                joueurs8emeDeFinale.add(gagnant);
-                
-                if (joueurs8emeDeFinale.size() == 2) {
-                    // il y a deux joueurs, on peut creer un nouveau match de 8eme de finale
-                }
-                
+                nouveauRangTournoi = 8;
+                nomRangNouveauTournoi = "8ème de finale";
+                joueursEnAttente = joueurs8emeDeFinale;
                 break;
             case 8:
+                nouveauRangTournoi = 4;
+                nomRangNouveauTournoi = "Quart de finale";
+                joueursEnAttente = joueursQuartDeFinale;
                 break;
             case 4:
+                nouveauRangTournoi = 2;
+                nomRangNouveauTournoi = "Demi-finale";
+                joueursEnAttente = joueursDemiFinale;
                 break;
             case 2:
+                nouveauRangTournoi = 1;
+                nomRangNouveauTournoi = "Finale";
+                joueursEnAttente = joueursFinale;
                 break;
             case 1:
+                // tournoi remporté
+                JOptionPane.showMessageDialog(null, equipeGagnante.toString() + " gagne la finale et remporte le tournoi ! ", "Nous avons un gagnant", JOptionPane.INFORMATION_MESSAGE);
                 break;
             default:
                 throw new Error("RangTournoi invalide : " + rangTournoi);
         }
+        
+        
+        joueursEnAttente.add(equipeGagnante);
+        JOptionPane.showMessageDialog(null, equipeGagnante.toString() + " gagne le match et entre en " + nomRangNouveauTournoi + ".", "Information", JOptionPane.INFORMATION_MESSAGE);
+        
+        
+        DaoMatch.modifierMatch(match.getId(), "fini", "'true'");
+
+        String stringSets = "'";
+
+        for (modele.Set set : sets) {
+            stringSets += set.getPointsJoueur1() + "-" + set.getPointsJoueur2() + "," ;
+        }
+        stringSets += "'";
+        DaoMatch.modifierMatch(match.getId(), "sets", stringSets);
+
+        
+        if (joueursEnAttente.size() == 2) {
+            // il y a deux joueurs, on peut creer un nouveau match pour ce rang
+
+            System.out.println("Nouveau match de " + nomRangNouveauTournoi + " (" + joueursEnAttente.get(0) + "/" + joueursEnAttente.get(1));
+
+            Creneau creneau = DaoCreneau.getPremierCreneauLibre();
+            
+            joueursEnAttente.get(0).getJoueurA().setRangTournoi(nouveauRangTournoi);
+            DaoJoueur.updateJoueurRangTournoi(joueursEnAttente.get(0).getJoueurA(), nouveauRangTournoi);
+
+            joueursEnAttente.get(1).getJoueurA().setRangTournoi(nouveauRangTournoi);
+            DaoJoueur.updateJoueurRangTournoi(joueursEnAttente.get(1).getJoueurA(), nouveauRangTournoi);
+
+            if (match.getType() == "double") {
+                joueursEnAttente.get(0).getJoueurB().setRangTournoi(nouveauRangTournoi);
+                DaoJoueur.updateJoueurRangTournoi(joueursEnAttente.get(0).getJoueurB(), nouveauRangTournoi);
+
+                joueursEnAttente.get(1).getJoueurB().setRangTournoi(nouveauRangTournoi);
+                DaoJoueur.updateJoueurRangTournoi(joueursEnAttente.get(1).getJoueurB(), nouveauRangTournoi);
+            }
+
+            
+
+            Match nouveauMatch = new Match(creneau, match.getType(), HOMME, joueursEnAttente.get(0), joueursEnAttente.get(1), nouveauRangTournoi);
+
+
+            creneau.assigne(nouveauMatch);
+
+            try {
+                parametrerMatch(nouveauMatch, creneau);
+            }
+            catch (Error e) {
+                throw new Error("Le nouveau match ne peut pas être créé : " + e.getMessage());
+            }
+
+            DaoMatch.insertMatch(nouveauMatch);
+            int id = nouveauMatch.getId();
+            System.out.println("nouveauMatch (" + id + ") : " + nouveauMatch);
+            matchs.put(id, nouveauMatch);
+
+            joueursEnAttente.clear();
+        }
+        else {
+            System.out.println("1 équipe " + (joueursEnAttente.get(0)) + "en attente pour " + nomRangNouveauTournoi);
+        }
+
         
         
     }

@@ -205,11 +205,18 @@ public class JDialog_ResultatMatch extends javax.swing.JDialog {
 
     private void jButton_AjouterSetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_AjouterSetActionPerformed
 
+        
         String s1 = Integer.toString(jComboBox_Set1.getSelectedIndex());
         System.out.println("selectedIndex=" + jComboBox_Set1.getSelectedIndex() + " - s1 = " + s1);
         String s2 = Integer.toString(jComboBox_Set2.getSelectedIndex());
-
+        
+        if (s1.equals(s2)) {
+            JOptionPane.showMessageDialog(this, "Erreur : le set que vous tentez d'ajouter est invalide.");
+            return;
+        }
+        
         m_sets.add(new modele.Set(new Integer(s1), new Integer(s2)));
+        PlanningMatchs.recupererMatchs();
         actualiserListe();
         //jList_Sets = new JList<>(jList_Sets.get)
         //jList_Sets.getSelectedValuesList();
@@ -239,13 +246,20 @@ public class JDialog_ResultatMatch extends javax.swing.JDialog {
     }//GEN-LAST:event_jComboBox_Set2ActionPerformed
 
     private void jButton_SupprimerSetsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_SupprimerSetsActionPerformed
-
+        /*
         while (jList_Sets.getSelectedValuesList().size() > 0) {
             //jList_Sets.remove(i);
             int index = jList_Sets.getSelectedIndex();
             m_sets.remove(index);
         }
-
+        
+        List<modele.Set> newSets = new ArrayList<>();
+        for (int i = jList_Sets.getModel().getSize() - 1 ; i >= 0 ; i++) {
+            m_sets.remove(i);
+        }
+        */
+        int index = jList_Sets.getSelectedIndex();
+        m_sets.remove(index);
         actualiserListe();
     }//GEN-LAST:event_jButton_SupprimerSetsActionPerformed
 
@@ -255,6 +269,14 @@ public class JDialog_ResultatMatch extends javax.swing.JDialog {
             //try {
             System.out.println(m_sets);
             System.out.println(m_match);
+            
+            if (jList_Sets.getModel().getSize() == 0 || m_sets.size() == 0) {
+                JOptionPane.showMessageDialog(this, "Vous devez entrer la liste des sets du matchs.", "Information", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+                
+            
             PlanningMatchs.ajouterResultatMatch(m_match, m_sets);
             /*
             } catch (modele.Error ex) {
