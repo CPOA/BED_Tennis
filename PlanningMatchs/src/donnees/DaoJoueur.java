@@ -1,6 +1,6 @@
 package donnees;
 
-import modele.personne.Joueur;
+import metier.personne.Joueur;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import modele.EquipeJoueurs;
-import modele.personne.Sexe;
-import modele.personne.TypeVIP;
+import metier.EquipeJoueurs;
+import metier.personne.Sexe;
+import metier.personne.TypeVIP;
 
 public class DaoJoueur extends Dao {
 

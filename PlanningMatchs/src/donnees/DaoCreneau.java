@@ -12,11 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import modele.Creneau;
-import modele.Error;
-import modele.Match;
-import modele.TrancheHoraire;
-import modele.court.Court;
+import metier.Creneau;
+import metier.Error;
+import metier.Match;
+import metier.TrancheHoraire;
+import metier.court.Court;
 import static donnees.Dao.query;
 
 /**

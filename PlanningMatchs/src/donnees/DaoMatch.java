@@ -15,22 +15,22 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import modele.Creneau;
-import modele.EquipeJoueurs;
-import modele.EquipeRamasseurs;
-import modele.Error;
-import modele.Match;
-import modele.Set;
-import modele.TrancheHoraire;
-import modele.personne.arbitre.Arbitre;
-import modele.personne.arbitre.ArbitreChaise;
-import modele.personne.arbitre.ArbitreFilet;
-import modele.personne.arbitre.ArbitreLigne;
-import modele.court.Court;
-import modele.personne.Joueur;
-import modele.personne.Ramasseur;
-import modele.personne.Sexe;
-import modele.personne.TypeVIP;
+import metier.Creneau;
+import metier.EquipeJoueurs;
+import metier.EquipeRamasseurs;
+import metier.Error;
+import metier.Match;
+import metier.Set;
+import metier.TrancheHoraire;
+import metier.personne.arbitre.Arbitre;
+import metier.personne.arbitre.ArbitreChaise;
+import metier.personne.arbitre.ArbitreFilet;
+import metier.personne.arbitre.ArbitreLigne;
+import metier.court.Court;
+import metier.personne.Joueur;
+import metier.personne.Ramasseur;
+import metier.personne.Sexe;
+import metier.personne.TypeVIP;
 import static donnees.Dao.queryUpdate;
 
 /**
@@ -111,7 +111,7 @@ public class DaoMatch extends Dao{
                     */
                     boolean fini = res.getBoolean("fini");
                     //  sets
-                    List<modele.Set> sets = new ArrayList<modele.Set>();
+                    List<metier.Set> sets = new ArrayList<metier.Set>();
                     if (fini) {
                         String stringSets = res.getString("sets");
                         int i = 0;
@@ -119,7 +119,7 @@ public class DaoMatch extends Dao{
                             //System.out.println("i=" + i + ", stringSet = " + stringSet + "- | " +  stringSet.split("-")[0]);
                             int pointsJoueur1 = new Integer(stringSet.split("-")[0]); //Integer.getInteger(stringSet.split("-")[0]);
                             int pointsJoueur2 = new Integer(stringSet.split("-")[1]);
-                            Set set = new modele.Set(pointsJoueur1, pointsJoueur2);
+                            Set set = new metier.Set(pointsJoueur1, pointsJoueur2);
                             sets.add(set);
                             i++;
                         }
@@ -272,8 +272,8 @@ public class DaoMatch extends Dao{
         
         String stringSets = " ";
         
-        List<modele.Set> listSets = match.getScoreFinal();
-        for (modele.Set set : listSets) {
+        List<metier.Set> listSets = match.getScoreFinal();
+        for (metier.Set set : listSets) {
             stringSets += set.getPointsJoueur1() + "-" + set.getPointsJoueur2() + "," ;
         }
         

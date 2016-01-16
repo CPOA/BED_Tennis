@@ -12,10 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import modele.court.Court;
-import modele.court.CourtAnnexe;
-import modele.court.CourtCentral;
-import modele.court.CourtEntrainement;
+import metier.court.Court;
+import metier.court.CourtAnnexe;
+import metier.court.CourtCentral;
+import metier.court.CourtEntrainement;
 
 /**
  *
