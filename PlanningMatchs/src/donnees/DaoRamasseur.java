@@ -12,12 +12,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import modele.Match;
-import modele.personne.Ramasseur;
-import modele.personne.Sexe;
-import modele.arbitre.Arbitre;
-import modele.personne.Joueur;
-import modele.personne.TypeVIP;
+import metier.Match;
+import metier.personne.Ramasseur;
+import metier.personne.Sexe;
+import metier.personne.arbitre.Arbitre;
+import metier.personne.Joueur;
+import metier.personne.TypeVIP;
 import static donnees.Dao.queryUpdate;
 
 /**

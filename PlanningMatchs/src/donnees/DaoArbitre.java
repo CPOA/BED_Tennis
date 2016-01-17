@@ -12,15 +12,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import modele.personne.Joueur;
-import modele.Match;
-import modele.personne.Sexe;
-import modele.arbitre.Arbitre;
-import modele.arbitre.ArbitreChaise;
-import modele.arbitre.ArbitreFilet;
-import modele.arbitre.ArbitreLigne;
-import modele.arbitre.TypeArbitre;
-import modele.personne.TypeVIP;
+import metier.personne.Joueur;
+import metier.Match;
+import metier.personne.Sexe;
+import metier.personne.arbitre.Arbitre;
+import metier.personne.arbitre.ArbitreChaise;
+import metier.personne.arbitre.ArbitreFilet;
+import metier.personne.arbitre.ArbitreLigne;
+import metier.personne.arbitre.TypeArbitre;
+import metier.personne.TypeVIP;
 import static donnees.Dao.queryUpdate;
 
 /**

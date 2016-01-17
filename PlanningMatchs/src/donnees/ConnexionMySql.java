@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package donnees;
 
 import java.sql.*;
@@ -28,6 +24,8 @@ public class ConnexionMySql {
             java.util.Properties props;
             props = new java.util.Properties();
             props.load(fichier);
+            
+            // Library : MySQL JDBC Driver - mysql-connector-java-5.1.23-bin.jar
             
             connexion = DriverManager.getConnection("jdbc:mysql://iutdoua-webetu.univ-lyon1.fr/p1407734", "p1407734", "215859");
             

@@ -12,10 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import modele.court.Court;
-import modele.court.CourtAnnexe;
-import modele.court.CourtCentral;
-import modele.court.CourtEntrainement;
+import metier.court.Court;
+import metier.court.CourtAnnexe;
+import metier.court.CourtCentral;
+import metier.court.CourtEntrainement;
 
 /**
  *
@@ -31,7 +31,7 @@ public class DaoCourt extends Dao{
         HashMap<Integer, Court> courts = new HashMap<>();
         //List<Court> courts = new ArrayList<>();
         
-        // courts connus
+        // courts spéciaux
         courts.put(1, CourtCentral.getInstance());
         courts.put(2, CourtAnnexe.getInstance());
         //courts.add(CourtCentral.getInstance());
@@ -41,9 +41,10 @@ public class DaoCourt extends Dao{
         
         connect();
         
-        ResultSet res = query("Select id_court, nom, adresse, capacite from court");
-        
+        ResultSet res = query("Select id_court, nom, adresse, capacite from `court`");
+       
         try {
+            System.out.println("res.isLast()=" + res.isLast());
             while (res.next()) {
                 
                 Court court = new CourtEntrainement(res.getInt("id_court"),
@@ -52,6 +53,7 @@ public class DaoCourt extends Dao{
                                                     res.getInt("capacite"));
                     
                 courts.put(res.getInt("id_court"), court);
+                System.out.println("court récupéré :" + res.getInt("id_court"));
                 //courts.add(court);
             }
         } catch (SQLException ex) {
