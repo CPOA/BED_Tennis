@@ -52,6 +52,4 @@ abstract class Compte {
     function setType($type) {
         $this->_type = $type;
     }
-
-
 }

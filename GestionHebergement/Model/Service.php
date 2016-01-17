@@ -62,9 +62,6 @@ class Service {
             echo ($e->getMessage());
         }
     }
-    
-    static function cmpServices($a, $b) {
-        return strcmp($a, $b);
-    }
+
 }
 

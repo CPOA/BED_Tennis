@@ -14,7 +14,7 @@
 class VIP {
     private $_nom;
     private $_prenom;
-    private $_id;
+    private $_idVIP;
     private $_type;
     function __construct($id) {
         try {
@@ -33,7 +33,7 @@ class VIP {
         else {
             $this->_nom=$c['nom'];
             $this->_prenom=$c['prenom'];
-            $this->_id=$c['id_vip'];
+            $this->_idVIP=$c['id_vip'];
             $this->_type=$c['typeVIP'];
         }   
     }
@@ -46,7 +46,7 @@ class VIP {
     }
 
     function getId() {
-        return $this->_id;
+        return $this->_idVIP;
     }
 
     function setNom($nom) {
@@ -58,7 +58,7 @@ class VIP {
     }
 
     function setId($id) {
-        $this->_id = $id;
+        $this->_idVIP = $id;
     }
     function getType() {
         return $this->_type;
@@ -69,21 +69,20 @@ class VIP {
     }
 
     static function getListVip() {
-    try {
-        $bd=Connection::getInstance();
-        $bd->prepare("Select * from vip");
-        $bd->execute();
-        $liste=array();
-        $vips=$bd->fetchAll();
-        foreach ($vips as $vip){
-            array_push($liste,new VIP($vip['id_vip']));
+        try {
+            $bd=Connection::getInstance();
+            $bd->prepare("Select * from vip");
+            $bd->execute();
+            $liste=array();
+            $vips=$bd->fetchAll();
+            foreach ($vips as $vip){
+                array_push($liste,new VIP($vip['id_vip']));
+            }
+            $bd->closeCursor();
+            return $liste;
         }
-        $bd->closeCursor();
-        return $liste;
+        catch (PDOException $e) {
+            echo ($e->getMessage());
+        }
     }
-    catch (PDOException $e) {
-        echo ($e->getMessage());
-    }
-}
-
 }

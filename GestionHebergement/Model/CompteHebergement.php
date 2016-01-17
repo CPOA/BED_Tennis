@@ -98,10 +98,6 @@ class CompteHebergement extends Compte{
         $this->_placesDispo = $placesDispo;
     }
 
-    function getHotel() {
-        return array($this->_nom,$this->_typeHebergement,$this->_adresse,$this->_nbEtoile,$this->_typeVIP,$this->_placesDispo);
-    }
-    
     function getService() {
         return $this->_service;
     }
@@ -113,6 +109,7 @@ class CompteHebergement extends Compte{
             array_push($this->_service, $service);
         }
     }
+    
     function getPlacesTotal() {
         return $this->_placesTotal;
     }
@@ -120,7 +117,6 @@ class CompteHebergement extends Compte{
     function setPlacesTotal($placesTotal) {
         $this->_placesTotal = $placesTotal;
     }
-
         
     static function getListHotels() {
         try {
@@ -138,51 +134,6 @@ class CompteHebergement extends Compte{
         catch (PDOException $e) {
             echo ($e->getMessage());
         }
-    }
-    
-    static function cmpTypeVip($login, $type){
-        try {
-            $bd=Connection::getInstance();
-            $bd->prepare("Select * from CompteHebergement where login=?");
-            $bd->execute(array($login));
-            $c=$bd->fetch();
-            $bd->closeCursor();
-        }
-        catch (PDOException $e) {
-            echo($e->getMessage());
-        }
-        if (isset($c["typevip"]) || !empty($c["typevip"])) {
-            if (strcmp($c["typevip"],"ARBITRE")==0) {
-                if (strcmp($type,"ARBITRE")==0) {
-                    $b=true;
-                }
-                else {
-                    $b=false;
-                }
-            }
-            else {
-                if (strcmp($type,"ARBITRE")==0) {
-                    $b=false;
-                }
-                else {
-                    $b=true;
-                }
-            }
-        }
-        else {
-            try {
-                $bd=Connection::getInstance();
-                $bd->prepare("Update CompteHebergement set typevip=? where login=?");
-                $bd->execute(array($type, $login));
-                $c=$bd->fetch();
-                $bd->closeCursor();
-            }
-            catch (PDOException $e) {
-                echo($e->getMessage());
-            }
-            $b=true;
-        }
-        return $b;
     }
     
     function update() {
