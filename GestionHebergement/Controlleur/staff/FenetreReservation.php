@@ -22,14 +22,19 @@
                 header("Location: ./FenetreReservation.php?erreur=1");
             }
             else {
-                $vip=new VIP($_POST["vip"]);
-                $_SESSION['vip']=$vip;
-                $_SESSION['dateDebut']=$_POST["dateDebut"];
-                $_SESSION['dateFin']=$_POST["dateFin"];
-                $_SESSION['nbPersonnes']=$_POST["nbPersonnes"];
-                $dateDebut=$_SESSION['dateDebut'];
-                $dateFin=$_SESSION['dateFin'];
-                $nbPersonnes=$_SESSION['nbPersonnes'];
+                if(strcmp($_POST["dateDebut"],$_POST["dateFin"])>0 || strcmp($_POST["dateDebut"], date("Y-m-j"))<0 || strcmp($_POST["dateFin"], date("Y-m-j"))<0) {
+                    header("Location: ./FenetreReservation.php?erreurDate=1");
+                }
+                else {
+                    $vip=new VIP($_POST["vip"]);
+                    $_SESSION['vip']=$vip;
+                    $_SESSION['dateDebut']=$_POST["dateDebut"];
+                    $_SESSION['dateFin']=$_POST["dateFin"];
+                    $_SESSION['nbPersonnes']=$_POST["nbPersonnes"];
+                    $dateDebut=$_SESSION['dateDebut'];
+                    $dateFin=$_SESSION['dateFin'];
+                    $nbPersonnes=$_SESSION['nbPersonnes'];
+                }
             }
         }
         else {
@@ -98,12 +103,15 @@
                     $dateDebut=$_SESSION['dateDebut'];
                     $dateFin=$_SESSION['dateFin'];
                     $nbPersonnes=$_SESSION['nbPersonnes'];
-                    $compte->effectuerReservation($_POST["hotel"],$vip->getId(), $dateDebut,$dateFin,$nbPersonnes);
+                    $compte->effectuerReservation($_POST["hotel"],$vip->getId(),$dateDebut,$dateFin,$nbPersonnes, $vip->getType());
                     $content="<div><p>Réservation effectuer</p>";
                     unset($_SESSION['vip']);
                     unset($_SESSION['dateDebut']);
                     unset($_SESSION['dateFin']);
                     unset($_SESSION['nbPersonnes']);
+                    $content = $content."<form action=\"./FenetreReservation.php\">"
+                    . "<input type=\"submit\" value=\"Retour\">"
+                    . "</form><br />";
                 }
                 catch (Exception $ex) {
                     $content = $content.$ex->getMessage();
@@ -132,9 +140,15 @@
                            ."<label for = \"datefin\"> Au :</label>"
                            ."<input type = \"date\" name = \"dateFin\" id =\"dateFin\" /><br />";
 
-        $content = $content."</div><br /><input type=\"submit\" value=\" Trouver Hebergement \"><br />";
+        $content = $content."</div><br /><input type=\"submit\" value=\" Trouver Hebergement \"></form><br />";
+        $content = $content."<form action=\"./FenetreMenuStaff.php\">"
+                . "<input type=\"submit\" value=\"Annuler\">"
+                . "</form><br />";
         if(isset($_GET["erreur"])) {
             $content = $content."<p class=\"erreur\">Veuillez renseigner toutes les valeurs</p>";
+        }
+        else if(isset($_GET["erreurDate"])) {
+            $content = $content."<p class=\"erreur\">Veuillez entrer des dates valides</p>";
         }
         $content=$content."</div>";
     }

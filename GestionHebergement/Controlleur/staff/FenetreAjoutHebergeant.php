@@ -14,17 +14,17 @@
     $title = "Création d'un Compte Hébergement";
     
     $content = "<div id = \"cadre\">"
+                ."<i>Les champs avec * sont obligatoires</i><br /><br />"
                 . "<form action = \"FenetreAjoutHebergeant.php?creation=1\" method = \"post\">"
                     . "<div id = \"formulaire\">"
-                    . "<label for = \"log\"> Login de l'hébergeant :</label>"
+                    . "<label for = \"log\"> Login de l'hébergeant * : </label>"
                     . "<input type = \"text\" id = \"log\" name = \"log\"/><br /><br />"
-                    . "<label for = \"pwd\"> Mot de passe :</label>"
+                    . "<label for = \"pwd\"> Mot de passe * :</label>"
                     . "<input type = \"password\" id = \"pwd\" name = \"pwd\"/><br /><br />"
-                    . "<label for = \"pwdVerif\"> Retaper mot de passe :</label>"
-                    . "<input type = \"password\" id = \"pwdVerif\" name = \"pwdVerif\"/><br /><br />"
+                    . "<label for = \"pwdVerif\"> Retaper mot de passe * :</label>"
+                    . "<input type = \"password\" id = \"pwdVerif\" name = \"pwdVerif\"/><br /><br /><br /><br />"
                     . "<label for = \"addressM\"> Adresse Mail :</label>"
-                    . "<input type = \"text\" id = \"addressM\" name = \"addrM\"/><br /><br /><br /><br />"
-            
+                    . "<input type = \"text\" id = \"addressM\" name = \"addrM\"/><br /><br />"
                     . "<label for = \"name\"> Nom de l'hébergement :</label>"
                     . "<input type = \"text\" id = \"name\" name = \"name\"/><br /><br />"
                     . "<label for = \"type\"> Type de l'hébergement :</label>"
@@ -39,6 +39,9 @@
             
                     ."<input type =\"submit\" value =\"Création du compte\"/><br />"
                 . "</form>";
+    $content = $content."<form action=\"./FenetreMenuStaff.php\">"
+                . "<input type=\"submit\" value=\"Annuler\">"
+                . "</form><br />";
 
     if (isset($_GET["creation"])) {
         if(empty($_POST["log"])) {
@@ -73,6 +76,9 @@
             else {
                 $compte->creerCompteHebergement($_POST["log"],$_POST["pwd"],$_POST["addrM"],$_POST["name"],$_POST["type"],$_POST["addr"],$_POST["star"],$_POST["nbPlace"]);
                 $content="<div><p>Compte hébergement crée</p>";
+                $content = $content."<form action=\"./FenetreAjoutHebergeant.php\">"
+                    . "<input type=\"submit\" value=\"Retour\">"
+                    . "</form><br />";
             }
         }        
     }

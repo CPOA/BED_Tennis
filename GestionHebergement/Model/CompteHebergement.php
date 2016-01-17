@@ -10,6 +10,7 @@ class CompteHebergement extends Compte{
     private $_adresse;
     private $_nbEtoile;
     private $_typeVIP;
+    private $_placesTotal;
     private $_placesDispo;
     private $_service=array();
     public function __construct($login, $motDePasse) {
@@ -32,6 +33,7 @@ class CompteHebergement extends Compte{
         else {
             parent::__construct($login, $motDePasse);
             $this->setAdresseMail($c['adressemail']);
+            $this->_placesTotal=$c['placestotal'];
             $this->_adresse=$c['adresse'];
             $this->_nom=$c['nom'];
             $this->_typeHebergement=$c['typeHebergement'];
@@ -111,7 +113,15 @@ class CompteHebergement extends Compte{
             array_push($this->_service, $service);
         }
     }
-    
+    function getPlacesTotal() {
+        return $this->_placesTotal;
+    }
+
+    function setPlacesTotal($placesTotal) {
+        $this->_placesTotal = $placesTotal;
+    }
+
+        
     static function getListHotels() {
         try {
             $bd=Connection::getInstance();
@@ -179,11 +189,11 @@ class CompteHebergement extends Compte{
         $serviceID="";
         try {
             $bd=Connection::getInstance();
-            $bd->prepare("Update CompteHebergement set nom=?,typehebergement=?,adresse=?,nbetoile=?,placesdispo=?, service=? where login=?");
+            $bd->prepare("Update CompteHebergement set nom=?,typehebergement=?,adresse=?,nbetoile=?,placestotal=?,placesdispo=?, service=? where login=?");
             foreach($this->_service as $service) {
                 $serviceID=$serviceID.",".$service->getIdType();
             }
-            $bd->execute(array($this->_nom, $this->_typeHebergement, $this->_adresse, $this->_nbEtoile, $this->_placesDispo,$serviceID, $this->getLogin()));
+            $bd->execute(array($this->_nom, $this->_typeHebergement, $this->_adresse, $this->_nbEtoile,$this->_placesTotal, $this->_placesDispo,$serviceID, $this->getLogin()));
             $bd->closeCursor();
         }
         catch (PDOException $e) {

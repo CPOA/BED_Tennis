@@ -16,13 +16,41 @@
       }
     }
     $title = "Mise à jour informations l'hébergement";
-    
+    $content= "";
     /*
     * Affichage des informations récuperer grace à l'id du compte de la session actuel,
     * dans un tableau avec possibilité de les modifiers. 
     */
     
-        if(isset($_GET["modification"])) {
+    $content = $content. "<div id =\"tableau2\"><form action = \"FenetreMajInfo.php?modification=1\" method = \"post\">";
+            
+    $content = $content
+            ."<table>"
+                . "<tr> <td><h3> Informations </h3></td> <td><h3> Actuelles </h3></td><td><h3> Nouvelles </h3></td></tr>"
+                . "<tr> <td> Nom </td> <td> ".$compte -> getNom()." </td> <td><input type = \"text\" name = \"newName\" /></td> </tr>"
+                . "<tr> <td> Type </td> <td> ".$compte -> getTypeHebergement()." </td> <td><input type = \"text\" name = \"newType\" /></td> </tr>"
+                . "<tr> <td> Adresse </td> <td> ".$compte -> getAdresse()." </td> <td><input type = \"text\" name = \"newAddress\" /></td> </tr>"
+                . "<tr> <td> Adresse Mail </td> <td> ".$compte -> getAdresseMail()." </td> <td><input type = \"mail\" name = \"newAddressMail\" /></td> </tr>"
+                . "<tr> <td> Nombre d'étoiles </td> <td> ".$compte -> getNbEtoile()." </td> <td><input type = \"number\" name = \"newNbEtoile\"/></td> </tr>"
+                . "<tr> <td> Capacité </td> <td> ".$compte -> getPlacesTotal()." </td> <td><input type = \"number\" name = \"newCapacite\"/></td> </tr>"
+                . "<tr> <td> Services </td> <td> ";
+                foreach ($compte->getService() as $service) {
+                    $content=$content."<p>".$service->getType()."</p>";
+                }
+                $content=$content." </td> <td><select name=\"services[]\" multiple>";
+                foreach (Service::getListServices() as $service) {
+                    $content=$content."<option value=".$service->getIdType().">".$service->getType()."</option>";
+                }
+                $content=$content."</select></td> </tr>"
+                . "</table><br /><br />"
+                . "<input type = \"submit\" value = \"Modification\">";
+    
+    $content = $content ."</form>";
+    $content = $content."<form action=\"./FenetreMenuCompteHebergement.php\">"
+                . "<input type=\"submit\" value=\"Annuler\">"
+                . "</form></div><br />";
+    
+    if(isset($_GET["modification"])) {
         if(!empty($_POST['newName'])) {
             $compte->setNom($_POST['newName']);
         }
@@ -41,33 +69,15 @@
         if(!empty($_POST['services'])) {
             $compte->setService($_POST["services"]);
         }
+        if(!empty($_POST['newCapacite'])) {
+            $compte->setPlacesTotal($_POST["newCapacite"]);
+        }
         $compte->update();
         $_SESSION['compte']=$compte;
         $content="<p>Modifications effectuées</p>";
+        $content = $content."<form action=\"./FenetreMajInfo.php\">"
+                    . "<input type=\"submit\" value=\"Retour\">"
+                    . "</form><br />";
     }
-    
-    $content = $content. "<form action = \"FenetreMajInfo.php?modification=1\" method = \"post\"><div id =\"tableau2\">";
-            
-    $content = $content
-            ."<table>"
-                . "<tr> <td><h3> Informations </h3></td> <td><h3> Actuelles </h3></td><td><h3> Nouvelles </h3></td></tr>"
-                . "<tr> <td> Nom </td> <td> ".$compte -> getNom()." </td> <td><input type = \"text\" name = \"newName\" /></td> </tr>"
-                . "<tr> <td> Type </td> <td> ".$compte -> getTypeHebergement()." </td> <td><input type = \"text\" name = \"newType\" /></td> </tr>"
-                . "<tr> <td> Adresse </td> <td> ".$compte -> getAdresse()." </td> <td><input type = \"text\" name = \"newAddress\" /></td> </tr>"
-                . "<tr> <td> Adresse Mail </td> <td> ".$compte -> getAdresseMail()." </td> <td><input type = \"mail\" name = \"newAddressMail\" /></td> </tr>"
-                . "<tr> <td> Nombre d'étoiles </td> <td> ".$compte -> getNbEtoile()." </td> <td><input type = \"number\" name = \"newNbEtoile\"/></td> </tr>"
-                . "<tr> <td> Services </td> <td> ";
-                foreach ($compte->getService() as $service) {
-                    $content=$content."<p>".$service->getType()."</p>";
-                }
-                $content=$content." </td> <td><select name=\"services[]\" multiple>";
-                foreach (Service::getListServices() as $service) {
-                    $content=$content."<option value=".$service->getIdType().">".$service->getType()."</option>";
-                }
-                $content=$content."</select></td> </tr>"
-                . "</table><br /><br />"
-                . "<input type = \"submit\" value = \"Modification\">";
-    
-    $content = $content ."</div></form>";
     require_once("../../Vue/Layout.php");
 ?>

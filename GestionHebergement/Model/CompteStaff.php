@@ -41,11 +41,13 @@ class CompteStaff extends Compte{
         }
     }
     
-    public function effectuerReservation($loginHebergement, $idVIP, $dateDebut, $dateFin, $nbPersonnes) {
+    public function effectuerReservation($loginHebergement, $idVIP, $dateDebut, $dateFin, $nbPersonnes, $typeVIP) {
         try {
             $bd=Connection::getInstance();
             $bd->prepare("Insert into reservation values(?,?,?,?,?)");
             $bd->execute(array($loginHebergement, $idVIP, $dateDebut, $dateFin, $nbPersonnes));
+            $bd->prepare("Update CompteHebergement set typevip=? where login=?");
+            $bd->execute(array($typeVIP, $loginHebergement));
             $bd->closeCursor();
         }
         catch (PDOException $e) {

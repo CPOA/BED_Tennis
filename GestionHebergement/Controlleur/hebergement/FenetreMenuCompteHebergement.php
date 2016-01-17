@@ -7,7 +7,11 @@
                     . "</div>"
                     . "<br /><br />"
                     . "<div id = \"bouton\"><a href = \"../../Controlleur/hebergement/FenetreMajDispo.php\">"
-                        . "<h1> Mettre à jour disponibilité </h1>"
+                        . "<h1> Mettre à jour disponibilités </h1>"
+                    . "</a></div>"
+                    . "<br /><br />"
+                    . "<div id = \"bouton\"><a href = \"../../Controlleur/hebergement/FenetreConsulterReservation.php\">"
+                        . "<h1> Consulter les réservations </h1>"
                     . "</a></div>"
                     . "<br /><br />"
                 ;

@@ -51,12 +51,12 @@ class Reservation {
     static function getListReservations($loginHebergement) {
         try {
             $bd=Connection::getInstance();
-            $bd->prepare("Select * from reservation,vip where reservation.loginhebergement=? and reservation.idvip=vip.id_vip");
+            $bd->prepare("Select * from reservation,vip where reservation.loginhebergement=? and reservation.idvip=vip.id_vip order by datedebut");
             $bd->execute(array($loginHebergement));
             $liste=array();
             $reservations=$bd->fetchAll();
             foreach ($reservations as $reservation) {
-                array_push($liste, array(new Reservation($reservation['loginhebergement'], $reservation["idvip"], $reservation["datedebut"], $reservation["datefin"],$reservation["nbpersonnes"]), new VIP($reservation["nom"], $reservation["prenom"])));
+                array_push($liste, array(new Reservation($reservation['loginhebergement'], $reservation["idvip"], date("j/m/Y", strtotime($reservation["datedebut"])), date("j/m/Y", strtotime($reservation["datefin"])),$reservation["nbpersonnes"]), new VIP($reservation["id_vip"])));
             }
             $bd->closeCursor();
             return $liste;
