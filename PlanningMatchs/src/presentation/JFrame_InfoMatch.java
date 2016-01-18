@@ -327,7 +327,7 @@ public class JFrame_InfoMatch extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -419,7 +419,7 @@ public class JFrame_InfoMatch extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosed
 
     private void jButton_FermerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_FermerActionPerformed
-        setVisible(false);
+        this.dispose();
     }//GEN-LAST:event_jButton_FermerActionPerformed
 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed

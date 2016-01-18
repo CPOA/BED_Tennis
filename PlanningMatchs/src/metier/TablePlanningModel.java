@@ -89,7 +89,7 @@ public class TablePlanningModel extends AbstractTableModel {
             case 2:
                 return match.getCourt().getNom();
             case 3:
-                return match.getType() + " - " + match.getRangTournoi();
+                return match.getType() + " - " + match.getStrRangTournoi();
             case 4:
                 //return match.getJoueur1().toString();
                 String txt = "";

@@ -18,7 +18,7 @@ import metier.personne.Joueur;
  *
  * @author dave
  */
-public class Dao {
+public abstract class Dao {
     
     private static java.sql.Connection connexion = null;
 
