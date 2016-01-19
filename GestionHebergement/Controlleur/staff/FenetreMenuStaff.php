@@ -20,7 +20,7 @@
                     . "<h1> Ajouter Hébergeant </h1>"
                 . "</a></div>"
                 . "<br /><br />"
-                . "<div id = \"bouton\"><a href = \"../../Controlleur/staff/FenetreReservation\">"
+                . "<div id = \"bouton\"><a href = \"../../Controlleur/staff/FenetreReservation.php\">"
                     . "<h1> Effectuer Réservation </h1>"
                 . "</a></div>"
                 . "<br /><br />"

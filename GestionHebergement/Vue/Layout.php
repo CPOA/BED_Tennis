@@ -23,7 +23,7 @@
         <center><div id = "corps"><?php echo $content ?></div></center>
 
         <div id = "footer"><!--  -->
-            <p>Ce site a était réalisé par BRYAN BONI et EMILE BEX, dans le cadre d'un projet web à l'iut info Lyon 1</p>    
+            <p>Ce site a été réalisé par BRYAN BONI et EMILE BEX, dans le cadre d'un projet web à l'iut info Lyon 1</p>    
         </div>
     </body>
 </html>

@@ -104,7 +104,7 @@
                     $dateFin=$_SESSION['dateFin'];
                     $nbPersonnes=$_SESSION['nbPersonnes'];
                     $compte->effectuerReservation($_POST["hotel"],$vip->getId(),$dateDebut,$dateFin,$nbPersonnes, $vip->getType());
-                    $content="<div><p>Réservation effectuer</p>";
+                    $content="<div><p>Réservation effectué</p>";
                     unset($_SESSION['vip']);
                     unset($_SESSION['dateDebut']);
                     unset($_SESSION['dateFin']);
