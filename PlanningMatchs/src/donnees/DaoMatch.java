@@ -96,19 +96,6 @@ public class DaoMatch extends Dao{
 
                     int idMatch = res.getInt("id_match");
 
-                    //  créneau
-                    //Creneau creneau = null;
-                    /*
-                    int idCreneau = res.getInt("creneau");
-                    for (Creneau c : creneaux) {
-                        if (c.getId() == idCreneau) {
-                            creneau = c;
-                            break;
-                        }
-                    }
-                    if (creneau == null)
-                        throw new Error("Match n° " + idMatch + " : id creneau " + idCreneau + " n'existe pas");
-                    */
                     boolean fini = res.getBoolean("fini");
                     //  sets
                     List<metier.Set> sets = new ArrayList<metier.Set>();
@@ -138,19 +125,7 @@ public class DaoMatch extends Dao{
                     Joueur j_2_A = joueurs.get(id_equipe2_joueurA);
                     Joueur j_2_B = joueurs.get(id_equipe2_joueurB);
 
-                    /*
-                    for (Joueur k : ) {
-
-                        if (j.getId() == id_equipe1_joueurA)
-                            j_1_A = j;
-                        if (j.getId() == id_equipe1_joueurB)
-                            j_1_B = j;
-                        if (j.getId() == id_equipe2_joueurA)
-                            j_2_A = j;
-                        if (j.getId() == id_equipe2_joueurB)
-                            j_2_B = j;
-                    }
-                    */
+                    
 
                     EquipeJoueurs equipe1 = new EquipeJoueurs(j_1_A, j_1_B);
                     EquipeJoueurs equipe2 = new EquipeJoueurs(j_2_A, j_2_B);

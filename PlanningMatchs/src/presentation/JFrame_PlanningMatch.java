@@ -78,6 +78,8 @@ public class JFrame_PlanningMatch extends javax.swing.JFrame {
                         Point p = me.getPoint();
                         int row = table.rowAtPoint(p);
                         if (me.getClickCount() == 2) {
+                            if (row < 0)
+                                return;
                             afficherDetailsMatchSelectionne(row);
                         }
                     }
@@ -412,7 +414,7 @@ public class JFrame_PlanningMatch extends javax.swing.JFrame {
     private void jButton_ViderTablesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_ViderTablesActionPerformed
         int res = JOptionPane.showConfirmDialog(this, "Cela effacera les données des joueurs, arbitres, ramasseurs, courts, créneaux. Continuer ?", "Êtes-vous sûr ?",  JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         //JOptionPane.showMessageDialog(this, JOptionPane.WARNING_MESSAGE, "Cela supprimera tous les matchs planifiés. Continuer ?", 0);
-        JOptionPane.showMessageDialog(this, "res = " + res);
+        //JOptionPane.showMessageDialog(this, "res = " + res);
         if (res == 0) { // yes
             verrouillerIHM();
             PlanningMatchs.viderTables();
@@ -428,6 +430,8 @@ public class JFrame_PlanningMatch extends javax.swing.JFrame {
     private void jButton_detailsMatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_detailsMatchActionPerformed
 
         int row = tableAffichagePlanning.getSelectedRow();
+        if (row < 0) 
+            return;
         afficherDetailsMatchSelectionne(row);
 
     }//GEN-LAST:event_jButton_detailsMatchActionPerformed
@@ -436,7 +440,7 @@ public class JFrame_PlanningMatch extends javax.swing.JFrame {
         
         int res = JOptionPane.showConfirmDialog(this, "Cela supprimera tous les matchs planifiés. Continuer ?", "Supprimer les matchs",  JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         //JOptionPane.showMessageDialog(this, JOptionPane.WARNING_MESSAGE, "Cela supprimera tous les matchs planifiés. Continuer ?", 0);
-        JOptionPane.showMessageDialog(this, "res = " + res);
+        //JOptionPane.showMessageDialog(this, "res = " + res);
         if (res == 0) { // yes
             DaoMatch.viderMatchs();
             
@@ -527,11 +531,11 @@ public class JFrame_PlanningMatch extends javax.swing.JFrame {
         tableAffichagePlanning.getColumnModel().getColumn(1).setMaxWidth(130);
         tableAffichagePlanning.getColumnModel().getColumn(1).setMinWidth(130);
         
-        tableAffichagePlanning.getColumnModel().getColumn(2).setMaxWidth(120);
-        tableAffichagePlanning.getColumnModel().getColumn(2).setMinWidth(120);
+        tableAffichagePlanning.getColumnModel().getColumn(2).setMaxWidth(105);
+        tableAffichagePlanning.getColumnModel().getColumn(2).setMinWidth(105);
         
-        tableAffichagePlanning.getColumnModel().getColumn(3).setMaxWidth(200);
-        tableAffichagePlanning.getColumnModel().getColumn(3).setMinWidth(200);
+        tableAffichagePlanning.getColumnModel().getColumn(3).setMaxWidth(170);
+        tableAffichagePlanning.getColumnModel().getColumn(3).setMinWidth(170);
         
         tableAffichagePlanning.getColumnModel().getColumn(4).setMaxWidth(200);
         tableAffichagePlanning.getColumnModel().getColumn(4).setMinWidth(200);
