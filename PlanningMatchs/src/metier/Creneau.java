@@ -19,10 +19,8 @@ public class Creneau implements Comparable<Creneau>{
     
         private DateTime m_dateTime;
         
-	//private Date m_date;
 	private TrancheHoraire m_trancheHoraire;
         
-        //private int m_heure;
         
         private Court m_court;
         
